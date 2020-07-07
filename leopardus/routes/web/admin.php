@@ -22,6 +22,8 @@ Route::get('vistaCorreo', function ()
 
 Route::prefix('mioficina')->group(function ()
 {
+
+  Route::get('index', 'HomeController@home');
   
 Route::group(['prefix' => 'autentication'], function (){
   Route::get('/register', 'Auth\RegisterController@newRegister')->name('autenticacion.new-register');

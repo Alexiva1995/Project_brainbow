@@ -15,7 +15,7 @@ class Https
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->secure()) {
+        if ( (!$request->secure()) && (env('APP_ENV') === 'prod')) {
         	return redirect()->secure($request->getPathInfo());
         }
         return $next($request);
