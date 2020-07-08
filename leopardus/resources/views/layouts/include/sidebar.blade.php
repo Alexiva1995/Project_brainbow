@@ -1,12 +1,12 @@
 <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
 
-    <div class="navbar-header" style="background-color: #00646d;">
+    <div class="navbar-header">
 
         <ul class="nav navbar-nav flex-row">
 
             {{-- <li class="nav-item mr-auto"> --}}
 
-            <a class="navbar-brand" href="" href="" style="width: 100%;margin: 0px; margin-top: 1rem;">
+            {{-- <a class="navbar-brand" href="" href="" style="width: 100%;margin: 0px; margin-top: 1rem;">
 
                 <div class="brand-logo2" style="width: 100%;">
 
@@ -15,7 +15,7 @@
 
                 </div>
 
-            </a>
+            </a> --}}
 
             {{-- </li> --}}
 
@@ -89,7 +89,7 @@
 
                   
 
-                    <span class="title">E-commerce</span>
+                    <span class="title">Inversiones</span>
 
                     <span class="arrow"></span>
 

@@ -6,7 +6,7 @@
 		{{-- primeros cuadro --}}
 		@include('dashboard.componenteIndex.first_square')
 		{{-- secundo cuadro --}}
-		@include('dashboard.componenteIndex.second_square')
+		{{-- @include('dashboard.componenteIndex.second_square') --}}
 		{{-- tecer cuadro --}}
 		{{-- @include('dashboard.componenteIndex.third_square') --}}
 	</div>
