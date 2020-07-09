@@ -33,7 +33,7 @@ class HomeController extends Controller
     public function index()
     {
         if (Auth::guest()){
-            return redirect('mioficina/index');
+            return redirect('index');
             //return redirect('mioficina/login');
         }else{
             // if (empty(Auth::user()->verificar_correo)) {
