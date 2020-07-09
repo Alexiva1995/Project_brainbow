@@ -20,8 +20,12 @@ Route::get('vistaCorreo', function ()
   return view('emails.plantilla');
 });
 
+Route::get('index', 'HomeController@home');
+
 Route::prefix('mioficina')->group(function ()
 {
+
+ 
   
 Route::group(['prefix' => 'autentication'], function (){
   Route::get('/register', 'Auth\RegisterController@newRegister')->name('autenticacion.new-register');

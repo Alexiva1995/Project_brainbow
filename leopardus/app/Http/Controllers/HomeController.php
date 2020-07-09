@@ -26,10 +26,15 @@ class HomeController extends Controller
         $this->hasher = $hasher;
     }
 
+    public function home(){
+        return view('index');
+    }
+
     public function index()
     {
         if (Auth::guest()){
-            return redirect('mioficina/login');
+            return redirect('index');
+            //return redirect('mioficina/login');
         }else{
             // if (empty(Auth::user()->verificar_correo)) {
                 // return redirect('login')->with('msj3', 'Your Email has not been Validated, check the email that registered in the system');
