@@ -1,5 +1,5 @@
 <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
-    <div class="navbar-header" style="background-color: #00646d;">
+    <div class="navbar-header" >
         <ul class="nav navbar-nav flex-row">
             {{-- <li class="nav-item mr-auto">
                 <a class="navbar-brand" href="">
@@ -16,11 +16,11 @@
                         data-ticon="icon-disc"></i>
                 </a>
             </li> --}}
-            <a class="navbar-brand" href="" href="" style="width: 100%;margin: 0px;">
+            {{-- <a class="navbar-brand" href="" href="" style="width: 100%;margin: 0px;">
                 <div class="brand-logo2" style="width: 100%;">
                     <img src="https://comunidadlevelup.com/assets/imgLanding/logo.png" style="width: 100%;">
                 </div>
-            </a>
+            </a> --}}
         </ul>
     </div>
     <div class="shadow-bottom"></div>
@@ -54,7 +54,7 @@
             <li class="nav-item">
                 <a href="{{url('mioficina/tienda')}}" class="nav-link nav-toggle">
                     <i class="feather icon-shopping-cart"></i>
-                    <span class="title">E-commerce</span>
+                    <span class="title">Inversiones</span>
                 </a>
             </li>
             {{--FIN RANKING --}}
@@ -139,12 +139,12 @@
                         <span class="title">Billetera Cash</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
                         <i class="feather icon-circle"></i>
                         <span class="title">Historial de Puntos</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
         {{-- FIN BILLETERA --}}
