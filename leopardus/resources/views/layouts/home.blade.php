@@ -13,7 +13,7 @@
         <script type="text/javascript" src="js/html5shiv.js"></script>
         <script type="text/javascript" src="js/respond.js"></script>
         <![endif]-->
-    	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('flaticon.png') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('templateHome/css/slick.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('templateHome/css/swiper3.min.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('templateHome/css/animate.min.css') }}"/>

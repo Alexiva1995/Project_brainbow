@@ -36,7 +36,7 @@
     <link href="{{ asset('assets/css/celest.css') }}" rel="stylesheet"/>
     <!-- END THEME LAYOUT STYLES -->
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('flaticon.png') }}">
 
     <!--DATATABLES-->
 
