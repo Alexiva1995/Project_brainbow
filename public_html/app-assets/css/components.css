@@ -138,7 +138,7 @@ html body p {
   line-height : 1.5rem;
 }
 html body.bg-full-screen-image {
-  background : url(../../assets/fondo-registro-inicio-de-sesin-.jpg) no-repeat center center;
+  background : url(../../assets/imgLanding/fondo.png) no-repeat center center;
   background-size : cover;
 }
 html body.blank-page .content {

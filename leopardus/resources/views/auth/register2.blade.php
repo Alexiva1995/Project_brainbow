@@ -42,17 +42,15 @@ $referred = DB::table($settings->prefijo_wp.'users')
 <section class="row flexbox-container">
     <div class="col-xl-8 col-10 d-flex justify-content-center">
         <div class="card bg-authentication rounded-0 mb-0">
-            <div class="row m-0">
-                <div class="col-lg-6 d-lg-block d-none text-center align-self-center pl-0 pr-3 py-0">
-                    {{-- <img src="{{asset('assets/imgLanding/logo2.png')}}" alt="branding logo" width="350"> --}}
-                    <img src="{{asset('assets/imgLanding/logo2.png')}}" alt="branding logo" width="300">
-                    {{-- <img src="../../../app-assets/images/pages/register.jpg" alt="branding logo"> --}}
+            <div class="row m-0" style="background-color: white;">
+                <div class="col-lg-6 d-lg-block d-none text-center align-items-center" style="padding: 0 0; background-color: black;">
+                    <img style="width: 100%;"src="{{asset('assets/imgLanding/foto-logo.png')}}" alt="branding logo">
                 </div>
                 <div class="col-lg-6 col-12 p-0">
                     <div class="card rounded-0 mb-0 p-2">
                         <div class="card-header pt-50 pb-1">
                             <div class="card-title">
-                                <h4 class="mb-0">Nuevo Usuario</h4>
+                                <h4 class="mb-0" style="color: #00000F; font-weight: bold;">Nuevo Usuario</h4>
                             </div>
                         </div>
                         @if ($referred != null)
@@ -204,17 +202,17 @@ $referred = DB::table($settings->prefijo_wp.'users')
                                                     <i class="vs-icon feather icon-check"></i>
                                                 </span>
                                             </span>
-                                            <span class="">
-                                                Acepta terminos y condiciones
-                                                <a href="{{asset('assets/terminosycondiciones.pdf')}}" download> Descargar terminos y condiciones</a>
+                                            <span class="" style="font-size: 12px; color: #00184E; font-weight: bold;">
+                                                Acepto los <a href="{{asset('assets/terminosycondiciones.pdf')}}" download>términos y condiciones</a>
                                             </span>
                                         </div>
                                     </fieldset>
                                 </div>
                             </div>
-                            <a href="{{route('login')}}"
-                                class="btn btn-outline-primary float-left btn-inline mb-50">Login</a>
-                            <button type="submit" class="btn btn-primary float-right btn-inline mb-50">Registrar</a>
+                            <br>
+                            <button type="submit" class="btn" style="display: block; background-color: #02E9FE; color: white; font-weight: bold; width: 100%;">REGISTRAME</button>
+
+                            <div style="padding: 30px 0 0 0;" class="text-center">¿Ya tienes una cuenta? <a href="{{route('login')}}" style="font-size: 12px; color: #00184E; font-weight: bold;">Inicia Sesión</a></div>
 
 
                                 {{-- <div class="col-sm-12 col-xs-12 form-label-group">
