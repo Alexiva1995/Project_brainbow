@@ -25,7 +25,7 @@
 
             <div class="mologo">
                 <a href="index.html">
-                    <img class="l1" src="{{ asset('flaticon.png') }}">
+                    <img class="l1" src="{{ asset('assets/imgLanding/logo2.png') }}">
 
                 </a>
             </div>
@@ -52,11 +52,11 @@
                 </li>
             </ul>
 
-            <div class="mo-language">
+            {{--<div class="mo-language">
                 <a class="ch" href="#">中文</a>/
                 <a class="en" href="#">English</a>/
                 <a class="hw" href="#">한국어</a>
-            </div>
+            </div>--}}
         </div>
         <!-- navdown.end -->
 
@@ -64,8 +64,8 @@
             <div class="head content clearfix">
                 <div class="logo">
                     <a href="index.html">
-                        <img class="logo1" src="{{ asset('flaticon.png') }}">
-                        <img class="logo2" src="{{ asset('flaticon.png') }}">
+                        <img class="logo1" src="{{ asset('assets/imgLanding/logo2.png') }}" style="width: 25%;">
+                        <img class="logo2" src="{{ asset('assets/imgLanding/logo2.png') }}" style="width: 25%;">
                     </a>
                 </div>
                 <div class="nav">
@@ -77,13 +77,13 @@
                             <a href="{{ route('autenticacion.new-register') }}">Registrarme</a>
                         </li>
                     </ul>
-                    <div class="language">
+                    {{--<div class="language">
                         <a class="ch on" href="#">English<i></i></a>
                         <div class="con clearfix">
                             <a href="#">한국어</a>
                             <a href="#">中文</a>
                         </div>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>
