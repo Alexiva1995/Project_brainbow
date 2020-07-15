@@ -1,17 +1,16 @@
 @extends('layouts.dashboard')
 
 @section('content')
-<div class="contai2">
-	<div class="row">
-		{{-- primeros cuadro --}}
-		@include('dashboard.componenteIndex.first_square')
-		{{-- secundo cuadro --}}
-		{{-- @include('dashboard.componenteIndex.second_square') --}}
-		{{-- tecer cuadro --}}
-		{{-- @include('dashboard.componenteIndex.third_square') --}}
+	<div class="contai2">
+		<div class="row">
+			{{-- primeros cuadro --}}
+			@include('dashboard.componenteIndex.first_square')
+			{{-- secundo cuadro --}}
+			{{-- @include('dashboard.componenteIndex.second_square') --}}
+			{{-- tecer cuadro --}}
+			{{-- @include('dashboard.componenteIndex.third_square') --}}
+		</div>
 	</div>
-</div>
-
 @endsection
 
 @push('custom_js')

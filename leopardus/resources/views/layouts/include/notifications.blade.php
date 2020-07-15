@@ -20,7 +20,7 @@ $notificaciones = DB::table('notificaciones')
 
 <li class="dropdown dropdown-notification nav-item">
 	<a class="nav-link nav-link-label" href="#" data-toggle="dropdown">
-		<i class="ficon feather icon-bell"></i>
+		<i class="ficon feather icon-bell" style="color: black;"></i>
 		@if (count($notificaciones) != 0)
 		<span class="badge badge-pill badge-primary badge-up"> {{ count($notificaciones) }} </span>
 		@endif
