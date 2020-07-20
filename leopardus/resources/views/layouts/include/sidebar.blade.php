@@ -312,14 +312,14 @@
                 </a>
 
             </li>
-
+{{-- 
             <li>
 
                 <a href="{{route('publicidad')}}" class="nav-link nav-toggle">
                     <span class="title">Publicidad</span>
                 </a>
 
-            </li>
+            </li> --}}
 
             {{-- <li>
 

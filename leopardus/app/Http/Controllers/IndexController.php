@@ -283,7 +283,7 @@ class IndexController extends Controller
      * @param integer $id_item
      * @return void
      */
-	public function getIdProductos($id_item): integer
+	public function getIdProductos($id_item): int
 	{
         $settings = Settings::first();
         $valor = 0;

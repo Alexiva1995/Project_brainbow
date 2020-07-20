@@ -47,7 +47,7 @@
 							<th>Paquete</th>
 							<th>Estato</th>
 							<th>Auspiciador</th>
-							<th>Nivel de Referido</th>
+							<th>Nivel Matriz</th>
 							<th>Ingreso</th>
 						</tr>
 					</thead>

@@ -19,11 +19,12 @@
 							<th>#</th>
 							<th>Usuario</th>
 							<th>Descripcion</th>
-							<th>Tantechcoins</th>
-							<th>Cash</th>
-							<th>Credito</th>
-							<th>Balance</th>
+							{{-- <th>Tantechcoins</th> --}}
+							{{-- <th>Cash</th> --}}
+							<th>Monto</th>
+							<th>Billetera</th>
 							<th>Fecha</th>
+							<th>Estado</th>
 						</tr>
 					</thead>
 
@@ -33,14 +34,14 @@
 							<td>{{ $bille->id }}</td>
 							<td>{{ $bille->usuario }}</td>
 							<td>{{ $bille->descripcion }}</td>
-							<td>{{ $bille->puntos }}</td>
-							<td>
+							{{-- <td>{{ $bille->puntos }}</td> --}}
+							{{-- <td>
 								@if ($moneda->mostrar_a_d)
 								{{$moneda->simbolo}} {{ $bille->debito }}
 								@else
 								{{ $bille->debito }} {{$moneda->simbolo}}
 								@endif
-							</td>
+							</td> --}}
 							<td>
 								@if ($moneda->mostrar_a_d)
 								{{$moneda->simbolo}} {{ $bille->credito }}
@@ -56,6 +57,19 @@
 								@endif
 							</td>
 							<td>{{ date('d-m-Y', strtotime($bille->created_at)) }}</td>
+							<td>
+								<td>
+									<center>
+										@if ($bille->estado == 1)
+										Aprobado
+										@elseif ($bille->estado == 2)
+										Rechazado
+										@else
+										En Espera
+										@endif
+									</center>
+								</td>
+							</td>
 						</tr>
 
 						@endforeach

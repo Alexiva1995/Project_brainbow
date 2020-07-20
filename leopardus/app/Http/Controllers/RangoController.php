@@ -30,23 +30,25 @@ class RangoController extends Controller
     {
         $user = User::find($iduser);
         $rol_actual = $user->rol_id;
-        $rol_new = $user->rol_id + 1;
-        $rol = Rol::find($rol_new);
-        $cantrol = Rol::all()->count('ID');
+        if ($rol_actual > 0) {
+            $rol_new = $user->rol_id + 1;
+            $rol = Rol::find($rol_new);
+            $cantrol = Rol::all()->count('ID');
 
-        $cantrequisito = 0;
-        $cantaprobado = 0;
+            $cantrequisito = 0;
+            $cantaprobado = 0;
 
-        if($cantrol > $rol_new){ 
+            if($cantrol > $rol_new){ 
 
-            $cantrequisito++;
-            if ($this->checkPuntos($iduser, $rol->grupal)) {
-                $cantaprobado++;
-            }
+                $cantrequisito++;
+                if ($this->checkPuntos($iduser, $rol->grupal)) {
+                    $cantaprobado++;
+                }
 
-            if ($rol_actual == $rol->rolprevio) {
-                if ($cantrequisito == $cantaprobado) {
-                    $this->ActualizarRango($iduser, $rol_new);
+                if ($rol_actual == $rol->rolprevio) {
+                    if ($cantrequisito == $cantaprobado) {
+                        $this->ActualizarRango($iduser, $rol_new);
+                    }
                 }
             }
         }
