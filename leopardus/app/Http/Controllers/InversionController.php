@@ -20,16 +20,16 @@ class InversionController extends Controller
         $validate = $request->validate([
             'inversion' => ['required']
         ]);
-
         if ($validate) {
             $inversion = (double) $request->inversion;
+            $total = ($inversion + $request->precio);
             $transacion = [
-                'amountTotal' => $inversion,
+                'amountTotal' => $total,
                 'note' => 'Inversion de '.number_format($request->inversion, 2, ',', '.').' USD',
-                'idorden' => $this->saveOrden($inversion),
+                'idorden' => $this->saveOrden($inversion, $request->idproducto),
                 'tipo' => 'inversion',
                 'buyer_email' => Auth::user()->user_email,
-                // 'redirect_url' => route('pagos')
+                'redirect_url' => route('tienda-index')
             ];
             $transacion['items'][] = [
                 'itemDescription' => 'Inversion de '.number_format($request->inversion, 2, ',', '.').' USD',
@@ -37,6 +37,13 @@ class InversionController extends Controller
                 'itemQty' => (INT) 1,
                 'itemSubtotalAmount' => $inversion // USD
             ];
+            $transacion['items'][] = [
+                'itemDescription' => 'Paquete de Inversion '.$request->name,
+                'itemPrice' => $request->precio, // USD
+                'itemQty' => (INT) 1,
+                'itemSubtotalAmount' => $request->precio // USD
+            ];
+
             $ruta = CoinPayment::generatelink($transacion);
             return redirect($ruta);
         }
@@ -46,9 +53,10 @@ class InversionController extends Controller
      * Permite guardar la orden de compra de la inversion
      *
      * @param string $inversion - monto invertido
+     * @param string $idpaquete - id del paqueted de inversion
      * @return integer
      */
-    public function saveOrden($inversion): int
+    public function saveOrden($inversion, $idpaquete): int
     {
         $data = [
             'invertido' => (DOUBLE) $inversion,
@@ -56,7 +64,7 @@ class InversionController extends Controller
             'iduser' => Auth::user()->ID,
             'idtrasancion' => '',
             'status' => 0,
-            'saldo_capital' => (DOUBLE) $inversion
+            'paquete_inversion' => (int)$idpaquete
         ];
 
         $orden = OrdenInversion::create($data);

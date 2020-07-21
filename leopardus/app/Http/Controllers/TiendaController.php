@@ -33,6 +33,7 @@ class TiendaController extends Controller
         view()->share('title', 'Tienda');
         $productos = $this->getProductoWP();
         $moneda = Monedas::where('principal', 1)->get()->first();
+        // dd($productos);
         return view('tienda.index')->with(compact('productos', 'moneda'));
     }
 

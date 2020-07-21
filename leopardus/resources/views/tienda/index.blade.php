@@ -12,24 +12,20 @@
     <div class="card-content">
         <div class="card-body">
             <div class="row">
+                <h4 class="col-12">Inversion</h4>
                 <div class="col-12 mt-3 mb-3 ">
-                    <form action="{{route('tienda.inversion')}}" method="post">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                            <label for="customRange3">Inversion</label>
-                            <input type="range" class="custom-range" name="inversion" min="100" max="10000" step="100" id="customRange3"
-                                onchange="medidas()" required>
-                            <label class="col-12 text-center">
-                                <span class="float-left">100</span>
-                                <span class="" id="medida">5000</span>
-                                <span class="float-right">10000</span>
-                            </label>
-                        </div>
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-info">Invertir</button>
-                        </div>
-                    </form>
+                    <div class="form-group">
+                        <label for="inversion">Inversion</label>
+                        <input type="range" class="custom-range" min="100" max="10000" step="100" id="inversion"
+                            onchange="medidas()" required value="5000">
+                        <label class="col-12 text-center">
+                            <span class="float-left">100</span>
+                            <span class="" id="medida">5000</span>
+                            <span class="float-right">10000</span>
+                        </label>
+                    </div>
                 </div>
+                <h4 class="col-12">Paquetes de Inversiones</h4>
                 @foreach ($productos as $item)
                 <div class="col-md-4 col-sm-12">
                     <div class="card ecommerce-card">
@@ -59,7 +55,7 @@
                                 </div>
                                 <div class="btn btn-info mt-1 text-white" onclick="detalles('{{json_encode($item)}}')">
                                     <i class="feather icon-shopping-cart"></i>
-                                    <a class="view-in-cart">Comprar</a>
+                                    <a class="view-in-cart">Inversion y Paquete de inversion</a>
                                 </div>
                             </div>
                         </div>
@@ -79,15 +75,17 @@
 
 <script>
     function medidas() {
-        let medida = $('#customRange3').val();
+        let medida = $('#inversion').val();
         $('#medida').text(medida)
     }
 
     function detalles(product) {
         product = JSON.parse(product)
-        
+        let inversion = $('#inversion').val()
         $('#idproducto').val(product.ID)
         $('#img').attr('src', product.imagen)
+        $('#invertido').html('$ ' + inversion)
+        $('#invertido2').val(inversion)
         $('#title').html(product.post_title)
         $('#title2').val(product.post_title)
         $('#content').html(product.post_content)

@@ -13,15 +13,21 @@
                     <img id="img" src="" alt="" class="card-img-top">
                     <div class="card-content">
                         <div class="card-body">
-                            <div id="title" class="card-title mt-2"></div>
-                            <p id="content" class="card-text"></p>
-                            <p id="price" class="card-text"></p>
+                            <div class="col-12">
+                                <div class="card-title mt-2">Valor Invertido</div>
+                                <p id="invertido" class="card-text"></p>
+                            </div>
+                            <hr>
+                            <div class="col-12">
+                                <div id="title" class="card-title mt-2"></div>
+                                <p id="content" class="card-text"></p>
+                                <p id="price" class="card-text"></p>
+                            </div>
                             <h6 class="text-center">
-                                <form action="{{route('tienda-save-compra')}}" method="POST">
+                                <form action="{{route('tienda.inversion')}}" method="POST">
                                     {{ csrf_field() }}
+                                    <input type="hidden" name="inversion" id="invertido2">
                                     <input type="hidden" name="idproducto" id="idproducto">
-                                    <input type="hidden" id="code_coinbase" name="code_coinbase">
-                                    <input type="hidden" id="id_coinbase" name="id_coinbase">
                                     <input type="hidden" id="title2" name="name">
                                     <input type="hidden" id="price2" name="precio">
                                     <input type="hidden" name="tipo" value="">
