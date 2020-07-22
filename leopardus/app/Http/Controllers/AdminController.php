@@ -40,23 +40,10 @@ class AdminController extends Controller
     {
 
         $funcionesIndex = new IndexController();
-        $publicidad = new PublicidadController();
         $rango = new RangoController();
         $rango->ValidarRango(Auth::user()->ID);
         $data = [
-            'activoBinario' => $funcionesIndex->statusBinary(Auth::user()->ID),
-            'progresoDiario' => 49,
-            'membresia' => [
-                'img' => 'https://comunidadlevelup.com/assets/imgLanding/logo.png',
-                'nombre' => 'Membresia Junior'
-            ],
-            'puntos' => [
-                'derechos' => Auth::user()->puntosder,
-                'izquierdos' => Auth::user()->puntosizq
-            ],
-            'billetera' => Auth::user()->wallet_amount,
-            'publicidades' => $publicidad->getPublicidadCompartir(Auth::user()->ID),
-            'inversion' => $rango->getTotalInvertion(Auth::user()->ID),
+            'inversiones' => $funcionesIndex->getInversionesUserDashboard(Auth::user()->ID)
         ];
         view()->share('title', 'Balance General');
         return view('dashboard.index', compact('data'));

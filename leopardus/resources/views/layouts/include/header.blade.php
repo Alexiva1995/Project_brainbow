@@ -143,7 +143,7 @@ height="40" alt="{{Auth::user()->paquete}}">
                   </div>
                </li> --}}
                {{-- notificaciones --}}
-               @include('layouts.include.notifications')
+               {{-- @include('layouts.include.notifications') --}}
 
                <li class="dropdown dropdown-user nav-item">
                   <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">

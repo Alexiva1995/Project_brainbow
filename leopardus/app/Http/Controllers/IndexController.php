@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\OrdenInversion;
 use App\Settings;
 use App\User;
+use App\WalletlogRentabilidad;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-
-
 
 class IndexController extends Controller
 {
@@ -133,6 +134,50 @@ class IndexController extends Controller
         return $array_tree_user;
     }
 
+    /**
+     * Se trare la informacion de los hijos 
+     *
+     * @param integer $id - id a buscar hijos
+     * @param integer $nivel - nivel en que los hijos se encuentra
+     * @param string $typeTree - tipo de arbol a usar
+     * @return void
+     */
+    private function getDataSponsor($id, $nivel, $typeTree) : object
+    {
+        $resul = User::where($typeTree, '=', $id)->get();
+        foreach ($resul as $user) {
+            $user->avatar = asset('avatar/'.$user->avatar);
+            $user->nivel = $nivel;
+            $user->ladomatriz = $user->ladomatrix;
+        }
+        return $resul;
+    }
+
+    /**
+     * Permite obtener a todos mis patrocinadores
+     *
+     * @param integer $child - id del hijo
+     * @param array $array_tree_user - arreglo de patrocinadores
+     * @param integer $nivel - nivel a buscar
+     * @param string $typeTree - llave a buscar
+     * @param string $keySponsor - llave para buscar el sponsor, position o referido
+     * @return array
+     */
+    public function getSponsor($child, $array_tree_user, $nivel, $typeTree, $keySponsor): array
+    {
+        if (!is_array($array_tree_user))
+        $array_tree_user = [];
+    
+        $data = $this->getDataSponsor($child, $nivel, $typeTree);
+        if (count($data) > 0 && $nivel > 0) {
+            foreach($data as $user){
+                $array_tree_user [] = $user;
+                $array_tree_user = $this->getSponsor($user->$keySponsor, $array_tree_user, ($nivel-1), $typeTree, $keySponsor);
+            }
+        }
+        return $array_tree_user;
+    }
+
 
     /**
      * Permite ordenar el arreglo primario con las claves de los arreglos segundarios
@@ -190,7 +235,7 @@ class IndexController extends Controller
                                 'idproducto' => $idProducto,
                                 'precio' => $this->getTotalProductos($product->order_item_id),
                                 'nombre' => $detalleProduct->post_title,
-                                'img' => $detalleProduct->post_excerpt,
+                                'img' => asset('products/'.$detalleProduct->post_excerpt),
                                 'duracion' => $detalleProduct->duration,
                                 'rentabilidad' => $detalleProduct->rentabilidad,
                                 'penalizacion' => $detalleProduct->penalizacion,
@@ -304,11 +349,11 @@ class IndexController extends Controller
      * @param integer $shop_id
      * @return void
      */
-    public function getProductDetails($shop_id) : object
+    public function getProductDetails($shop_id)
     {
         $settings = Settings::first();
 		$datosCompra = DB::table($settings->prefijo_wp.'posts')
-                        ->select('post_excerpt', 'post_title', 'wp.post_password as limite', 'wp.post_content_filtered as rentabilidad', 'wp.post_parent as penalizacion')
+                        ->select('post_excerpt', 'post_title', 'post_password as duration', 'post_content_filtered as rentabilidad', 'post_parent as penalizacion')
                         ->where('ID', '=', $shop_id)
                         ->first();
         return $datosCompra;
@@ -351,7 +396,46 @@ class IndexController extends Controller
 				        ->where('meta_key', '=', '_order_total')
 				        ->first();
 		return $totalCompra->meta_value;
-	}
+    }
+    
+
+    /**
+     * Permite obtener las inversiones realizadas por el usuario
+     *
+     * @param integer $iduser
+     * @return array
+     */
+    public function getInversionesUserDashboard($iduser) : array
+    {
+        $fechaActual = Carbon::now();
+        $arrayInversiones = [];
+        $inversiones = OrdenInversion::where([
+            ['iduser', '=', $iduser],
+            ['paquete_inversion', '!=', ''],
+            ['status', '=', 1]
+        ])->get();
+        foreach ($inversiones as $inversion) {
+            $paquete = $this->getProductDetails($inversion->paquete_inversion);
+            if ($paquete != null) {
+                $rentabilidad = WalletlogRentabilidad::where([
+                    ['iduser', '=', $iduser],
+                    ['idinversion', '=', $inversion],
+                ])->get()->sum('debito');
+                $fechaInversion = new Carbon($inversion->created_at);
+                $fecha_vencimiento = $fechaInversion->addMonth($paquete->duration);
+                $estado = ($fecha_vencimiento > $fechaActual) ? 'Activa' : 'Vencidad';
+                $arrayInversiones [] = [
+                    'img' => asset('products/'.$paquete->post_excerpt),
+                    'inversion' => $inversion->invertido,
+                    'rentabilidad' => $rentabilidad,
+                    'fecha_venci' => $fecha_vencimiento,
+                    'estado' => $estado
+                ];
+            }
+        }
+
+        return $arrayInversiones;
+    }
 
 
 }

@@ -48,6 +48,9 @@ class ProductController extends Controller
                         'wp.post_password as duration', 'wp.pinged as visible',
                         'wp.post_content_filtered as rentabilidad', 'wp.post_parent as penalizacion')
                     ->get();
+        foreach ($result as $item ) {
+            $item->imagen = asset('products/'.$item->imagen);
+        }
         return $result;
     }
 
@@ -117,7 +120,7 @@ class ProductController extends Controller
         $namePhoto = Str::slug($nameProduct.''.now()->format('Ymd'), '_');
         $nameExtention = $namePhoto.'.'.$file->getClientOriginalExtension();
         $path = $file->storeAs($directory, $nameExtention, 'assets');
-        $asset_path = ($directory == 'Logo') ? asset('products/'.$path) : $path;
+        $asset_path = $path;
         return $asset_path;
     }
 

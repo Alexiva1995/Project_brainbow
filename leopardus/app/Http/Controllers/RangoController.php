@@ -105,7 +105,7 @@ class RangoController extends Controller
         $result = OrdenInversion::where([
             ['iduser', '=', $iduser],
             ['status', '=', 1]
-        ])->get()->sum('invetido');
+        ])->get()->sum('invertido');
 
         return $result;
     }
@@ -126,7 +126,7 @@ class RangoController extends Controller
                 $totalRed = OrdenInversion::where([
                     ['iduser', '=', $user->ID],
                     ['status', '=', 1]
-                ])->get()->sum('invetido');
+                ])->get()->sum('invertido');
                 $result = ($result + $totalRed);
             }
         }

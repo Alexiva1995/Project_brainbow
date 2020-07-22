@@ -11,6 +11,7 @@ class WalletlogRentabilidad extends Model
 
     protected $fillable = [
         'iduser', 'concepto', 'debito', 'credito', 'balance',
-        'semana', 'year', 'fecha_pago', 'fecha_retiro', 'descuento'
+        'semana', 'year', 'fecha_pago', 'fecha_retiro', 'descuento',
+        'idinversion'
     ];
 }

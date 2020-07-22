@@ -23,118 +23,15 @@ class ComisionesController extends Controller
     if (Auth::user()->rol_id == 0) {
         // $this->bonoUnilevel(Auth::user()->ID);
     } else {
-        $this->bonoDirecto(Auth::user()->ID);
+        $this->bonoDirecto();
     }
   }
 
-  /**
-   * Permite recorrer la matriz para obtener los puntos necesarios
-   *
-   * @param [type] $iduser
-   * @return void
-   */
-  public function recordPoint($iduser)
-  {
-        $funciones = new IndexController;
-        $directoMatrix = User::where('position_id', $iduser)->get();
-        if ($directoMatrix->isNoEmpty()) {
-            foreach ($directoMatrix as $directo) {
-                if ($directo->ladomatrix == 'D') {
-                    $this->detalleComision($directo->ID, $directo->user_email, 'D');
-                    $arregloD = $funciones->getChidrens2($directo->ID, [], 2, 'position_id', 1);
-                    if (!empty($arregloD)) {
-                        foreach ($arregloD as $user) {
-                            if ($user->nivel < 7) {
-                                $this->detalleComision($user->ID, $user->user_email, 'D');
-                            }
-                        }
-                    }
-                }
-                if ($directo->ladomatrix == 'I') {
-                    $this->detalleComision($directo->ID, $directo->user_email, 'I');
-                    $arregloI = $funciones->getChidrens2($directo->ID, [], 2, 'position_id', 1);
-                    if (!empty($arregloI)) {
-                        foreach ($arregloI as $user) {
-                            if ($user->nivel < 7) {
-                                $this->detalleComision($user->ID, $user->user_email, 'I');
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-  /**
-   * Permite verificar el detalle de la compra 
-   *
-   * @param integer $iduser
-   * @param string $email
-   * @param string $side
-   * @return void
-   */
-  public function detalleComision($iduser, $email, $side)
-  {
-        $funciones = new IndexController;
-        $compras = $funciones->getInforShopping($iduser);
-        foreach ($compras as $compra) {
-            $idcomision = '10'.$compra['idcompra'];
-            if ($this->checkComision($idcomision, $iduser)) {
-                foreach ($compra['productos'] as $producto) {
-                    $this->PuntosPaquetes($iduser, $producto['precio'], $email, $side);
-                }
-            }
-        }
-    }
-
-
-  /**
-   * Agrega los puntos obtenido por los paquetes comprando mis usuarios
-   *
-   * @param integer $iduser - id usuario
-   * @param integer $totalcomision - puntos obtenidos
-   * @return void
-   */
-  public function PuntosPaquetes(int $iduser, float $totalcomision, string $referred_email, $lado)
-  {
-        if ($iduser != 1) {
-            $user = User::find($iduser);
-            $referido = User::where('user_email', $referred_email)->first();
-            $puntosI = 0; $puntosD = 0;
-            if ($referido->ID != $iduser) {
-                if ($lado == 'I') {
-                    $user->puntosizq = ($user->puntosizq + $totalcomision);
-                    $puntosI = $totalcomision;
-                }elseif($lado == 'D'){
-                    $user->puntosder = ($user->puntosder + $totalcomision);
-                    $puntosD = $totalcomision;
-                }
-                $user->save();
-                $concepto = 'Puntos por las compras del usuario '.$referido->display_name;
-                $datos = [
-                    'iduser' => $iduser,
-                    'usuario' => $user->display_name,
-                    'descripcion' => $concepto,
-                    'puntos' => 0,
-                    'puntosI' => $puntosI,
-                    'puntosD' => $puntosD,
-                    'tantechcoin' => 0,
-                    'descuento' => 0,
-                    'debito' => 0,
-                    'credito' => 0,
-                    'balance' => 0,
-                    'tipotransacion' => 2
-                ];
-                $funciones = new WalletController;
-                $funciones->saveWallet($datos);
-            }
-        }
-    }
 
   // guarda la comision una vez procesada
   public function guardarComision($iduser, $idcompra, $totalComision, $referred_email, $referred_level, $concepto, $tipo_comision)
   {
-            $dinero = 0; $puntos = 0;
+            $dinero = 0;
             $dinero = $totalComision;
             $comision = new Commission();
             $comision->user_id = $iduser;
@@ -145,59 +42,24 @@ class ComisionesController extends Controller
             $comision->tipo_comision = $tipo_comision;
             $comision->referred_email = $referred_email;
             $comision->referred_level = $referred_level;
-            $comision->status = true;
+            $comision->status = 0;
 
-            if ($concepto != 'Primera Compra sin Comision') {
-                $user = User::find($iduser);
-                if ($user->porc_rentabilidad < $user->rentabilidad) {
-                    
-                    if ($idcompra == 51) {
-                        $user->porc_rentabilidad = ($user->porc_rentabilidad + $totalComision);
-                        if ($user->porc_rentabilidad >= $user->rentabilidad) {
-                            $user->porc_rentabilidad = $user->rentabilidad;
-                        }
-                    }
-                    $user->wallet_amount = ($user->wallet_amount + $dinero);
-                    $user->save();
-                    $datos = [
-                        'iduser' => $iduser,
-                        'usuario' => $user->display_name,
-                        'descripcion' => $concepto,
-                        'puntos' => 0,
-                        'puntosI' => 0,
-                        'puntosD' => 0,
-                        'descuento' => 0,
-                        'debito' => $dinero,
-                        'tantechcoin' => 0,
-                        'credito' => 0,
-                        'balance' => $user->wallet_amount,
-                        'tipotransacion' => 2
-                    ];
-                    $funciones = new WalletController;
-                    $funciones->saveWallet($datos);
-                }else{
-                    if ($user->ID == 1) {
-                        $user->wallet_amount = ($user->wallet_amount + $dinero);
-                        $user->save();
-                        $datos = [
-                            'iduser' => $iduser,
-                            'usuario' => $user->display_name,
-                            'descripcion' => $concepto,
-                            'puntos' => 0,
-                            'puntosI' => 0,
-                            'puntosD' => 0,
-                            'descuento' => 0,
-                            'debito' => $dinero,
-                            'tantechcoin' => 0,
-                            'credito' => 0,
-                            'balance' => $user->wallet_amount,
-                            'tipotransacion' => 2
-                        ];
-                        $funciones = new WalletController;
-                        $funciones->saveWallet($datos);
-                    }
-                }
-            }
+            $user = User::find($iduser);
+            $user->wallet_amount = ($user->wallet_amount + $dinero);
+            $user->save();
+            $datos = [
+                'iduser' => $iduser,
+                'usuario' => $user->display_name,
+                'descripcion' => $concepto,
+                'descuento' => 0,
+                'debito' => $dinero,
+                'credito' => 0,
+                'balance' => $user->wallet_amount,
+                'tipotransacion' => 2,
+                'status' => 0
+            ];
+            $funciones = new WalletController;
+            $funciones->saveWallet($datos);
             $comision->save();
   }
 
@@ -207,40 +69,37 @@ class ComisionesController extends Controller
   /**
    * Permite pagar el pono unilevel
    *
-   * @param integer $iduser
    * @return void
    */
-    public function bonoDirecto($iduser)
+    public function bonoDirecto()
     {
-        $user = User::find($iduser);
         $funciones = new IndexController;
-        $TodosUsuarios = $funciones->getChidrens2($iduser, [], 1, 'referred_id', 1);
-        $bono = 0;
-        foreach ($TodosUsuarios as $user) {
-            if ($user->nivel == 1) {
-                $inversiones = OrdenInversion::where('iduser', $user->ID)->get();
-                if (!empty($user->paquete)) {
-                    $paquete = json_decode($user->paquete);
-                    $porcentaje = 0;
-                    if (stripos($paquete->nombre, 'BRONCE') !== false) {
-                        $porcentaje = 0.01;
-                    }
-                    if (stripos($paquete->nombre, 'PLATA') !== false) {
-                        $porcentaje = 0.02;
-                    }
-                    if (stripos($paquete->nombre, 'ORO') !== false) {
-                        $porcentaje = 0.03;
-                    }
-                    foreach ($inversiones as $inversion) {
-                        $idcomision = $iduser.$user->ID.$inversion->id.'40';
-                        if ($this->checkComision($idcomision, $iduser) && $porcentaje != 0) {
+        $inversiones = $this->getInversiones(false);
+        foreach ($inversiones as $inversion) {
+            $paquete = $funciones->getProductDetails($inversion->paquete_invertido);
+            if (!empty($paquete)) {
+                $sponsors = $funciones->getSponsor($inversion->iduser, [], 2, 'ID', 'referred_id');
+                foreach ($sponsors as $sponsor) {
+                    $user = User::find($inversion->iduser);
+                    if ($sponsor->ID != $inversion->iduser) {
+                        $idcomision = $inversion->iduser.$sponsor->ID.$inversion->id.'40';
+                        $porcentaje = 0;
+                        if (stripos($paquete->post_title, 'BRONCE') !== false) {
+                            $porcentaje = 0.01;
+                        }
+                        if (stripos($paquete->post_title, 'PLATA') !== false) {
+                            $porcentaje = 0.02;
+                        }
+                        if (stripos($paquete->post_title, 'ORO') !== false) {
+                            $porcentaje = 0.03;
+                        }
+                        if ($this->checkComision($idcomision, $sponsor->ID) && $porcentaje != 0) {
                             $pagar = ($inversion->invertido * $porcentaje);
                             $concepto = 'Bono Directo, usuario '.$user->display_name;
-                            $this->guardarComision($iduser, $idcomision, $pagar, $user->email, $user->nivel, $concepto, 'referido');
+                            $this->guardarComision($sponsor->ID, $idcomision, $pagar, $user->email, 1, $concepto, 'referido');
                         }
                     }
                 }
-
             }
         }
     }
@@ -341,33 +200,46 @@ class ComisionesController extends Controller
         return $arreMonto[$nivel];
     }
 
-
-    public function getRentabilidad($iduser)
+    /**
+     * Permite pagar todas las inversiones realizadas
+     *
+     * @return void
+     */
+    public function getRentabilidad()
     {
-        $user = User::find($iduser);
-        $paquete = json_decode($user->paquete);
-        if (!empty($user->paquete)) {
-            $fechatmpSemana = Carbon::now();
-            $semanayear = $fechatmpSemana->weekOfYear;
-            $year = $fechatmpSemana->year;
-            $semanas = ($paquete->duracion / 4.345);
-            $porcentaje = ($paquete->rentabilidad / 100);
-            $rentabilidad = (($paquete->precio * $porcentaje) / $semanas);
-            $user->rentabilidad = ($user->rentabilidad + $rentabilidad);
-            $data = [
-                'iduser' => $iduser,
-                'concepto' => 'Rentabilidad de la semana '.$semanayear.' del año '.$year,
-                'debito' => $rentabilidad,
-                'credito' => 0,
-                'balance' => $user->rentabilidad,
-                'semana' => $semanayear,
-                'year' => $year,
-                'fecha_pago' => Carbon::now(),
-                'descuento' => 0,
-            ];
+        $fechaActual = Carbon::now();
+        $funciones = new IndexController;
+        $inversiones = $this->getInversiones(true);
+        foreach ($inversiones as $inversion) {
+            $paquete = $funciones->getProductDetails($inversion->paquete_inversion);
+            $user = User::find($inversion->iduser);
+            if (!empty($paquete)) {
+                $fechaInversion = new Carbon($inversion->created_at);
+                if ($fechaInversion->addMonth($paquete->duration) > $fechaActual) {
+                    $fechatmpSemana = Carbon::now();
+                    $semanayear = $fechatmpSemana->weekOfYear;
+                    $year = $fechatmpSemana->year;
+                    $semanas = ($paquete->duration / 4.345);
+                    $porcentaje = ($paquete->rentabilidad / 100);
+                    $rentabilidad = (($inversion->invertido * $porcentaje) / $semanas);
+                    $user->rentabilidad = ($user->rentabilidad + $rentabilidad);
+                    $data = [
+                        'iduser' => $inversion->iduser,
+                        'idinversion' => $inversion->id,
+                        'concepto' => 'Rentabilidad de la semana '.$semanayear.' del año '.$year,
+                        'debito' => $rentabilidad,
+                        'credito' => 0,
+                        'balance' => $user->rentabilidad,
+                        'semana' => $semanayear,
+                        'year' => $year,
+                        'fecha_pago' => Carbon::now(),
+                        'descuento' => 0,
+                    ];
 
-            $this->sabeWalletRentabilidad($data);
-            $user->save();
+                    $this->sabeWalletRentabilidad($data);
+                    $user->save();
+                }
+            }
         }
 
     }
@@ -382,6 +254,27 @@ class ComisionesController extends Controller
     public function sabeWalletRentabilidad(array $data)
     {
         WalletlogRentabilidad::create($data);
+    }
+
+    /**
+     * Permite obtener las inversiones realizadas por los usuarios
+     *
+     * @return object
+     */
+    public function getInversiones($rentabilidad) : object
+    {
+        if ($rentabilidad) {
+            $inversiones = OrdenInversion::where([
+                ['status', '=', 1]
+            ])->get();
+        }else{
+            $fecha = Carbon::now();
+            $inversiones = OrdenInversion::where([
+                ['status', '=', 1]
+            ])->whereDate('created_at', '>', $fecha->subDay(3))->get();
+        }
+
+        return $inversiones;
     }
 }
 

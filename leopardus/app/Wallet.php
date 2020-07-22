@@ -12,8 +12,9 @@ class Wallet extends Model
      * @var array
      */
     protected $fillable = [
-         'iduser', 'usuario', 'descripcion', 'debito', 'credito', 'balance', 'descuento', 'tipotransacion', 'puntos',
-         'puntosI', 'puntosD', 'tantechcoin', 'creditocoin'
+         'iduser', 'usuario', 'descripcion', 'debito', 'credito',
+         'balance', 'descuento', 'tipotransacion', 'status'
+
     ];
     public function user(){
         return $this->belongsTo('App\User');
