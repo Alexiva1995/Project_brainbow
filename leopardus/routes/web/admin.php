@@ -20,7 +20,7 @@ Route::get('vistaCorreo', function ()
   return view('emails.plantilla');
 });
 
-Route::get('index', 'HomeController@home');
+Route::get('/', 'HomeController@home');
 
 Route::prefix('mioficina')->group(function ()
 {

@@ -25,7 +25,7 @@
 
             <div class="mologo">
                 <a href="index.html">
-                    <img class="l1" src="{{ asset('assets/imgLanding/logo2.png') }}">
+                    <img class="l1" src="{{ asset('assets/imgLanding/brainbow_png.png') }}">
 
                 </a>
             </div>
@@ -64,8 +64,8 @@
             <div class="head content clearfix">
                 <div class="logo">
                     <a href="index.html">
-                        <img class="logo1" src="{{ asset('assets/imgLanding/logo2.png') }}" style="width: 25%;">
-                        <img class="logo2" src="{{ asset('assets/imgLanding/logo2.png') }}" style="width: 25%;">
+                        <img class="logo1" src="{{ asset('assets/imgLanding/brainbow_png.png') }}" style="width: 65%;">
+                        <img class="logo2" src="{{ asset('assets/imgLanding/brainbow_png.png') }}" style="width: 65%;">
                     </a>
                 </div>
                 <div class="nav">

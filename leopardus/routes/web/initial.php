@@ -16,11 +16,13 @@ Route::prefix('mioficina')->group(function(){
     Route::get('/', 'HomeController@index')->name('index');
 });
 
-Route::get('/', function(){
+/*Route::get('/', function(){
     // $landing = 0;
     return redirect()->route('index');
     // return view('landing.index', compact('landing'));
-})->name('landing');
+})->name('landing');*/
+
+Route::get('/', 'HomeController@home');
 
 Route::get('/producto/legal', function(){
     $landing = 3;

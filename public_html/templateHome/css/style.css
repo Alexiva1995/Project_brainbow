@@ -424,11 +424,11 @@ table{border-collapse: collapse;}
                  color: #dddddd !important;
 }
 .language .con a:hover{color: #fff !important;}
-.hd.on{background: #fff;color: #333;height: 90px;border: none;box-shadow: 0 0 12px rgba(0,0,0,0.1)}
+.hd.on{background: #000;color: #fff;height: 90px;border: none;box-shadow: 0 0 12px rgba(0,0,0,0.1)}
 .hd.on .logo2{display: inline-block;}
 .hd.on .logo1{display: none;}
 .hd.on .nav>ul>li>a:hover{color: #fff;}
-.hd.on .nav>ul>li>a{color: #333;margin-top: 20px;}
+.hd.on .nav>ul>li>a{color: #fff;margin-top: 20px;}
 .hd.on .language a{color: #333;}
 .hd.on .nav>ul>li>a>i{background: url(../images/icon02.png);}
 .hd.on .language a i{background: url(../images/icon02.png);}
