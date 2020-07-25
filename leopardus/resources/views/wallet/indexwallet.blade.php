@@ -22,7 +22,7 @@ if ($fecha->dayOfWeek >= 1 && $fecha->dayOfWeek <= 2) { $activo=true; }
                 <table id="mytable" class="table zero-configuration">
                     <thead>
                         <tr>
-                            <th class="text-center">
+                            {{--<th class="text-center">
                                 #
                             </th>
                             <th class="text-center">
@@ -45,13 +45,53 @@ if ($fecha->dayOfWeek >= 1 && $fecha->dayOfWeek <= 2) { $activo=true; }
                             </th>
                             <th class="text-center">
                                 Balance
-                            </th>
+                            </th>--}}
+                            <th>#</th>
+                            <th>Fecha</th>
+                            <th>Correo</th>
+                            <th>Descripción</th>
+                            <th>Comisión</th>
+                            <th>Retiro</th>
+                            <th>Fee</th>
+                            <th>Saldo</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($wallets as $wallet)
                         <tr>
-                            <td class="text-center">
+                            <td class="text-center">{{ $wallet->id }}</td>
+                            <td class="text-center">{{date('d-m-Y', strtotime($wallet->created_at)) }}</td>
+                            <td class="text-center">{{ $correoUser->user_email }}</td>
+                            <td class="text-center">{{ $wallet->descripcion }}</td>
+                            <td class="text-center"> 
+                                @if ($moneda->mostrar_a_d)
+                                    {{$moneda->simbolo}} {{$wallet->debito}}
+                                @else
+                                    {{$wallet->debito}} {{$moneda->simbolo}}
+                                @endif
+                            </td>
+                            <td class="text-center"> 
+                                @if ($moneda->mostrar_a_d)
+                                    {{$moneda->simbolo}} {{$wallet->credito}}
+                                @else
+                                    {{$wallet->credito}} {{$moneda->simbolo}}
+                                @endif
+                            </td>
+                            <td class="text-center"> 
+                                @if ($moneda->mostrar_a_d)
+                                    {{$moneda->simbolo}} {{$wallet->descuento}}
+                                @else
+                                    {{$wallet->descuento}} {{$moneda->simbolo}}
+                                @endif
+                            </td>
+                            <td class="text-center"> 
+                                @if ($moneda->mostrar_a_d)
+                                    {{$moneda->simbolo}} {{$wallet->balance}}
+                                @else
+                                    {{$wallet->balance}} {{$moneda->simbolo}}
+                                @endif
+                            </td>
+                            {{--<td class="text-center">
                                 {{$wallet->id}}
                             </td>
                             <td class="text-center">
@@ -98,7 +138,7 @@ if ($fecha->dayOfWeek >= 1 && $fecha->dayOfWeek <= 2) { $activo=true; }
                                     {{$wallet->balance}} {{$moneda->simbolo}}
                                     @endif
                                 
-                            </td>
+                            </td>--}}
                         </tr>
                         @endforeach
                     </tbody>

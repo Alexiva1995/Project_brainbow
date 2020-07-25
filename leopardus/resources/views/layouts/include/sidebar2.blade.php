@@ -95,25 +95,25 @@
 
         {{--INICIO BILLETERA --}}
         <li class="nav-item">
-            <a href="javascript:;" class="nav-link nav-toggle" style="color: #FFFFFF;">
+            <a href="{{url('mioficina/admin/wallet/')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
                 <i class="feather icon-trending-up"></i>
                 <span class="title">Billetera</span>
                 <span class="arrow"></span>
             </a>
-            <ul class="sub-menu" style="background-color: #000D2F;">
+          {{--  <ul class="sub-menu" style="background-color: #000D2F;">
                 <li class="nav-item">
-                    <a href="{{url('mioficina/admin/wallet/')}}" class="nav-link" style="color: #FFFFFF;">
+                    <a href="" class="nav-link" style="color: #FFFFFF;">
                         <i class="feather icon-circle"></i>
                         <span class="title">Billetera Cash</span>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
+                 <li class="nav-item">
                     <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
                         <i class="feather icon-circle"></i>
                         <span class="title">Historial de Puntos</span>
                     </a>
-                </li> --}}
-            </ul>
+                </li> 
+            </ul>--}}
         </li>
         {{-- FIN BILLETERA --}}
 

@@ -17,14 +17,19 @@
 					<thead>
 						<tr>
 							<th>#</th>
+							<th>Correo</th>
+							<th>Wallet</th>
+							<th>Fecha</th>
+							<th>Monto</th>
+							{{--<th>#</th>
 							<th>Usuario</th>
 							<th>Descripcion</th>
-							{{-- <th>Tantechcoins</th> --}}
-							{{-- <th>Cash</th> --}}
-							<th>Monto</th>
+							 <th>Tantechcoins</th> --}}
+							{{-- <th>Cash</th> 
 							<th>Billetera</th>
 							<th>Fecha</th>
 							<th>Estado</th>
+							<th>Monto</th>--}}
 						</tr>
 					</thead>
 
@@ -32,16 +37,27 @@
 						@foreach ($billetera as $bille)
 						<tr>
 							<td>{{ $bille->id }}</td>
+							<td>{{ $bille->user_email }}</td>
+							<td>{{ $bille->paypal }}</td>
+							<td>{{ date('d-m-Y', strtotime($bille->created_at)) }}</td>
+							<td>
+								@if ($moneda->mostrar_a_d)
+								{{$moneda->simbolo}} {{ $bille->credito }}
+								@else
+								{{ $bille->credito }} {{$moneda->simbolo}}
+								@endif
+							</td>
+							{{--<td>{{ $bille->id }}</td>
 							<td>{{ $bille->usuario }}</td>
 							<td>{{ $bille->descripcion }}</td>
-							{{-- <td>{{ $bille->puntos }}</td> --}}
+							 <td>{{ $bille->puntos }}</td> --}}
 							{{-- <td>
 								@if ($moneda->mostrar_a_d)
 								{{$moneda->simbolo}} {{ $bille->debito }}
 								@else
 								{{ $bille->debito }} {{$moneda->simbolo}}
 								@endif
-							</td> --}}
+							</td> 
 							<td>
 								@if ($moneda->mostrar_a_d)
 								{{$moneda->simbolo}} {{ $bille->credito }}
@@ -69,7 +85,7 @@
 										@endif
 									</center>
 								</td>
-							</td>
+							</td>--}}
 						</tr>
 
 						@endforeach

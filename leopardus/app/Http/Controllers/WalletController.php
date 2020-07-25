@@ -62,9 +62,10 @@ class WalletController extends Controller
 				])->get();
 			$cuentawallet = DB::table('user_campo')->where('ID', Auth::user()->ID)->select('paypal')->get()[0];
 			$cuentawallet = $cuentawallet->paypal;
+			$correoUser = DB::table('wp_users')->where('ID', Auth::user()->ID)->select('user_email')->first();
 		// }
 		
-	   	return view('wallet.indexwallet')->with(compact('metodopagos', 'comisiones', 'wallets', 'moneda', 'cuentawallet', 'pagosPendientes'));
+	   	return view('wallet.indexwallet')->with(compact('metodopagos', 'comisiones', 'wallets', 'moneda', 'cuentawallet', 'pagosPendientes', 'correoUser'));
 	}
 
 	/**
@@ -380,11 +381,15 @@ $billetera = DB::table('walletlog')
     
     public function cobros()
     {
+    	view()->share('title', 'Retiros');
 		$moneda = Monedas::where('principal', 1)->get()->first();
 		$billetera = DB::table('walletlog')
-                ->where('iduser', '=', Auth::user()->ID )
-                ->where('tipotransacion', '=', 1 )
-                ->get();
+						->join('wp_users', 'walletlog.iduser', '=', 'wp_users.ID')
+						->join('user_campo', 'walletlog.iduser', '=', 'user_campo.ID')
+		                ->where('walletlog.iduser', '=', Auth::user()->ID )
+		                ->where('walletlog.tipotransacion', '=', 1 )
+		                ->select('walletlog.*', 'wp_users.user_email', 'user_campo.paypal')
+		                ->get();
 
      return view('wallet.cobros', compact('billetera', 'moneda')); 
     }

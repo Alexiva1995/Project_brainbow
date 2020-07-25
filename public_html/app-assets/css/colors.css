@@ -1413,13 +1413,14 @@ input:focus ~ .bg-primary {
 }
 
 .btn-outline-primary {
-  border : 1px solid #00646d;
+  border : 1px solid #02E9FE;
   background-color : transparent;
-  color : #00646d;
+  color : #02E9FE;
 }
 .btn-outline-primary:hover {
-  background-color : rgba(115, 103, 240, 0.08);
-  color : #00646d;
+  border : 1px solid #02E9FE;
+  background-color : #02E9FE;
+  color : #fff;
 }
 .btn-outline-primary:active {
   color : #FFFFFF !important;

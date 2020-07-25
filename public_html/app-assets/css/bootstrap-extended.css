@@ -3423,7 +3423,7 @@ _:-ms-lang(x), .toast-bs-container {
   box-shadow : none;
 }
 .pagination .page-item .page-link:hover {
-  color : #00646d;
+  color : #02E9FE;
 }
 .pagination .page-item.active {
   background-color : #F0F0F0;
@@ -3432,7 +3432,7 @@ _:-ms-lang(x), .toast-bs-container {
 .pagination .page-item.active .page-link {
   z-index : 3;
   border-radius : 5rem;
-  background-color : #00646d;
+  background-color : #02E9FE;
   color : #FFFFFF;
   -webkit-transform : scale(1.05);
       -ms-transform : scale(1.05);
