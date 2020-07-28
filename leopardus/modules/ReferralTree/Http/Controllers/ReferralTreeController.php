@@ -14,7 +14,7 @@ class ReferralTreeController extends Controller
     function __construct()
     {
         // TITLE
-        view()->share('title', 'Arbol de Referidos');
+        view()->share('title', 'Matriz de Referido');
     }
 
     /**

@@ -74,6 +74,7 @@ class TiendaController extends Controller
                     ])
                     ->select('wp.ID', 'wp.post_title', 'wp.post_content', 'wp.guid', 'wpm.meta_value', 'wp.post_excerpt as imagen',
                     'wp.post_password as duration', 'wp.post_content_filtered as rentabilidad', 'wp.post_parent as penalizacion')
+                    ->orderBy('wp.ID', 'decs')
                     ->get();
         $cont = 0;
         foreach ($result as $element) {

@@ -18,7 +18,8 @@ class InversionController extends Controller
     public function pago(Request $request)
     {
         $validate = $request->validate([
-            'inversion' => ['required']
+            'inversion' => ['required'],
+            'name' => ['required']
         ]);
         if ($validate) {
             $inversion = (double) $request->inversion;

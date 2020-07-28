@@ -8,6 +8,7 @@ use App\User;
 use App\WalletlogRentabilidad;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\RangoController;
 
 class IndexController extends Controller
 {
@@ -90,11 +91,29 @@ class IndexController extends Controller
      */
     private function getData($id, $nivel, $typeTree) : object
     {
+        $settings = Settings::first();
+        $rango = new RangoController();
         $resul = User::where($typeTree, '=', $id)->get();
         foreach ($resul as $user) {
             $patrocinado = User::find($user->referred_id);
+            $avatarTree = asset('avatar/'.$user->avatar);
+            $inversion = OrdenInversion::where([
+                ['iduser', '=', $user->ID],
+                ['paquete_inversion', '!=', ''],
+                ['status', '=', 1]
+            ])->orderBy('id', 'decs')->first();
+            
+            if (!empty($inversion)) {
+                $paquete = DB::table($settings->prefijo_wp.'posts as wp')->where('ID', $inversion->paquete_inversion)->first();
+                if (!empty($paquete)) {
+                    $avatarTree = asset('products/'.$paquete->post_excerpt);
+                }
+            }
+            $user->avatar = asset('avatar/'.$user->avatar);
+            $user->avatarTree = $avatarTree;
             $user->avatar = asset('avatar/'.$user->avatar);
             $user->nivel = $nivel;
+            $user->invertido = $rango->getTotalInvertion($user->ID);
             $user->ladomatriz = $user->ladomatrix;
             $user->patrocinador = $patrocinado->display_name;
         }

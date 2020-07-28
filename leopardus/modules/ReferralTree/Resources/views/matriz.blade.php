@@ -9,9 +9,9 @@
 		padding: 3px 3px;
 	}
 
-	li {
+	/* li {
 		position: relative;
-	}
+	} */
 
 	li img:hover+.inforuser {
 		transform: translateY(-100px);
@@ -29,8 +29,8 @@
 
 	.inforuser {
 		width: 300px;
-		position: absolute;
-		/* top: 0; */
+		position: fixed;
+		top: 50%;
 		/* left: 0; */
 		/* margin: 0; */
 		z-index: 9996;
@@ -209,75 +209,63 @@ right connector from last child*/
 				{{-- Nivel 1 --}}
 				<ul>
 					@foreach ($trees as $child)
-					{{-- lado Derecho --}}
-					{{-- @include('referraltree::sideempty', ['side' => 'D']) --}}
 					<li>
 						@include('referraltree::infouser', ['data' => $child])
+						{{-- Nivel 2 --}}
 						@if (!empty($child->children))
-						{{-- nivel 2 --}}
 						<ul>
-							@foreach ($child->children as $child)
-							{{-- lado Derecho --}}
-							{{-- @include('referraltree::sideempty', ['side' => 'D']) --}}
+							@foreach ($child->children as $child2)
 							<li>
-								@include('referraltree::infouser', ['data' => $child])
-								@if (!empty($child->children))
-								{{-- nivel 3 --}}
-								<ul>
-									@foreach ($child->children as $child)
-									{{-- lado Derecho --}}
-									{{-- @include('referraltree::sideempty', ['side' => 'D']) --}}
-									<li>
-										@include('referraltree::infouser', ['data' => $child])
-										@if (!empty($child->children))
-										{{-- nivel 4 --}}
-										<ul>
-											@foreach ($child->children as $child)
-											{{-- lado Derecho --}}
-											{{-- @include('referraltree::sideempty', ['side' => 'D']) --}}
-											<li>
-												@include('referraltree::infouser', ['data' => $child])
-
-												@if (!empty($child->children))
-												{{-- nivel 5 --}}
-												<ul>
-													@foreach ($child->children as $child)
-													{{-- lado Derecho --}}
-													{{-- @include('referraltree::sideempty', ['side' => 'D']) --}}
-													<li>
-														@include('referraltree::infouser', ['data' => $child])
-													</li>
-													{{-- lado Izquierdo --}}
-													{{-- @include('referraltree::sideempty', ['side' => 'I']) --}}
-													@endforeach
-												</ul>
-												{{-- fin nivel 5 --}}
-												@endif
-											</li>
-											{{-- lado Izquierdo --}}
-											{{-- @include('referraltree::sideempty', ['side' => 'I']) --}}
-											@endforeach
-										</ul>
-										{{-- fin nivel 4 --}}
-										@endif
-									</li>
-									{{-- lado Izquierdo --}}
-									{{-- @include('referraltree::sideempty', ['side' => 'I']) --}}
-									@endforeach
-								</ul>
-								{{-- fin nivel 3 --}}
-								@endif
+								@include('referraltree::infouser', ['data' => $child2])
 							</li>
-							{{-- lado Izquierdo --}}
-							{{-- @include('referraltree::sideempty', ['side' => 'I']) --}}
 							@endforeach
+							@if (count($child->children) < 3)
+								@if (count($child->children) == 2)
+									<li>
+										<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									</li>
+								@endif
+								@if (count($child->children) == 1)
+									@for ($i = 1; $i < 3; $i++)
+									<li>
+										<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									</li>
+									@endfor
+								@endif
+								@if (count($child->children) == 0)
+									@for ($i = 1; $i < 4; $i++)
+									<li>
+										<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									</li>
+									@endfor
+								@endif
+							@endif
 						</ul>
-						{{-- fin nivel 2 --}}
 						@endif
+						{{-- Fin nivel 2 --}}
 					</li>
-					{{-- lado Izquierdo --}}
-					{{-- @include('referraltree::sideempty', ['side' => 'I']) --}}
 					@endforeach
+					@if (count($trees) < 3)
+						@if (count($trees) == 2)
+							<li>
+								<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+							</li>
+						@endif
+						@if (count($trees) == 1)
+							@for ($i = 1; $i < 3; $i++)
+							<li>
+								<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+							</li>
+							@endfor
+						@endif
+						@if (count($trees) == 0)
+							@for ($i = 1; $i < 4; $i++)
+							<li>
+								<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+							</li>
+							@endfor
+						@endif
+					@endif
 				</ul>
 				{{-- fin nivel 1 --}}
 			</li>

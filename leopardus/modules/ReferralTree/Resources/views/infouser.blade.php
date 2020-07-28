@@ -1,35 +1,27 @@
-<img title="{{ ucwords($data->display_name) }}" src="{{ $data->avatar }}" style="width:64px"
+<img title="{{ ucwords($data->display_name) }}" src="{{ $data->avatarTree }}" style="width:64px"
     onclick="nuevoreferido('{{base64_encode($data->ID)}}', '{{$type}}')">
 <div class="inforuser">
-    <div class="card mb-0" style="background:#cf6046 !important">
+    <div class="card mb-0" style="background: #000d2f">
         <div class="card-header mx-auto">
             <div class="avatar avatar-xl">
-                <img class="img-fluid" src="{{ $data->avatar }}" alt="img placeholder">
+                <img class="img-fluid" src="{{ $data->avatarTree }}" alt="img placeholder">
             </div>
         </div>
-        <h4 class="text-white">{{ ucwords($data['nombre']) }}</h4>
         <div class="card-content">
-            <div class="card-body text-center" style="background:#ffffff !important">
-                {{-- <p class="">Backend Dev</p> --}}
-                {{-- <div class="card-btns d-flex justify-content-between">
-                <button class="btn gradient-light-primary">Follow</button>
-                <button class="btn btn-outline-primary">Message</button>
-            </div> --}}
-                {{-- <hr class="my-2"> --}}
+            <div class="card-body text-center " style="background: #000d2f">
                 <div class="d-flex justify-content-center">
                     <div>
-                        <h6>
-                            Fecha Ingreso: <strong>{{date('d-m-Y', strtotime($data->created_at))}}</strong>
+                        <h6 class="text-white">
+                            <strong>Usuario:</strong> {{$data->display_name}} 
                         </h6>
-                        <h6>
-                            Patrocinador: <strong>{{$data->patrocinador}}</strong>
+                        <h6 class="text-white">
+                            <strong>Fecha Ingreso:</strong> {{date('d-m-Y', strtotime($data->created_at))}}
                         </h6>
-                        <h6>
-                            Pto. Izq: <strong>{{$data->puntosizq}}</strong>
-                        </h6>
-                        <h6>
-                            Pto. Dzq: <strong>{{$data->puntosder}}</strong>
-                        </h6>
+                        <h4 class="mt-2 text-white">
+                            Total Invertido
+                            <br>
+                             <strong>{{$data->invertido}}</strong>
+                        </h4>
                     </div>
                 </div>
             </div>
