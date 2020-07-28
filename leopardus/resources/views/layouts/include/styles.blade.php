@@ -137,6 +137,41 @@
 
     }
 
+    .app-content .wizard > .steps > ul > li.current .step, .app-content .wizard.wizard-circle > .steps > ul > li::before, .app-content .wizard.wizard-circle > .steps > ul > li::after{
+        background: #02E9FE ;
+        border-color:  #02E9FE ;
+    }
+    
+    .app-content .wizard > .steps > ul > li.done .step{
+        border-color:  #02E9FE ;
+    }
+
+    .app-content .wizard > .steps > ul > li.current > a{
+        color: #1f2b48
+    }
+
+    .app-content .wizard > .actions > ul > li > a[href="#previous"]{
+        background: #02E9FE;
+        /* color: white; */
+    }
+
+    .app-content .wizard > .actions > ul > li > a{
+        background: #02E9FE;
+    }
+
+    .bg-blue-dark{
+        background: #1f2b48 !important;
+    }
+
+    .input-group-text{
+        background: #02E9FE;
+        color: #1f2b48;
+        border-color: #02E9FE;
+    }
+    .b-blue{
+        border-color: #02E9FE;
+    }
+
     .fondoBoxDashboard{
         height: 100% !important;
         background-repeat: no-repeat !important;

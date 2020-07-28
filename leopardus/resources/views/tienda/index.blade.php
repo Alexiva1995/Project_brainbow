@@ -5,73 +5,119 @@
 {{-- alertas --}}
 @include('dashboard.componentView.alert')
 
-<div class="card">
-    <div class="card-header">
-        <h4 class="card-title">Inversiones</h4>
-    </div>
-    <div class="card-content">
-        <div class="card-body">
+{{-- style page --}}
+@push('page_css')
+<link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/core/menu/menu-types/vertical-menu.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/core/colors/palette-gradient.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/plugins/forms/wizard.css')}}">
+@endpush
+
+{{-- script vendor --}}
+@push('vendor_js')
+<script src="{{asset('app-assets/vendors/js/extensions/jquery.steps.min.js')}}"></script>
+<script src="{{asset('app-assets/vendors/js/forms/validation/jquery.validate.min.js')}}"></script>
+@endpush
+
+<section class="row flexbox-container">
+    <div class="col-12 d-flex justify-content-center">
+        <section id="validation">
             <div class="row">
-                <h4 class="col-12">Inversion</h4>
-                <div class="col-12 mt-3 mb-3 ">
-                    <div class="form-group">
-                        <label for="inversion">Inversion</label>
-                        <input type="range" class="custom-range" min="100" max="10000" step="100" id="inversion"
-                            onchange="medidas()" required value="5000">
-                        <label class="col-12 text-center">
-                            <span class="float-left">100</span>
-                            <span class="" id="medida">5000</span>
-                            <span class="float-right">10000</span>
-                        </label>
-                    </div>
-                </div>
-                <h4 class="col-12">Paquetes de Inversiones</h4>
-                @foreach ($productos as $item)
-                <div class="col-md-4 col-sm-12">
-                    <div class="card ecommerce-card">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Proceso de Inversion</h4>
+                        </div>
                         <div class="card-content">
-                            <div class="item-img text-center">
-                                <img class="img-fluid" src="{{$item->imagen}}" alt="{{$item->post_title}}">
-                            </div>
                             <div class="card-body">
-                                <div class="item-name">
-                                    <span>
-                                        {{$item->post_title}}
-                                    </span>
-                                </div>
-                                <div>
-                                    <p class="item-description">
-                                        {{$item->post_content}}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="item-options text-center">
-                                <div class="item-wrapper">
-                                    <div class="item-cost">
-                                        <h6 class="item-price">
-                                            ${{$item->meta_value}}
-                                        </h6>
-                                    </div>
-                                </div>
-                                <div class="btn btn-info mt-1 text-white" onclick="detalles('{{json_encode($item)}}')">
-                                    <i class="feather icon-shopping-cart"></i>
-                                    <a class="view-in-cart">Inversion y Paquete de inversion</a>
-                                </div>
+                                <form action="{{route('tienda.inversion')}}" class="steps-validation wizard-circle" method="POST">
+                                    {{ csrf_field() }}
+                                    {{-- paso 1 --}}
+                                    @include('tienda.componentes.inversion')
+                                    {{-- paso 1 fin --}}
+
+                                    {{-- paso 2 --}}
+                                    @include('tienda.componentes.planes')
+                                    {{-- paso 2 fin --}}
+
+                                    {{-- paso 3 --}}
+                                    {{-- @include('install.component.step3') --}}
+                                    {{-- paso 3 fin --}}
+                                    <input type="hidden" name="idproducto" id="idproducto">
+                                    <input type="hidden" id="title2" name="name">
+                                    <input type="hidden" id="price2" name="precio">
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                @endforeach
             </div>
-        </div>
+        </section>
     </div>
-</div>
-
+</section>
 
 
 {{-- modales --}}
-@include('tienda.modalCompra')
+{{-- @include('tienda.modalCompra') --}}
 {{-- @include('tienda.modalCupon') --}}
+
+@push('custom_js')
+<script>
+    var form = $(".steps-validation").show();
+    $(".steps-validation").steps({
+        headerTag: "h6",
+        bodyTag: "fieldset",
+        transitionEffect: "fade",
+        titleTemplate: '<span class="step">#index#</span> #title#',
+        labels: {
+            finish: 'Invertir',
+            next: 'Siguiente',
+            previous: 'Atra'
+        },
+        onStepChanging: function (event, currentIndex, newIndex) {
+            // Allways allow previous action even if the current form is not valid!
+            if (currentIndex > newIndex) {
+                return true;
+            }
+            // Needed in some cases if the user went back (clean up)
+            if (currentIndex < newIndex) {
+                // To remove error styles
+                form.find(".body:eq(" + newIndex + ") label.error").remove();
+                form.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+            }
+            form.validate().settings.ignore = ":disabled,:hidden";
+            return form.valid();
+        },
+        onFinishing: function (event, currentIndex) {
+            form.validate().settings.ignore = ":disabled";
+            return form.valid();
+        },
+        onFinished: function (event, currentIndex) {
+            form.submit()
+        }
+    });
+
+    // Initialize validation
+    $(".steps-validation").validate({
+        ignore: 'input[type=hidden]', // ignore hidden fields
+        errorClass: 'danger',
+        successClass: 'success',
+        highlight: function (element, errorClass) {
+            $(element).removeClass(errorClass);
+        },
+        unhighlight: function (element, errorClass) {
+            $(element).removeClass(errorClass);
+        },
+        errorPlacement: function (error, element) {
+            error.insertAfter(element);
+        },
+        rules: {
+            email: {
+                email: true
+            }
+        }
+    });
+</script>
+@endpush
 
 <script>
     function medidas() {
@@ -83,41 +129,10 @@
         product = JSON.parse(product)
         let inversion = $('#inversion').val()
         $('#idproducto').val(product.ID)
-        $('#img').attr('src', product.imagen)
-        $('#invertido').html('$ ' + inversion)
-        $('#invertido2').val(inversion)
-        $('#title').html(product.post_title)
         $('#title2').val(product.post_title)
-        $('#content').html(product.post_content)
-        $('#price').html('$ ' + product.meta_value)
         $('#price2').val(product.meta_value)
-        $('#myModal1').modal('show')
     }
 
-    function validarCupon() {
-        let cupon = $('#cupon').val();
-        let url = '{{route('tienda-verificar-cupon')}}'
-        let token = '{{ csrf_token() }}'
-        $.post(url, {
-            '_token': token,
-            'cupon': cupon
-        }).done(function (response) {
-            let data = JSON.parse(response)
-            if (data.msj != '') {
-                alert(data.msj)
-            } else {
-                $("#tipo1").val(data.tipo)
-                $("#producto" + 1).val(data.paquete)
-                $("#total" + 1).val(data.precio)
-                $("#myModalLabel1").text('Cupon del Producto ' + data.paquete)
-                $("#idproducto" + 1).val(data.idpaquete)
-                $("#restante" + 1).val(0)
-                $("#btn" + 1).text('Recibir Cupon')
-                $("#cupon" + 1).val(data.cupon)
-                $("#myModal" + 1).modal('show')
-            }
-        })
-    }
 </script>
 
 @endsection

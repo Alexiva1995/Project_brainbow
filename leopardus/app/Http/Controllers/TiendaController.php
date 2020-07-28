@@ -30,7 +30,7 @@ class TiendaController extends Controller
     //Historial de Comisiones para el usuario
 
     public function index(){
-        view()->share('title', 'Tienda');
+        view()->share('title', 'Inversiones');
         $productos = $this->getProductoWP();
         $moneda = Monedas::where('principal', 1)->get()->first();
         // dd($productos);
@@ -72,7 +72,8 @@ class TiendaController extends Controller
                         ['wp.post_type', '=', 'product'],
                         ['wp.pinged', '=', 'Visible']
                     ])
-                    ->select('wp.ID', 'wp.post_title', 'wp.post_content', 'wp.guid', 'wpm.meta_value', 'wp.post_excerpt as imagen')
+                    ->select('wp.ID', 'wp.post_title', 'wp.post_content', 'wp.guid', 'wpm.meta_value', 'wp.post_excerpt as imagen',
+                    'wp.post_password as duration', 'wp.post_content_filtered as rentabilidad', 'wp.post_parent as penalizacion')
                     ->get();
         $cont = 0;
         foreach ($result as $element) {
