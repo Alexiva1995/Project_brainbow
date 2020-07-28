@@ -10,6 +10,19 @@
 <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/core/menu/menu-types/vertical-menu.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/core/colors/palette-gradient.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/plugins/forms/wizard.css')}}">
+<style>
+    #steps-uid-0 div.actions.clearfix ul li.disabled a {
+    display: none;
+}
+    .app-content .wizard > .actions > ul > li > a {
+    background: #02E9FE;
+    font-weight: 600;
+    border-radius: 4px !important;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    margin-top: 40px;
+}
+</style>
 @endpush
 
 {{-- script vendor --}}

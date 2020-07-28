@@ -1,9 +1,10 @@
 <h6>
-    <i class="step-icon feather icon-server"></i>
+    <i class="step-icon fa fa-usd"></i>
     Inversion
 </h6>
 <fieldset>
-        <div class="col-md-12 mb-2">
+        <div class="col-md-12 mb-2 mt-2">
+            <h5 for="">Por favor ingresar la cantidad la cual quieres invertir</h5>
             <div class="input-group">
                 <div class="input-gruop-prepend">
                     <span class="input-group-text" style="border-radius: 5px 0px 0px 5px;">$</span>
