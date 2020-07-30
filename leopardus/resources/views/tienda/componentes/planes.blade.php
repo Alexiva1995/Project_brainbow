@@ -28,9 +28,9 @@
                     </p>
                 </div>
                 <div class="card-body text-center" style="background: white; padding:0px">
-                    <div class="btn btn-info btn-block bg-blue-dark mt-1 text-white" onclick="detalles('{{json_encode($item)}}')" style="margin: 0px auto">
+                    <button type="button" id="product{{$item->ID}}" class="btn btn-info btn-block bg-blue-dark enable mt-1 text-white" onclick="detalles('{{json_encode($item)}}')" style="margin: 0px auto">
                         <a class="view-in-cart">Comprar</a>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>

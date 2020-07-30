@@ -205,7 +205,7 @@ right connector from last child*/
 	<div class="padre tree">
 		<ul>
 			<li>
-				<img title="{{ ucwords($base->display_name) }}" src="{{ $base->avatar }}" style="width:64px">
+				<img title="{{ ucwords($base->display_name) }}" src="{{ $base->avatar }}" style="width:100px; height: 100px">
 				{{-- Nivel 1 --}}
 				<ul>
 					@foreach ($trees as $child)
@@ -249,12 +249,26 @@ right connector from last child*/
 						@if (count($trees) == 2)
 							<li>
 								<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+								<ul>
+									@for ($o = 1; $o < 4; $o++)
+									<li>
+										<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									</li>
+									@endfor
+								</ul>
 							</li>
 						@endif
 						@if (count($trees) == 1)
 							@for ($i = 1; $i < 3; $i++)
 							<li>
 								<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+								<ul>
+									@for ($o = 1; $o < 4; $o++)
+									<li>
+										<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									</li>
+									@endfor
+								</ul>
 							</li>
 							@endfor
 						@endif
@@ -262,6 +276,13 @@ right connector from last child*/
 							@for ($i = 1; $i < 4; $i++)
 							<li>
 								<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+								<ul>
+									@for ($o = 1; $o < 4; $o++)
+									<li>
+										<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									</li>
+									@endfor
+								</ul>
 							</li>
 							@endfor
 						@endif

@@ -141,6 +141,8 @@
     function detalles(product) {
         product = JSON.parse(product)
         let inversion = $('#inversion').val()
+        $('.enable').attr('disabled', false)
+        $('#product'+product.ID).attr('disabled', true)
         $('#idproducto').val(product.ID)
         $('#title2').val(product.post_title)
         $('#price2').val(product.meta_value)
