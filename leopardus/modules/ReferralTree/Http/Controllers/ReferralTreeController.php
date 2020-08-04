@@ -50,9 +50,12 @@ class ReferralTreeController extends Controller
         $funcione = new IndexController();
 
         $id = base64_decode($id);
-        $trees = $funcione->getDataEstructura($id, $type);
+        $trees = $funcione->getDataEstructura($id, strtolower($type));
         $type = ucfirst($type);
         $base = User::find($id);
+        if (empty($base)) {
+            return redirect()->back()->with('msj2', 'El ID '. $id.', no se encuentra registrado');
+        }
         $base->avatar = asset('avatar/'.$base->avatar);
         return view('referraltree::matriz')->with(compact('base', 'trees', 'type'));
     }

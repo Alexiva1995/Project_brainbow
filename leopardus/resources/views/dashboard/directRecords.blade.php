@@ -5,7 +5,22 @@
 @include('dashboard.componentView.optionDatatable')
 
 {{-- formulario de fecha  --}}
+@if (Auth::user()->ID == 1)
+@include('dashboard.componentView.formSearchSimple', ['route' => 'admin.directo', 'name1' => 'id', 'type' => 'number',
+'text' => 'ID del Usuario'])
+@if (Session::has('msj2'))
+<div class="col-md-12">
+	<div class="alert alert-warning">
+		<button class="close" data-close="alert"></button>
+		<span>
+			{{Session::get('msj2')}}
+		</span>
+	</div>
+</div>
+@endif
+@else
 @include('dashboard.componentView.formSearch', ['route' => 'buscardirectos', 'name1' => 'fecha1', 'name2' => 'fecha2', 'text1' => 'Fecha Desde', 'text1' => 'Fecha Hasta', 'type' => 'date'])
+@endif
 
 <div class="card">
 	<div class="card-content">

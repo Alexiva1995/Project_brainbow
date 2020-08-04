@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\OrdenInversion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\IndexController;
+use App\User;
 use CoinPayment;
 
 class InversionController extends Controller
@@ -71,5 +73,32 @@ class InversionController extends Controller
         $orden = OrdenInversion::create($data);
 
         return $orden->id;
+    }
+
+    /**
+     * Lleva a la vista de inversiones del admin
+     *
+     * @return void
+     */
+    public function indexAdminInversion()
+    {
+        view()->share('title', 'Inversiones');
+        
+        $inversiones = OrdenInversion::all();
+        $funciones = new IndexController();
+        
+        foreach ($inversiones as $inversion) {
+            $plan = $funciones->getProductDetails($inversion->paquete_inversion);
+            $user = User::find($inversion->iduser);
+            $inversion->correo = $user->user_email;
+            $inversion->usuario = $user->display_name;
+            $inversion->plan = 'Plan no definido';
+            if (!empty($plan)) {
+                $inversion->plan = $plan->post_title;
+            }
+            
+        }
+
+        return view('admin.indexAdminInversiones', compact('inversiones'));
     }
 }

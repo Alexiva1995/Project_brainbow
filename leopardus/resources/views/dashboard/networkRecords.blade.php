@@ -4,10 +4,25 @@
 {{-- option datatable --}}
 @include('dashboard.componentView.optionDatatable')
 
+@if (Auth::user()->ID == 1)
+@include('dashboard.componentView.formSearchSimple', ['route' => 'admin.network', 'name1' => 'id', 'type' => 'number',
+'text' => 'ID del Usuario'])
+@if (Session::has('msj2'))
+<div class="col-md-12">
+	<div class="alert alert-warning">
+		<button class="close" data-close="alert"></button>
+		<span>
+			{{Session::get('msj2')}}
+		</span>
+	</div>
+</div>
+@endif
+@else
+
 {{-- formulario de fecha  --}}
 @include('dashboard.componentView.formSearch', ['route' => 'buscarnetwork', 'name1' => 'fecha1', 'name2' => 'fecha2', 'text1' => 'Fecha Desde', 'text1' => 'Fecha Hasta', 'type' => 'date'])
 
-<div class="card">
+{{-- <div class="card">
     <div class="card-content">
         <div class="card-body">
             <form method="POST" action="{{route('buscarnetworknivel')}}">
@@ -31,8 +46,9 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}
 
+@endif
 
 <div class="card">
 	<div class="card-header">

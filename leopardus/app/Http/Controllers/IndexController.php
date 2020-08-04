@@ -445,10 +445,13 @@ class IndexController extends Controller
                 $fecha_vencimiento = new Carbon($inversion->fecha_fin);
                 $estado = ($fecha_vencimiento > $fechaActual) ? 'Activa' : 'Vencidad';
                 $arrayInversiones [] = [
+                    'id' => $inversion->id,
                     'img' => asset('products/'.$paquete->post_excerpt),
                     'inversion' => $inversion->invertido,
+                    'plan' => $paquete->post_title,
                     'rentabilidad' => $rentabilidad,
                     'fecha_venci' => $fecha_vencimiento,
+                    'penalizacion' => $paquete->penalizacion,
                     'estado' => $estado
                 ];
             }

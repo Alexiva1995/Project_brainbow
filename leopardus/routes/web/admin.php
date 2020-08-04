@@ -102,7 +102,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
         Route::post('/historialfechas', 'WalletController@historial_fechas')->name('wallet-historial-fechas');
         Route::get('/cobros', 'WalletController@cobros')->name('wallet-cobros');
         Route::post('/cobrosfechas', 'WalletController@cobros_fechas')->name('wallet-cobros-fechas');
-        
+        // inversiones
+        Route::get('/walletInversiones', 'WalletController@indexInversiones')->name('wallet-invesiones');
+        Route::post('retirarInversiobes', 'WalletController@retirarInversiones')->name('wallet-inversiones-retirar');
+        // admin
+        Route::get('inversionesAdmin', 'InversionController@indexAdminInversion')->name('inversiones.admin');
     });
 
     
@@ -586,8 +590,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
 
         Route::put('actualizar/{id}', 'ActualizarController@actualizar')->name('admin.user.actualizar');
 
-        
-
     });
 
     
@@ -624,7 +626,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
 
          Route::get('/aprobarcomision/{id}', 'ComisionesController@aprobarComision')->name('comisiones.aprobar');
 
-
+      // admin
+      Route::post('records_directo', 'AdminController@directoAdmin')->name('admin.directo');
+      Route::post('records_network', 'AdminController@networkAdmin')->name('admin.network');
 
     });
 

@@ -20,10 +20,25 @@
             </li>
             {{-- RANKING --}}
             <li class="nav-item">
-                <a href="{{url('mioficina/tienda')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
-                    <i class="feather icon-shopping-cart"></i>
+                <a href="javascript:;" class="nav-link nav-toggle" style="color: #FFFFFF;">
+                    <i class="feather icon-bar-chart-2"></i>
                     <span class="title">Inversiones</span>
+                    <span class="arrow"></span>
                 </a>
+                <ul class="sub-menu" style="background-color: #000D2F;">
+                    <li class="nav-item">
+                        <a href="{{url('mioficina/tienda')}}" class="nav-link" style="color: #FFFFFF;">
+                            <i class="feather icon-circle"></i>
+                            <span class="title">Inversion</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{route('wallet-invesiones')}}" class="nav-link" style="color: #FFFFFF;">
+                            <i class="feather icon-circle"></i>
+                            <span class="title">Mis Inversiones</span>
+                        </a>
+                    </li>
+                </ul>
             </li>
             {{--FIN RANKING --}}
             {{-- TRANSACCIONES --}}

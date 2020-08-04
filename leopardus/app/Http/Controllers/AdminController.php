@@ -71,8 +71,36 @@ class AdminController extends Controller
         return view('dashboard.directRecords')->with(compact('referidosDirectos'));
     }
 
-    
+    /**
+     * Permite saber los direcctos de un usuario en especifico
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function directoAdmin(Request $request)
+    {
+        $base = User::find($request->id);
+        if (empty($base)) {
+            return redirect()->route('directrecords')->with('msj2', 'El ID '.$request->id.', no se encuentra registrado');
+        }
+        // TITLE
+        view()->share('title', 'Usuarios Directos del usuario: '.$base->display_name.' -  ID : '.$request->id);
+        $rango = new RangoController();
+        $referidosDirectos = User::where('referred_id', '=', $request->id)
+                                ->orderBy('created_at', 'DESC')
+                                ->get();
+        foreach ($referidosDirectos as $referido) {
+            $referido->inversion = $rango->getTotalInvertion($referido->ID);
+        }
+        return view('dashboard.directRecords')->with(compact('referidosDirectos'));
+    }
 
+    
+    /**
+     * Permite filtrar a los usuarios directos por fecha
+     *
+     * @return void
+     */
     public function buscardirectos(){
         // TITLE
         view()->share('title', 'Usuarios Directos');
@@ -98,9 +126,7 @@ class AdminController extends Controller
     public function buscarnetwork(Request $request){
 
         // TITLE
-
         view()->share('title', 'Usuarios en Red');
-
         view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
         $funcionesIndex = new IndexController();
         $rango = new RangoController();
@@ -148,25 +174,53 @@ class AdminController extends Controller
     }
 
 
-
+    /**
+     * LLeva a la vista de todos mis usuarios en red
+     *
+     * @return void
+     */
     public function network_records(){
 
         // TITLE
-
         view()->share('title', 'Usuarios en Red');
-
         $funcionesIndex = new IndexController();
         $rango = new RangoController();
         // DO MENU
-
         view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
         $allReferido = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
         foreach ($allReferido as $referido) {
             $referido->inversion = $rango->getTotalInvertion($referido->ID);
         }
+        return view('dashboard.networkRecords')->with(compact('allReferido'));
+    }
+
+    /**
+     * Permite Ver los usuario en red de un usuario determinado
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function networkAdmin(Request $request)
+    {
+        // TITLE
+        $base = User::find($request->id);
+        if (empty($base)) {
+            return redirect()->route('networkrecords')->with('msj2', 'El ID '.$request->id.', no se encuentra registrado');
+        }
+        // TITLE
+        view()->share('title', 'Red de usuarios del usuario: '.$base->display_name.' -  ID : '.$request->id);
+        $funcionesIndex = new IndexController();
+        $rango = new RangoController();
+        $allReferidotmp = $funcionesIndex->getChidrens2($request->id, [], 1, 'referred_id', 0);
+        $allReferido = [];
+        foreach ($allReferidotmp as $referido) {
+            if ($referido->nivel <= 10) {
+                $referido->inversion = $rango->getTotalInvertion($referido->ID);
+                $allReferido [] = $referido;
+            }
+        }
 
         return view('dashboard.networkRecords')->with(compact('allReferido'));
-
     }
 
     /**

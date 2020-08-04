@@ -9,9 +9,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon; 
 use App\Wallet;
-use App\MetodoPago; use App\SettingsComision; use App\Pagos; use App\Monedas;
+use App\MetodoPago;
+use App\SettingsComision;
+use App\Pagos;
+use App\Monedas;
 use App\Http\Controllers\ComisionesController;
+use App\WalletlogRentabilidad;
 use PragmaRX\Google2FA\Google2FA;
+use App\Http\Controllers\IndexController;
+use App\OrdenInversion;
+use App\OrdenRetiro;
+
+
 
 
 class WalletController extends Controller
@@ -405,6 +414,81 @@ $billetera = DB::table('walletlog')
 
      return view('wallet.cobros', compact('billetera', 'moneda')); 
 	}
+
+	/**
+	 * Lleva a la vista donde puedo ver mis inversiones realizadas y sus ganancias
+	 *
+	 * @return void
+	 */
+	public function indexInversiones()
+	{
+		$funciones = new IndexController();
+
+		$inversiones = $funciones->getInversionesUserDashboard(Auth::user()->ID);
+
+		return view('wallet.indexInversiones', compact('inversiones')); 
+	}
+
+	public function retirarInversiones(Request $request)
+	{
+
+		$user = User::find(Auth::user()->ID);
+		$admin = User::find(1);
+
+		$inversion = OrdenInversion::find($request->idinversion);
+		$concepto = 'Retiro de '.$request->retirar.' de la inversion: '.$request->idinversion;
+		$credito = $request->retirar;
+		if ($request->porc_penalizacion != 0) {
+			$user->rentabilidad = ($user->rentabilidad - $request->retirar);
+			$admin->rentabilidad = ($user->rentabilidad + $request->mont_penalizacion);
+		}
+		$user->save();
+		$admin->save();
+
+		$dataRetiro = [
+			'idinversion' => $inversion->id,
+			'total_retirar' => $request->total,
+			'retiro' => $request->retirar,
+			'penalizacion' => $request->mont_penalizacion,
+			'iduser' => $inversion->iduser,
+			'concepto' => $concepto,
+			'plan' => $request->plan,
+			'ganancia' => $request->ganacia,
+			'porc_penalizacion' => $request->porc_penalizacion,
+			'fecha_vencimiento' => new Carbon($inversion->fecha_fin),
+			'status' => 0,
+		];
+
+		$data = [
+			'iduser' => $inversion->iduser,
+			'idinversion' => $inversion->id,
+			'concepto' => $concepto,
+			'debito' => 0,
+			'credito' => $credito,
+			'balance' => $user->rentabilidad,
+			'semana' => '',
+			'year' => '',
+			'fecha_retiro' => Carbon::now(),
+			'descuento' => $request->mont_penalizacion,
+		];
+
+		$comisiones = new ComisionesController();
+		$comisiones->sabeWalletRentabilidad($data);
+		$this->saveOrdenRetiro($dataRetiro);
+
+		return redirect()->back()->with('msj', 'Retiro procesado con exito');
+	}
 	
+
+	/**
+	 * Permite guardar las orden de retiro
+	 *
+	 * @param array $data
+	 * @return void
+	 */
+	public function saveOrdenRetiro($data)
+	{
+		OrdenRetiro::create($data);
+	}
 
 }

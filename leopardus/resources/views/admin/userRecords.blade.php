@@ -23,15 +23,15 @@
 							<th class="text-center">
 								Correo
 							</th>
-							<th class="text-center">
+							{{-- <th class="text-center">
 								Telefono
-							</th>
-							<th class="text-center">
+							</th> --}}
+							{{-- <th class="text-center">
 								Pais
-							</th>
-							<th class="text-center">
+							</th> --}}
+							{{-- <th class="text-center">
 								Referido por
-							</th>
+							</th> --}}
 							{{-- <th class="text-center">
 								Rango
 							</th> --}}
@@ -66,17 +66,17 @@
 							<td class="text-center">
 								{{ $usuario['user_email'] }}
 							</td>
-							<td class="text-center">
+							{{-- <td class="text-center">
 								{{ $usuario['phone'] }}
-							</td>
-							<td class="text-center">
+							</td> --}}
+							{{-- <td class="text-center">
 								@foreach($falta as $fal)
 								{{ $fal->pais }}
 								@endforeach
-							</td>
-							<td class="text-center">
+							</td> --}}
+							{{-- <td class="text-center">
 								{{ $usuario['nombre_referido'] }}
-							</td>
+							</td> --}}
 {{-- 
 							<td class="text-center">
 
