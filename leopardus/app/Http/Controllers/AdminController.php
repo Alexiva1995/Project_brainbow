@@ -14,10 +14,10 @@ use App\User;
 use App\Wallet;
 use App\Settings;
 use App\Notification;
+use App\OrdenInversion;
 
 
 use App\Http\Controllers\IndexController;
-use App\Http\Controllers\PublicidadController;
 use App\Http\Controllers\RangoController;
 
 class AdminController extends Controller
@@ -58,79 +58,65 @@ class AdminController extends Controller
     public function direct_records(){
 
         // TITLE
-
         view()->share('title', 'Usuarios Directos');
-
-
-
         // DO MENU
-
         view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
-
-
-
-            $referidosDirectos = User::where('referred_id', '=', Auth::user()->ID)
-
+        $rango = new RangoController();
+        $referidosDirectos = User::where('referred_id', '=', Auth::user()->ID)
                                 ->orderBy('created_at', 'DESC')
-
                                 ->get();
+        foreach ($referidosDirectos as $referido) {
+            $referido->inversion = $rango->getTotalInvertion($referido->ID);
+        }
+        return view('dashboard.directRecords')->with(compact('referidosDirectos'));
+    }
 
+    
 
+    public function buscardirectos(){
+        // TITLE
+        view()->share('title', 'Usuarios Directos');
+        // DO MENU
+        view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
+        $rango = new RangoController();
+        $primero = new Carbon($_POST["fecha1"]);
+        $segundo = new Carbon($_POST["fecha2"]);
+        $referidosDirectos =User::whereDate("created_at",">=",$primero)
+            ->whereDate("created_at","<=",$segundo)
+            ->where('referred_id', '=', Auth::user()->ID)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+        foreach ($referidosDirectos as $referido) {
+            $referido->inversion = $rango->getTotalInvertion($referido->ID);
+        }
         return view('dashboard.directRecords')->with(compact('referidosDirectos'));
 
     }
 
     
 
-    public function buscardirectos(){
-
-        // TITLE
-
-        view()->share('title', 'Usuarios Directos');
-
-
-
-        // DO MENU
-
-        view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
-
-
-
-        $primero = new Carbon($_POST["fecha1"]);
-
-        $segundo = new Carbon($_POST["fecha2"]);
-
-
-            $referidosDirectos =User::whereDate("created_at",">=",$primero)
-
-             ->whereDate("created_at","<=",$segundo)
-
-             ->where('referred_id', '=', Auth::user()->ID)
-
-             ->orderBy('created_at', 'DESC')
-
-             ->get();
-
-
-
-
-        return view('dashboard.buscardirectos')->with(compact('referidosDirectos'));
-
-    }
-
-    
-
-    public function buscarnetwork(){
+    public function buscarnetwork(Request $request){
 
         // TITLE
 
         view()->share('title', 'Usuarios en Red');
 
         view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
+        $funcionesIndex = new IndexController();
+        $rango = new RangoController();
+        $allReferido = [];
+        $fecha1 = new Carbon($request->fecha1);
+        $fecha2 = new Carbon($request->fecha2);
+        $allReferidotmp = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
+        foreach ($allReferidotmp as $referido) {
+            $fechaIngreso = new Carbon($referido->created_at);
+            if ($fechaIngreso >= $fecha1 && $fechaIngreso <= $fecha2) {
+                $referido->inversion = $rango->getTotalInvertion($referido->ID);
+                $allReferido [] = $referido;
+            }
+        }
 
-
-        $allReferido = $this->generarArregloUsuario(Auth::user()->ID);
-        return view('dashboard.buscarnetwork')->with(compact('allReferido','primero','segundo'));
+        return view('dashboard.networkRecords')->with(compact('allReferido'));
 
     }
 
@@ -138,6 +124,7 @@ class AdminController extends Controller
     {
                 // TITLE
                 $funcionesIndex = new IndexController();
+                $rango = new RangoController();
                 view()->share('title', 'Usuarios en Red');
 
                 // DO MENU
@@ -147,6 +134,7 @@ class AdminController extends Controller
                 $allReferidotmp = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
                 $allReferido = [];
                 foreach ($allReferidotmp as $user ) {
+                    $user->inversion = $rango->getTotalInvertion($user->ID);
                     if ($request->nivel > 0) {
                         if ($user['nivel'] == $request->nivel) {
                             $allReferido [] = $user;
@@ -168,14 +156,14 @@ class AdminController extends Controller
         view()->share('title', 'Usuarios en Red');
 
         $funcionesIndex = new IndexController();
-
+        $rango = new RangoController();
         // DO MENU
 
         view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
-
-        
         $allReferido = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
-
+        foreach ($allReferido as $referido) {
+            $referido->inversion = $rango->getTotalInvertion($referido->ID);
+        }
 
         return view('dashboard.networkRecords')->with(compact('allReferido'));
 
@@ -218,39 +206,24 @@ class AdminController extends Controller
         }
 
     
-
+        /**
+         * lleva a la vista de las compras personales del usuario
+         *
+         * @return void
+         */
     public function personal_orders(){
           // TITLE
           view()->share('title', 'Ordenes Personales');
-        $settings = Settings::first();
-        $ordenes = DB::table($settings->prefijo_wp.'postmeta')
-                    ->select('post_id')
-                    ->where('meta_key', '=', '_customer_user')
-                    ->where('meta_value', '=', Auth::user()->ID)
-                    ->orderBy('post_id', 'DESC')
-                    ->get();
-         //******************
-        //Marcar como leídas las notificaciones pendientes de Órdenes Directas
-        $notificaciones_pendientes = DB::table('notifications')
-                                        ->select('id')
-                                        ->where('user_id', '=', Auth::user()->ID)
-                                        ->where('notification_type', '=', 'OD')
-                                        ->where('status', '=', 0)
-                                        ->get();
-        foreach ($notificaciones_pendientes as $not){
-            Notification::find($not->id)->update(['status' => 1]);
-        }
-        //********************
+        $ordenes = OrdenInversion::where('iduser', '=', Auth::user()->ID)->get();
+
         return view('dashboard.personalOrders')->with(compact('ordenes'));
-
-
-
     }
 
-    
-
-    
-
+    /**
+     * Permite filtrar por fechas las compras
+     *
+     * @return void
+     */
      public function buscarpersonalorder(){
 
           // TITLE
@@ -263,114 +236,12 @@ class AdminController extends Controller
 
         $segundo = new Carbon($_POST['fecha2']);
 
-        
+        $ordenes = OrdenInversion::where('iduser', '=', Auth::user()->ID)
+                                ->whereDate('created_at', '>=', $primero)
+                                ->whereDate('created_at', '<=', $segundo)->get();
 
-        $ordenes = DB::table($settings->prefijo_wp.'postmeta')
-
-                    ->select('post_id')
-
-                    ->where('meta_key', '=', '_customer_user')
-
-                    ->where('meta_value', '=', Auth::user()->ID)
-
-                    ->orderBy('post_id', 'DESC')
-
-                    ->get();
-
-        return view('dashboard.buscarpersonalorder')->with(compact('ordenes','primero','segundo'));
-
-
-
+        return view('dashboard.personalOrders')->with(compact('ordenes'));
     }
-
-    /**
-     * Genera la Informacion de las ordenes de la red
-     * 
-     * @access public
-     * @param int $order_id - orden de la compra, array $array_datos - informacion de las compras, int $level - nivel del usuario
-     * @return array
-     */
-    public function getDetailsOrder($order_id, $array_datos, $level, $nombre, $fecha){
-        $settings = Settings::first();
-        $numOrden = DB::table($settings->prefijo_wp.'postmeta')
-                        ->select('meta_value')
-                        ->where('post_id', '=', $order_id)
-                        ->where('meta_key', '=', '_order_key')
-                        ->first();
-        $fechaOrden = DB::table($settings->prefijo_wp.'posts')
-                        ->select('post_date')
-                        ->where('ID', '=', $order_id)
-                        ->first();
-        $totalOrden = DB::table($settings->prefijo_wp.'postmeta')
-                        ->select('meta_value')
-                        ->where('post_id', '=', $order_id)
-                        ->where('meta_key', '=', '_order_total')
-                        ->first();
-        $nombreOrden = DB::table($settings->prefijo_wp.'postmeta')
-                        ->select('meta_value')
-                        ->where('post_id', '=', $order_id)
-                        ->where('meta_key', '=', '_billing_first_name')
-                        ->first();
-        $apellidoOrden = DB::table($settings->prefijo_wp.'postmeta')
-                        ->select('meta_value')
-                        ->where('post_id', '=', $order_id)
-                        ->where('meta_key', '=', '_billing_last_name')
-                        ->first();
-		$nombreCompleto = $nombre;
-        if (!empty($nombreOrden->meta_value) && !empty($apellidoOrden->meta_value)) {
-    	$nombreCompleto = $nombreOrden->meta_value." ".$apellidoOrden->meta_value;
-        }
-        $itemsOrden = DB::table($settings->prefijo_wp.'woocommerce_order_items')
-                        ->select('order_item_name')
-                        ->where('order_id', '=', $order_id)
-                        ->where('order_item_type', '=', 'line_item')
-                        ->get();
-        $estadoOrden = DB::table($settings->prefijo_wp.'posts')
-                        ->select('post_status')
-                        ->where('ID', '=', $order_id)
-                        ->first();
-        $estadoEntendible = '';
-        switch ($estadoOrden->post_status) {
-            case 'wc-completed':
-                $estadoEntendible = 'Completado';
-                break;
-            case 'wc-pending':
-                $estadoEntendible = 'Pendiente de Pago';
-                break;
-            case 'wc-processing':
-                $estadoEntendible = 'Procesando';
-                break;
-            case 'wc-on-hold':
-                $estadoEntendible = 'En Espera';
-                break;
-            case 'wc-cancelled':
-                $estadoEntendible = 'Cancelado';
-                break;
-            case 'wc-refunded':
-                $estadoEntendible = 'Reembolsado';
-                break;
-            case 'wc-failed':
-                $estadoEntendible = 'Fallido';
-                break;
-        }
-        $items = "";
-        foreach ($itemsOrden as $item){
-            $items = $items." ".$item->order_item_name;
-        }
-        if (!empty($fecha)) {
-            $fechaCompra = new Carbon($fechaOrden->post_date);
-            if ($fechaCompra->format('ymd') >= $fecha['primero']->format('ymd') && $fechaCompra->format('ymd') <= $fecha['segundo']->format('ymd')) {
-                array_push($array_datos, array($order_id, $nombreCompleto, $fechaOrden->post_date, $items, $totalOrden->meta_value, $level, $estadoEntendible) );
-            }
-        } else {
-            array_push($array_datos, array($order_id, $nombreCompleto, $fechaOrden->post_date, $items, $totalOrden->meta_value, $level, $estadoEntendible) );
-        }
-        
-        
-        return($array_datos);
-    }
-
-
 
     /**
 
@@ -387,77 +258,20 @@ class AdminController extends Controller
     public function network_orders(){
 
         view()->share('title', 'Ordenes de Red');
-
-        $settings = Settings::first();
-
         $funcionesIndex = new IndexController();
-
         $TodosUsuarios = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
-
         $compras = array();
-
-        $fecha = [];
-
-         if (!empty($TodosUsuarios)) {
-
-        foreach($TodosUsuarios as $user){
-
-            $ordenes = DB::table($settings->prefijo_wp.'postmeta')
-
-                            ->select('post_id')
-
-                            ->where('meta_key', '=', '_customer_user')
-
-                            ->where('meta_value', '=', $user['ID'])
-
-                            ->orderBy('post_id', 'DESC')
-
-                            ->get();
-
-
-
-            foreach ($ordenes as $orden){
-
-                $compras = $this->getDetailsOrder($orden->post_id, $compras, '1', $user->display_name, $fecha);
-
+        if (!empty($TodosUsuarios)) {
+            foreach($TodosUsuarios as $user){
+                $ordenes = OrdenInversion::where('iduser', '=', $user->ID)->get();
+                foreach ($ordenes as $orden){
+                    $orden->usuario = $user->display_name;
+                    $compras = $orden;
+                }
             }
-
         }
-
-    }
-
-
-
-        //******************
-
-        //Marcar como leídas las notificaciones pendientes de Órdenes en Red
-
-        $notificaciones_pendientes = DB::table('notifications')
-
-                                        ->select('id')
-
-                                        ->where('user_id', '=', Auth::user()->ID)
-
-                                        ->where('notification_type', '=', 'OR')
-
-                                        ->where('status', '=', 0)
-
-                                        ->get();
-
-
-
-        foreach ($notificaciones_pendientes as $not){
-
-            Notification::find($not->id)->update(['status' => 1]);
-
-        }
-
-        //********************
-
-
-
+        
         return view('dashboard.networkOrders')->with(compact('compras'));
-
     }
 
     
@@ -477,23 +291,17 @@ class AdminController extends Controller
             'primero' => new Carbon($_POST['fecha1']),
             'segundo' => new Carbon($_POST['fecha2'])
         ];
-         if (!empty($TodosUsuarios)) {
-        foreach($TodosUsuarios as $user){
-
-            $ordenes = DB::table($settings->prefijo_wp.'postmeta')
-                            ->select('post_id')
-                            ->where('meta_key', '=', '_customer_user')
-                            ->where('meta_value', '=', $user['ID'])
-                            ->orderBy('post_id', 'DESC')
-                            ->get();
-            foreach ($ordenes as $orden){
-                $compras = $this->getDetailsOrder($orden->post_id, $compras, '1', $user->display_name, $fecha);
+        if (!empty($TodosUsuarios)) {
+            foreach($TodosUsuarios as $user){
+                $ordenes = OrdenInversion::where('iduser', '=', $user->ID)
+                                            ->whereDate('created_at', '>=', $fecha['primero'])
+                                            ->whereDate('created_at', '<=', $fecha['segundo'])->get();
+                foreach ($ordenes as $orden){
+                    $orden->usuario = $user->display_name;
+                    $compras = $orden;
+                }
             }
         }
-    }
-
-        
-
         return view('dashboard.networkOrders')->with(compact('compras'));
 
     }

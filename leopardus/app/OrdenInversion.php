@@ -10,6 +10,6 @@ class OrdenInversion extends Model
 
     protected $fillable = [
         'invertido', 'concepto', 'iduser', 'idtrasancion', 'status',
-        'rendimiento', 'paquete_inversion'
+        'rendimiento', 'paquete_inversion', 'fecha_inicio', 'fecha_fin'
     ];
 }

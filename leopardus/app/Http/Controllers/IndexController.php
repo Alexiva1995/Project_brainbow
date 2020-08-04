@@ -109,6 +109,8 @@ class IndexController extends Controller
                     $avatarTree = asset('products/'.$paquete->post_excerpt);
                 }
             }
+            $userTemp = DB::table('user_campo')->where('ID', '=', $user->ID)->first();
+            $user->fullname = $userTemp->firstname.' '.$user->lastname;
             $user->avatar = asset('avatar/'.$user->avatar);
             $user->avatarTree = $avatarTree;
             $user->avatar = asset('avatar/'.$user->avatar);
@@ -440,8 +442,7 @@ class IndexController extends Controller
                     ['iduser', '=', $iduser],
                     ['idinversion', '=', $inversion],
                 ])->get()->sum('debito');
-                $fechaInversion = new Carbon($inversion->created_at);
-                $fecha_vencimiento = $fechaInversion->addMonth($paquete->duration);
+                $fecha_vencimiento = new Carbon($inversion->fecha_fin);
                 $estado = ($fecha_vencimiento > $fechaActual) ? 'Activa' : 'Vencidad';
                 $arrayInversiones [] = [
                     'img' => asset('products/'.$paquete->post_excerpt),

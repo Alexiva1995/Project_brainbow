@@ -13,35 +13,22 @@
 			<div class="table-responsive">
 				<table id="mytable" class="table zero-configuration">
 					<thead>
-						<tr>
+						<tr class="text-center">
 							<th>ID</th>
 							<th>Nombre</th>
 							<th>Correo</th>
-							<th>Paquete</th>
+							<th>Inversion Total</th>
 							<th>Estado</th>
 							<th>Ingreso</th>
 						</tr>
 					</thead>
 					<tbody>
-						@php
-						$cont = 0;
-						$paquete = null;
-						$nombre = 'Sin Paquete';
-						@endphp
 						@foreach ($referidosDirectos as $referido)
-						@php
-						$paquete = json_decode($referido->paquete);
-						if (!empty($paquete)) {
-							$nombre = $paquete->nombre;
-						}
-						$cont++;
-						// $rol = DB::table('roles')->where('ID', $referido->rol_id)->select('name')->get()[0];
-						@endphp
-						<tr>
+						<tr class="text-center">
 							<td>{{ $referido->ID }}</td>
 							<td>{{ $referido->display_name }}</td>
 							<td>{{ $referido->user_email }}</td>
-							<td>{{ $nombre }}</td>
+							<td>$ {{ $referido->inversion }}</td>
 							@if ($referido->status == '0')
 							<td>Inactive</td>
 							@else

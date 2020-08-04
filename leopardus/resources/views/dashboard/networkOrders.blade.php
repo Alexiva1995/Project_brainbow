@@ -24,30 +24,20 @@
 						</tr>
 					</thead>
 					<tbody>
-						@php
-						$cont = 0;
-						@endphp
 						@foreach ($compras as $compra)
-						@php
-						$cont++;
-						$cont2 = 0;
-						@endphp
-						<tr>
-							@foreach ($compra as $dato)
-							@php
-							$cont2++;
-							@endphp
-							@if ($cont2 == 3)
-							<td>{{ date('Y-m-d', strtotime($dato)) }}</td>
-							@elseif ($cont2 == 5)
-							<td>$ {{ $dato }}</td>
-							@elseif ($cont2 == 6)
-							<td> Nivel {{ $dato }}</td>
-							@else
-							<td> {{ $dato }}</td>
+						<tr class="text-center">
+							<td>{{$orden->id}}</td>
+							<td>{{$orden->usuario}}</td>
+							<td>{{date('d-m-Y', strtotime($orden->created_at))}}</td>
+							<td>{{$orden->concepto}}</td>
+							<td>$ {{$orden->invertido}}</td>
+							<td>
+							@if ($orden->status == 0)
+								Pendiente
+							@elseif($orden->status == 1)
+								Aprobada
 							@endif
-
-							@endforeach
+							</td>
 						</tr>
 						@endforeach
 					</tbody>

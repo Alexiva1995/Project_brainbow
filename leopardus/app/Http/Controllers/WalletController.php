@@ -406,38 +406,5 @@ $billetera = DB::table('walletlog')
      return view('wallet.cobros', compact('billetera', 'moneda')); 
 	}
 	
-	// public function fixBalance()
-	// {
-	// 	$users = User::where('ID', '>', 4)->get();
-
-	// 	foreach ($users as $user) {
-	// 		$wallets = Wallet::where([
-	// 			['debito', '!=', 0],
-	// 			['iduser', '=', $user->ID],
-	// 		])->orWhere([
-	// 			['credito', '!=', 0],
-	// 			['iduser', '=', $user->ID]
-	// 		])->orderBy('id')->get();
-	// 		$balance = 0;
-	// 		echo "<br><br>usuario: ".$user->display_name.'<br>';
-	// 		foreach ($wallets as $wallet) {
-	// 				if ($wallet->debito != 0) {
-	// 					$balance = ($balance + $wallet->debito);
-	// 				}
-	// 				if ($wallet->credito != 0) {
-	// 					$balance = ($balance - ($wallet->credito+$wallet->descuento));
-	// 				}
-	// 				echo "userID: ".$wallet->iduser.' - debito '.$wallet->debito.' - credito '.$wallet->credito.' - descuento '.$wallet->descuento." - balance: ".$balance.'<br>';
-	// 				// Wallet::where('id', $wallet->id)->update([
-	// 				// 	'balance' => $balance
-	// 				// ]);
-	// 		}
-	// 		// User::where('ID', $user->ID)->update([
-	// 		// 	'wallet_amount' => $balance
-	// 		// ]);
-	// 		echo "Balance final: ".$balance.'<br>';
-	// 	}
-	// 	// dd('detener');
-	// }
 
 }

@@ -43,42 +43,28 @@
 			<div class="table-responsive">
 				<table id="mytable" class="table zero-configuration">
 					<thead>
-						<tr>
+						<tr class="text-center">
 							<th>ID</th>
 							<th>Nombre</th>
 							<th>Correo</th>
-							<th>Paquete</th>
+							<th>Inversion Total</th>
 							<th>Estato</th>
-							<th>Auspiciador</th>
 							<th>Nivel Matriz</th>
 							<th>Ingreso</th>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach ($allReferido as $referido)
-						@php
-						$paquete = null;
-							$nombre = 'Sin Paquete';
-							if ($referido['status'] == 1) {
-								$paquete = json_decode($referido['paquete']);
-								if (!empty($paquete)) {
-									$nombre = $paquete->nombre;
-								} 
-							}
-						@endphp
-						<tr>
+						<tr class="text-center">
 							<td>{{ $referido['ID'] }}</td>
 							<td>{{ $referido->display_name }}</td>
 							<td>{{ $referido->user_email }}</td>
-							<td>{{ $nombre }}</td>
+							<td>$ {{ $referido->inversion }}</td>
 							@if ($referido['status'] == '0')
 							<td>Inactive</td>
 							@else
 							<td>Active</td>
 							@endif
-							<td>
-								{{$referido['patrocinador']}}
-							</td>
 							<td>
 								@if($referido['nivel'] == 1)
 								1
@@ -86,7 +72,7 @@
 								{{$referido['nivel']}}
 								@endif
 							</td>
-							<td>{{ date('d-m-Y', strtotime($referido['fecha'])) }}</td>
+							<td>{{ date('d-m-Y', strtotime($referido->created_at)) }}</td>
 						</tr>
 
 						@endforeach

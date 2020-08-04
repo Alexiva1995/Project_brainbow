@@ -12,7 +12,7 @@
                 <div class="d-flex justify-content-center">
                     <div>
                         <h6 class="text-white">
-                            <strong>Usuario:</strong> {{$data->display_name}} 
+                            <strong>Usuario:</strong> {{$data->fullname}} 
                         </h6>
                         <h6 class="text-white">
                             <strong>Fecha Ingreso:</strong> {{date('d-m-Y', strtotime($data->created_at))}}
