@@ -1,4 +1,4 @@
-<?php
+u<?php
 
 namespace App\Http\Controllers;
 
@@ -90,8 +90,13 @@ class InversionController extends Controller
         foreach ($inversiones as $inversion) {
             $plan = $funciones->getProductDetails($inversion->paquete_inversion);
             $user = User::find($inversion->iduser);
-            $inversion->correo = $user->user_email;
-            $inversion->usuario = $user->display_name;
+ltimo            if (!empty($user)) {
+                $inversion->correo = $user->user_email;
+                $inversion->usuario = $user->display_name;
+            }else{
+                $inversion->correo = 'Usuario Eliminado o no disponible';
+                $inversion->usuario = 'Usuario Eliminado o no disponible';
+            }
             $inversion->plan = 'Plan no definido';
             if (!empty($plan)) {
                 $inversion->plan = $plan->post_title;

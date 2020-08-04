@@ -110,7 +110,10 @@ class IndexController extends Controller
                 }
             }
             $userTemp = DB::table('user_campo')->where('ID', '=', $user->ID)->first();
-            $user->fullname = $userTemp->firstname.' '.$user->lastname;
+            $user->fullname = $user->display_name;
+            if (!empty($userTemp)) {
+                $user->fullname = $userTemp->firstname.' '.$user->lastname;
+            }
             $user->avatar = asset('avatar/'.$user->avatar);
             $user->avatarTree = $avatarTree;
             $user->avatar = asset('avatar/'.$user->avatar);
