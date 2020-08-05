@@ -90,7 +90,7 @@ class InversionController extends Controller
         foreach ($inversiones as $inversion) {
             $plan = $funciones->getProductDetails($inversion->paquete_inversion);
             $user = User::find($inversion->iduser);
-ltimo            if (!empty($user)) {
+            if (!empty($user)) {
                 $inversion->correo = $user->user_email;
                 $inversion->usuario = $user->display_name;
             }else{
