@@ -1,4 +1,4 @@
-<div class="card">
+{{-- <div class="card">
     <div class="card-content">
         <div class="card-body">
             <div class="row justify-content-center">
@@ -7,13 +7,10 @@
                         <div class="card-content">
                             <img src="{{asset('/avatar/'.$data['principal']->avatar)}}" alt=""
                                 class="card-img-top img-fluid" >
-                             
                                 <div class="card-footer text-center">
                                     <button class="btn btn-primary" data-target="#myModal" data-toggle="modal">Cambiar</button>
                                 </div>
-                                
                         </div>
-                        
                     </div>
                 </div>
                 <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
@@ -51,10 +48,6 @@
                                         @endif
                                     </strong>
                                 </div>
-                                {{-- <div class="card-text">
-                                    <span>Rango</span>
-                                    <strong>{{$data['rol']->name}}</strong>
-                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -62,7 +55,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <!-- Modal para la imagen -->
 
@@ -96,14 +89,14 @@
 
                             <label for="">Imagen del Usuario</label>
 
-                            <input class="form-control form-control-solid placeholder-no-fix" type="file" name="avatar"
-                                required style="background-color:f7f7f7;">
+                            <input class="form-control form-control-solid placeholder-no-fix b-blue" type="file" name="avatar"
+                                required style="background-color:f7f7f7;" accept="image/png, image/jpeg">
 
                         </div>
 
-                        <div class="form-group col-sm-12" style="padding-left: 10px;">
+                        <div class="form-group col-sm-12 text-center" style="padding-left: 10px;">
 
-                            <button class="btn btn-success" type="submit">Subir</button>
+                            <button class="btn btn-info" type="submit">Subir</button>
 
                         </div>
 
