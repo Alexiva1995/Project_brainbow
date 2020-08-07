@@ -76,6 +76,17 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
 
     Route::get('updateall', 'AdminController@ActualizarTodo')->name('admin-update-all');
 
+    Route::group(['prefix' => 'liquidacion'], function ()
+    {
+      // Liquidaciones Pendientes
+      Route::get('/', 'LiquidationController@index')->name('liquidacion');
+      Route::get('/{iduser}/detalles', 'LiquidationController@detalles')->name('liquidacion.detalles');
+      Route::post('liquidationFiltro', 'LiquidationController@indexFiltro')->name('liquidation.filtro');
+      Route::post('generarliquidacion', 'LiquidationController@liduidarUser')->name('liquidacion.generar');
+      Route::post('procesarcomisiones', 'LiquidationController@procesarComisiones')->name('liquidacion.procesar.comision');
+      Route::get('/liquidacionPendientes', 'LiquidationController@liquidacionPendientes')->name('liquidacion.pendientes');
+    });
+
     // publicidad
     Route::group(['prefix' => 'publicidad'], function ()
     {

@@ -125,7 +125,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url('mioficina/admin/wallet/')}}" class="nav-link">
+                        <a href="{{route('liquidacion')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
                             <span class="title">Liquidación Comisiones</span>
                         </a>
@@ -137,7 +137,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
+                        <a href="{{route('liquidacion.pendientes')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
                             <span class="title">Liquidaciones Pendientes</span>
                         </a>
