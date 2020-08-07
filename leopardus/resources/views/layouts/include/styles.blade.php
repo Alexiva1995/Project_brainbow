@@ -179,6 +179,10 @@
         background-size: cover !important;
     }
 
+    .main-menu{
+        height: 200% !important;
+    }
+
 </style>
 
 @stack('custom_css')

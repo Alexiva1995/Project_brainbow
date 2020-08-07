@@ -69,7 +69,7 @@
 
     <div class="col-12 botom1 text-right">
         {{-- <button type="button" class="btn btn-danger" onclick="cancelarContacto();">Cancel</a> --}}
-        <button type="submit" class="btn btn-success ml-2">Enviar</button>
+        <button type="submit" class="btn btn-info">Guardar Cambios</button>
     </div>
 </form>
 

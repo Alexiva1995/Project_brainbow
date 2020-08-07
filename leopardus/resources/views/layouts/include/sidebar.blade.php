@@ -92,16 +92,19 @@
                 <ul class="sub-menu">
                     <li class="nav-item">
                         <a href="{{route('referraltree', ['matriz'])}}" class="nav-link">
+                            <i class="feather icon-circle"></i>
                             <span class="title">Matriz</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{url('mioficina/admin/network/directrecords')}}" class="nav-link">
+                            <i class="feather icon-circle"></i>
                             <span class="title">Directos</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{url('mioficina/admin/network/networkrecords')}}" class="nav-link">
+                            <i class="feather icon-circle"></i>
                             <span class="title">Red</span>
                         </a>
                     </li>
@@ -121,31 +124,41 @@
                     <li class="nav-item">
                         <a href="{{url('mioficina/admin/wallet/')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Billetera</span>
+                            <span class="title">
+                                <small>Billetera</small>
+                            </span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('liquidacion')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Liquidación Comisiones</span>
+                            <span class="title">
+                                <small>Liquidación Comisiones</small>
+                            </span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Liquidaciones Pendientes Inversiones</span>
+                            <span class="title">
+                                <small>Liquidaciones Pendientes Inversiones</small>
+                            </span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{route('liquidacion.pendientes')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Liquidaciones Pendientes</span>
+                            <span class="title">
+                                <small>Liquidaciones Pendientes</small>
+                            </span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Liquidaciones Realizadas</span>
+                            <span class="title">
+                                <small>Liquidaciones Realizadas</small>
+                            </span>
                         </a>
                     </li>
                 </ul>

@@ -23,18 +23,6 @@
 							<th class="text-center">
 								Correo
 							</th>
-							{{-- <th class="text-center">
-								Telefono
-							</th> --}}
-							{{-- <th class="text-center">
-								Pais
-							</th> --}}
-							{{-- <th class="text-center">
-								Referido por
-							</th> --}}
-							{{-- <th class="text-center">
-								Rango
-							</th> --}}
 							<th class="text-center">
 								Estatus
 							</th>
@@ -44,18 +32,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						@php
-						$cont = "";
-						@endphp
 						@foreach($datos as $usuario)
-						@php
-
-						$falta = DB::table('user_campo')
-						->where('ID', '=', $usuario['ID'])
-						->get();
-
-						$roles = DB::table('roles')->get();
-						@endphp
 						<tr>
 							<td class="text-center">
 								{{ $usuario['ID'] }}
@@ -66,28 +43,6 @@
 							<td class="text-center">
 								{{ $usuario['user_email'] }}
 							</td>
-							{{-- <td class="text-center">
-								{{ $usuario['phone'] }}
-							</td> --}}
-							{{-- <td class="text-center">
-								@foreach($falta as $fal)
-								{{ $fal->pais }}
-								@endforeach
-							</td> --}}
-							{{-- <td class="text-center">
-								{{ $usuario['nombre_referido'] }}
-							</td> --}}
-{{-- 
-							<td class="text-center">
-
-								@foreach($roles as $rol)
-								@if($rol->id == $usuario['rol_id'])
-								{{$rol->name}}
-								@endif
-								@endforeach
-
-							</td> --}}
-
 							<td class="text-center">
 
 								@if ($usuario['status'] == 1)

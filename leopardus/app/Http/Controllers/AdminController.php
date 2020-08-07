@@ -133,7 +133,7 @@ class AdminController extends Controller
         $allReferido = [];
         $fecha1 = new Carbon($request->fecha1);
         $fecha2 = new Carbon($request->fecha2);
-        $allReferidotmp = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
+        $allReferidotmp = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'position_id', 0);
         foreach ($allReferidotmp as $referido) {
             $fechaIngreso = new Carbon($referido->created_at);
             if ($fechaIngreso >= $fecha1 && $fechaIngreso <= $fecha2) {
@@ -157,7 +157,7 @@ class AdminController extends Controller
         
                 view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
                 
-                $allReferidotmp = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
+                $allReferidotmp = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'position_id', 0);
                 $allReferido = [];
                 foreach ($allReferidotmp as $user ) {
                     $user->inversion = $rango->getTotalInvertion($user->ID);
@@ -187,7 +187,7 @@ class AdminController extends Controller
         $rango = new RangoController();
         // DO MENU
         view()->share('do', collect(['name' => 'network', 'text' => 'Red de Usuarios']));
-        $allReferido = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
+        $allReferido = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'position_id', 0);
         foreach ($allReferido as $referido) {
             $referido->inversion = $rango->getTotalInvertion($referido->ID);
         }
@@ -211,7 +211,7 @@ class AdminController extends Controller
         view()->share('title', 'Red de usuarios del usuario: '.$base->display_name.' -  ID : '.$request->id);
         $funcionesIndex = new IndexController();
         $rango = new RangoController();
-        $allReferidotmp = $funcionesIndex->getChidrens2($request->id, [], 1, 'referred_id', 0);
+        $allReferidotmp = $funcionesIndex->getChidrens2($request->id, [], 1, 'position_id', 0);
         $allReferido = [];
         foreach ($allReferidotmp as $referido) {
             if ($referido->nivel <= 10) {
@@ -313,7 +313,7 @@ class AdminController extends Controller
 
         view()->share('title', 'Ordenes de Red');
         $funcionesIndex = new IndexController();
-        $TodosUsuarios = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
+        $TodosUsuarios = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'position_id', 0);
         $compras = array();
         if (!empty($TodosUsuarios)) {
             foreach($TodosUsuarios as $user){
@@ -337,7 +337,7 @@ class AdminController extends Controller
           view()->share('title', 'Ordenes de Red');
           $funcionesIndex = new IndexController();
 
-          $TodosUsuarios = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'referred_id', 0);
+          $TodosUsuarios = $funcionesIndex->getChidrens2(Auth::user()->ID, [], 1, 'position_id', 0);
          $settings = Settings::first();
         $compras = array();
 

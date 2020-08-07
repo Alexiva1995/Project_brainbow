@@ -160,17 +160,12 @@ class HomeController extends Controller
 
 
         foreach ($usuarios as $llave) {
-          $usuario = User::find($llave->referred_id);
-          $masinfo = DB::table('user_campo')->where('ID', $llave->ID)->select('phone')->first();
           array_push($datos, [
             'ID' => $llave->ID,
             'display_name' => $llave->display_name,
             'user_email' => $llave->user_email,
-            // 'country' => $llave->country,
             'rol_id' => $llave->rol_id,
             'status' => $llave->status,
-            'nombre_referido' => $usuario['display_name'],
-            'phone' => $masinfo->phone
           ]);
         }
 
