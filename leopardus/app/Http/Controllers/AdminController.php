@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\User;
-use App\Wallet;
 use App\Settings;
-use App\Notification;
 use App\OrdenInversion;
 
 

@@ -14,8 +14,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-        'App\Console\Commands\StatusUser',
-        'App\Console\Commands\UpdateRol'
     ];
 
     /**
@@ -28,11 +26,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('status:user')
-                    ->everyMinute();
+        // $schedule->command('status:user')
+        //             ->everyMinute();
                 
-        $schedule->command('update:roles')
-                  ->everyMinute();            
+        // $schedule->command('update:roles')
+        //           ->everyMinute();            
     }
 
     /**

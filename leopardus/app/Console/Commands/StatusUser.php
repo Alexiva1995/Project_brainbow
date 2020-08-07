@@ -6,10 +6,6 @@ use Illuminate\Console\Command;
 use App\User;
 use Carbon\Carbon;
 use App\Http\Controllers\ActivacionController;
-use App\Http\Controllers\ComisionesController;
-use App\Http\Controllers\TiendaController;
-use App\Http\Controllers\RangoController;
-use App\SettingsComision;
 
 class StatusUser extends Command
 {
@@ -45,14 +41,13 @@ class StatusUser extends Command
     public function handle()
     {
         try {
-            $users = User::where('rol_id', '!=', 0)->get();
+            $users = User::where([
+                ['status', '=', 0],
+                ['ID', '!=', 1]
+            ])->get();
             $activacion = new ActivacionController;
-            $comisiones = new ComisionesController;
-            $GLOBALS['settingsComision'] = SettingsComision::find(1);
             foreach ($users as $user ) {
                 $activacion->activarUsuarios($user->ID);  
-                // $comisiones->bonoDirecto($user->ID);
-                // $comisiones->generarComision($user->ID);
             }
             $this->info('Usuarios Verificados Correctamente '.Carbon::now());
         } catch (\Throwable $th) {

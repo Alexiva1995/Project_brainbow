@@ -46,7 +46,7 @@ class BonoRentabilidad extends Command
     {
         try {
             $comisiones = new ComisionesController;
-            $comisiones->rentabilidadMensual();
+            $comisiones->getRentabilidad();
 
             $this->info('Bono de Rentabilidad pagado '. Carbon::now());
         } catch (\Throwable $th) {

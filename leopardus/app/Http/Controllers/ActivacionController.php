@@ -19,36 +19,15 @@ class ActivacionController extends Controller
      */
     public function activarUsuarios($userid)
     {
-        $funciones = new IndexController;
         $user = User::find($userid);
-        $fechaActual = Carbon::now();
-        $paquete = [];
-        if (!$this->statusActivacion($user)) {
-            $compras = $funciones->getInforShopping($user->ID);
-            $fechaNueva = null;
-            $activo = false;
-            foreach ($compras as $compra) {
-                $fechaTmp = new Carbon($compra['fecha']);
-                $fechaNueva = $fechaTmp->addDay(200);
-                if ($fechaNueva > $fechaActual) {
-                    $activo = true;
-                    foreach ($compra['productos'] as $producto) {
-                        $paquete = $producto;
-                    }
-                }else{
-                    $activo = false;
-                }
-            }
-            if ($activo) {
-                $user->paquete = json_encode($paquete);
-                $user->status = 1;
-                $user->fecha_activacion = $fechaNueva;
-                $user->save();
-            }else{
-                $user->status = 0;
-                $user->save();
-            }
+        $index = new IndexController();
+        $inversiones = $index->getInversionesUserDashboard($userid);
+        if (count($inversiones) > 0) {
+            $user->status = 1;
+        }else{
+            $user->status = 0;
         }
+        $user->save();
     }
 
     /**

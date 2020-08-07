@@ -237,18 +237,18 @@ right connector from last child*/
 							@endforeach
 							@if (count($child->children) < 3) @if (count($child->children) == 2)
 								<li>
-									<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 								</li>
 								@endif
 								@if (count($child->children) == 1)
 								@for ($i = 1; $i < 3; $i++) <li>
-									<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+									<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 					</li>
 					@endfor
 					@endif
 					@if (count($child->children) == 0)
 					@for ($i = 1; $i < 4; $i++) <li>
-						<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+						<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 			</li>
 			@endfor
 			@endif
@@ -259,10 +259,10 @@ right connector from last child*/
 		</li>
 		@endforeach
 		@if (count($trees) < 3) @if (count($trees)==2) <li>
-			<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+			<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 			<ul>
 				@for ($o = 1; $o < 4; $o++) <li>
-					<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+					<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 					</li>
 					@endfor
 			</ul>
@@ -270,10 +270,10 @@ right connector from last child*/
 			@endif
 			@if (count($trees) == 1)
 			@for ($i = 1; $i < 3; $i++) <li>
-				<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+				<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 				<ul>
 					@for ($o = 1; $o < 4; $o++) <li>
-						<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+						<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 						</li>
 						@endfor
 				</ul>
@@ -282,10 +282,10 @@ right connector from last child*/
 				@endif
 				@if (count($trees) == 0)
 				@for ($i = 1; $i < 4; $i++) <li>
-					<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+					<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 					<ul>
 						@for ($o = 1; $o < 4; $o++) <li>
-							<img src="https://image.flaticon.com/icons/png/512/36/36962.png" style="width:64px">
+							<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 							</li>
 							@endfor
 					</ul>
