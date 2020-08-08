@@ -28,7 +28,8 @@ class Liquidacion extends Model
 
     protected $fillable = [
         'iduser', 'total', 'hash', 'wallet_used', 'process_date',
-        'comment', 'comment2', 'comment_reverse', 'status'
+        'comment', 'comment2', 'comment_reverse', 'status', 'type_liquidation',
+        'idinversion'
     ];
 
 

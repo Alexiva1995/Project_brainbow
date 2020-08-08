@@ -121,14 +121,14 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="{{url('mioficina/admin/wallet/')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
                             <span class="title">
                                 <small>Billetera</small>
                             </span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <a href="{{route('liquidacion')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
@@ -138,10 +138,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
+                        <a href="{{route('liquidacion.inversion')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
                             <span class="title">
-                                <small>Liquidaciones Pendientes Inversiones</small>
+                                <small>Liquidación Inversiones</small>
                             </span>
                         </a>
                     </li>
@@ -154,7 +154,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
+                        <a href="{{route('liquidacion.realizadas')}}" class="nav-link">
                             <i class="feather icon-circle"></i>
                             <span class="title">
                                 <small>Liquidaciones Realizadas</small>

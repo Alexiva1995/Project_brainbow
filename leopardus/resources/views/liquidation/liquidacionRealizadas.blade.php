@@ -23,7 +23,7 @@
                             <th>Valor USD</th>
                             <th>Billetera</th>
                             <th>Tipo Liquidacion</th>
-                            <th>Accion</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,8 +37,13 @@
                             <td>{{$liquidacion->wallet_used}}</td>
                             <td>{{$liquidacion->type_liquidation}}</td>
                             <td>
-                                <button class="btn btn-info" onclick="aprobar('{{json_encode($liquidacion)}}')">Aprobar</button>
-                                <button class="btn btn-danger" onclick="reversar('{{json_encode($liquidacion)}}')">Reversar</button>
+                                @if ($liquidacion->status == 0)
+                                    Pendiente
+                                @elseif($liquidacion->status == 1)
+                                    Liquidada
+                                @elseif($liquidacion->status == 2)
+                                    Reversada
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -49,32 +54,4 @@
     </div>
 </div>
 
-@include('liquidation.componentes.modalReversar')
-@include('liquidation.componentes.modalAprobar')
-
-<script>
-    function reversar(liquidacion) {
-        liquidacion = JSON.parse(liquidacion)
-        $('.iduser').val(liquidacion.iduser)
-        $('.liquidacion').val(liquidacion.id)
-        $('.usuario').html('Usuario: '+ liquidacion.usuario)
-        $('.billetera').html('Billetera: '+ liquidacion.wallet_used)
-        $('.monto').html('Monto: $ '+ liquidacion.total)
-        $('#modaReversarComision').html('Reversar la Liquidacion del usuario '+liquidacion.usuario)
-
-        $('#modalReversar').modal('show')
-    }
-
-    function aprobar(liquidacion) {
-        liquidacion = JSON.parse(liquidacion)
-        $('.iduser').val(liquidacion.iduser)
-        $('.liquidacion').val(liquidacion.id)
-        $('.usuario').html('Usuario: '+ liquidacion.usuario)
-        $('.billetera').html('Billetera: '+ liquidacion.wallet_used)
-        $('.monto').html('Monto: $ '+ liquidacion.total)
-        $('#modaAprobarComision').html('Aprobar la Liquidacion del usuario '+liquidacion.usuario)
-
-        $('#modalAprobar').modal('show')
-    }
-</script>
 @endsection

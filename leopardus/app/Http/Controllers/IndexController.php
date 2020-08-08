@@ -443,7 +443,7 @@ class IndexController extends Controller
             if ($paquete != null) {
                 $rentabilidad = WalletlogRentabilidad::where([
                     ['iduser', '=', $iduser],
-                    ['idinversion', '=', $inversion],
+                    ['idinversion', '=', $inversion->id],
                 ])->get()->sum('debito');
                 $fecha_vencimiento = new Carbon($inversion->fecha_fin);
                 $estado = ($fecha_vencimiento > $fechaActual) ? 'Activa' : 'Vencidad';

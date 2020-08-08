@@ -9,6 +9,11 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ComisionesController;
+use App\OrdenInversion;
+use App\WalletlogRentabilidad;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\WalletController;
+
 
 class LiquidationController extends Controller
 {
@@ -259,7 +264,8 @@ class LiquidationController extends Controller
             'total' => $totalLiquidation,
             'wallet_used' => $wallet->paypal,
             'process_date' => Carbon::now(),
-            'status' => 0
+            'status' => 0,
+            'type_liquidation' => 'Comisiones'
         ];
         $idLiquidacion = $this->saveLiquidation($data);
         $concepto = 'Liquidacion generada por un monto de '.$totalLiquidation;
@@ -305,9 +311,8 @@ class LiquidationController extends Controller
      */
     public function saveWallet(array $data)
     {
-        $comisiones = new ComisionesController();
-
-        $comisiones->saveWallet($data);
+        $funciones = new WalletController;
+        $funciones->saveWallet($data);
     }
 
     /**
@@ -333,4 +338,237 @@ class LiquidationController extends Controller
 
         return view('liquidation.liquidacionPendiente', compact('liquidaciones'));
     }
+
+    /**
+     * Permite llevar a las liquidaciones Realizadas
+     *
+     * @return void
+     */
+    public function liquidacionesRealizada()
+    {
+        // TITLE
+        view()->share('title', 'Liquidaciones Realizadas');
+        $liquidaciones = Liquidacion::where('status', '=', 0)->get();
+
+        foreach ($liquidaciones as $liquidacion) {
+            $user = User::find($liquidacion->iduser)->only('display_name', 'user_email');
+            $liquidacion->usuario = 'Usuario No Disponible';
+            $liquidacion->email = 'Correo no disponible';
+            if (!empty($user)) {
+                $liquidacion->usuario = $user['display_name'];
+                $liquidacion->email = $user['user_email'];
+            }
+        }
+
+        return view('liquidation.liquidacionRealizadas', compact('liquidaciones'));
+    }
+
+    /**
+     * Lleva a la vista las liquidaciones de inversion
+     *
+     * @return void
+     */
+    public function liquidacionesInversion()
+    {
+        // TITLE
+        view()->share('title', 'Liquidaciones de Inversiones');
+
+        $inversiones = $this->getInversionesUser();
+
+		return view('liquidation.indexInversiones', compact('inversiones')); 
+    }
+
+     /**
+     * Permite obtener las inversiones realizadas por los usuarios
+     *
+     * @return array
+     */
+    public function getInversionesUser() : array
+    {
+        $funciones = new IndexController();
+        $fechaActual = Carbon::now();
+        $arrayInversiones = [];
+        $inversiones = OrdenInversion::where([
+            // ['paquete_inversion', '!=', ''],
+            ['status', '=', 0]
+        ])->get();
+        foreach ($inversiones as $inversion) {
+            $paquete = $funciones->getProductDetails($inversion->paquete_inversion);
+            if ($paquete != null) {
+                $rentabilidad = WalletlogRentabilidad::where([
+                    ['iduser', '=', $inversion->iduser],
+                    ['idinversion', '=', $inversion->id],
+                ])->get()->sum('debito');
+                $user = User::find($inversion->iduser)->only('display_name', 'user_email');
+                $fecha_vencimiento = new Carbon($inversion->fecha_fin);
+                $estado = ($fecha_vencimiento > $fechaActual) ? 'Activa' : 'Vencidad';
+                $arrayInversiones [] = [
+                    'id' => $inversion->id,
+                    'img' => asset('products/'.$paquete->post_excerpt),
+                    'usuario' => $user['display_name'],
+                    'iduser' => $inversion->iduser,
+                    'inversion' => $inversion->invertido,
+                    'plan' => $paquete->post_title,
+                    'rentabilidad' => $rentabilidad,
+                    'fecha_venci' => $fecha_vencimiento,
+                    'penalizacion' => $paquete->penalizacion,
+                    'estado' => $estado
+                ];
+            }
+        }
+        return $arrayInversiones;
+    }
+
+    /**
+	 * Permite procesar el proceso de la liquidacion de la inversiones
+	 *
+	 * @param Request $request
+	 * @return void
+	 */
+	public function liquidarInversiones(Request $request)
+	{
+
+		$user = User::find($request->iduser);
+		$admin = User::find(1);
+		$inversion = OrdenInversion::find($request->idinversion);
+		$concepto = 'Liquidacion de '.$request->retirar.' de la inversion: '.$request->idinversion;
+		$credito = $request->retirar;
+		if ($request->porc_penalizacion != 0) {
+			$user->rentabilidad = ($user->rentabilidad - $request->retirar);
+			$admin->rentabilidad = ($user->rentabilidad + $request->mont_penalizacion);
+		}else{
+            $user->rentabilidad = ($user->rentabilidad - $request->retirar);
+        }
+		$user->save();
+		$admin->save();
+	
+        // $concepto = 'Liquidacion generada por un monto de '.$credito;
+
+		$data = [
+			'iduser' => $inversion->iduser,
+			'idinversion' => $inversion->id,
+			'concepto' => $concepto,
+			'debito' => 0,
+			'credito' => $credito,
+			'balance' => $user->rentabilidad,
+			'semana' => '',
+			'year' => '',
+			'fecha_retiro' => Carbon::now(),
+			'descuento' => $request->mont_penalizacion,
+		];
+
+		$comisiones = new ComisionesController();
+        $idWalletRentabilidad = $comisiones->sabeWalletRentabilidad($data);
+        
+        $wallet = DB::table('user_campo')->where('ID', '=', $request->iduser)->select('paypal')->first();
+        $dataLiquidation = [
+            'iduser' => $request->iduser,
+            'total' => $request->total,
+            'wallet_used' => $wallet->paypal,
+            'process_date' => Carbon::now(),
+            'status' => 0,
+            'type_liquidation' => 'Inversion',
+            'idinversion' => $idWalletRentabilidad
+		];
+		$this->saveLiquidation($dataLiquidation);
+
+		return redirect()->back()->with('msj', 'Liquidacion Procesada con exito');
+    }
+    
+    /**
+     * Permite procesar las liquidaciones ya una vez en estado de pendiente
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function updateLiquidation(Request $request)
+    {
+        if ($request->action == 'reversar') {
+            $validate = $request->validate([
+                'comentario' => 'required'
+            ]);
+        }else{
+            $validate = true;
+        }
+
+        if ($validate) {
+            $accion = '';
+            if ($request->action == 'reversar') {
+                $accion = 'Se reverso con exito la liquidacion '.$request->liquidacion;
+                $this->reversarLiquidaciones($request->iduser, $request->liquidacion, $request->comentario);
+            }else{
+                $accion = 'Se aprobo con exito la liquidacion '.$request->liquidacion;
+            }
+            return redirect()->back()->with('msj', $accion);
+        }
+    }
+
+    /**
+     * Permite reversar todas las liquidaciones procesadas
+     *
+     * @param integer $iduser
+     * @param integer $idliquidacion
+     * @param string $comentario
+     * @return void
+     */
+    public function reversarLiquidaciones(int $iduser, int $idliquidacion, string $comentario)
+    {
+        try {
+            $liquidacion = Liquidacion::find($idliquidacion);
+            $user = User::find($iduser);
+            if ($liquidacion->type_liquidation == 'Inversion') {
+                $admin = User::find(1);
+                $walletRentabilidad = WalletlogRentabilidad::find($liquidacion->idinversion);
+                $concepto = 'Reverso de la  liquidacion de '.$walletRentabilidad->credito.' de la inversion: '.$walletRentabilidad->idinversion;
+                $debito = $walletRentabilidad->credito;
+                if ($walletRentabilidad->descuento != 0) {
+                    $user->rentabilidad = ($user->rentabilidad + $walletRentabilidad->credito);
+                    $admin->rentabilidad = ($user->rentabilidad - $walletRentabilidad->descuento);
+                }else{
+                    $user->rentabilidad = ($user->rentabilidad + $walletRentabilidad->credito);
+                }
+                $user->save();
+                $admin->save();
+                
+                $data = [
+                    'iduser' => $iduser,
+                    'idinversion' => $walletRentabilidad->idinversion,
+                    'concepto' => $concepto,
+                    'debito' => $debito,
+                    'credito' => 0,
+                    'balance' => $user->rentabilidad,
+                    'semana' => '',
+                    'year' => '',
+                    'fecha_retiro' => Carbon::now(),
+                    'descuento' => 0,
+                ];
+        
+                $comisiones = new ComisionesController();
+                $comisiones->sabeWalletRentabilidad($data);
+            }elseif($liquidacion->type_liquidation == 'Comisiones'){
+
+                $concepto = 'Reverso de la liquidacion con un monto de '.$liquidacion->total;
+
+                $user->wallet_amount = ($user->wallet_amount + $liquidacion->total);
+                $dataWallet = [
+                    'iduser' => $iduser,
+                    'usuario' => $user->display_name,
+                    'descripcion' => $concepto,
+                    'descuento' => 0,
+                    'debito' => $liquidacion->total,
+                    'credito' => 0,
+                    'balance' => $user->wallet_amount,
+                    'tipotransacion' => 3,
+                    'status' => 0
+                ];
+                $this->saveWallet($dataWallet);
+            }
+            $liquidacion->comment_reverse = $comentario;
+            $liquidacion->status = 2;
+            $liquidacion->save();
+        } catch (\Throwable $th) {
+            dd($th);
+        }
+    }
+
 }

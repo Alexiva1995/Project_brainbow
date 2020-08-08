@@ -14,11 +14,10 @@ use App\SettingsComision;
 use App\Pagos;
 use App\Monedas;
 use App\Http\Controllers\ComisionesController;
-use App\WalletlogRentabilidad;
 use PragmaRX\Google2FA\Google2FA;
 use App\Http\Controllers\IndexController;
 use App\OrdenInversion;
-use App\OrdenRetiro;
+use App\Http\Controllers\LiquidationController;
 
 
 
@@ -429,35 +428,41 @@ $billetera = DB::table('walletlog')
 		return view('wallet.indexInversiones', compact('inversiones')); 
 	}
 
+	/**
+	 * Permite procesar el proceso de la liquidacion de la inversiones
+	 *
+	 * @param Request $request
+	 * @return void
+	 */
 	public function retirarInversiones(Request $request)
 	{
 
 		$user = User::find(Auth::user()->ID);
 		$admin = User::find(1);
-
 		$inversion = OrdenInversion::find($request->idinversion);
-		$concepto = 'Retiro de '.$request->retirar.' de la inversion: '.$request->idinversion;
+		$concepto = 'Liquidacion de '.$request->retirar.' de la inversion: '.$request->idinversion;
 		$credito = $request->retirar;
 		if ($request->porc_penalizacion != 0) {
 			$user->rentabilidad = ($user->rentabilidad - $request->retirar);
 			$admin->rentabilidad = ($user->rentabilidad + $request->mont_penalizacion);
+		}else{
+			$user->rentabilidad = ($user->rentabilidad - $request->retirar);
 		}
 		$user->save();
 		$admin->save();
 
-		$dataRetiro = [
-			'idinversion' => $inversion->id,
-			'total_retirar' => $request->total,
-			'retiro' => $request->retirar,
-			'penalizacion' => $request->mont_penalizacion,
-			'iduser' => $inversion->iduser,
-			'concepto' => $concepto,
-			'plan' => $request->plan,
-			'ganancia' => $request->ganacia,
-			'porc_penalizacion' => $request->porc_penalizacion,
-			'fecha_vencimiento' => new Carbon($inversion->fecha_fin),
-			'status' => 0,
+		$wallet = DB::table('user_campo')->where('ID', '=', Auth::user()->ID)->select('paypal')->first();
+        $dataLiquidation = [
+            'iduser' => Auth::user()->ID,
+            'total' => $credito,
+            'wallet_used' => $wallet->paypal,
+            'process_date' => Carbon::now(),
+            'status' => 0,
+			'type_liquidation' => 'Inversion',
+			'idinversion' => $inversion->id
 		];
+		
+        // $concepto = 'Liquidacion generada por un monto de '.$credito;
 
 		$data = [
 			'iduser' => $inversion->iduser,
@@ -474,21 +479,10 @@ $billetera = DB::table('walletlog')
 
 		$comisiones = new ComisionesController();
 		$comisiones->sabeWalletRentabilidad($data);
-		$this->saveOrdenRetiro($dataRetiro);
+		$liquidacion = new LiquidationController();
+		$liquidacion->saveLiquidation($dataLiquidation);
 
 		return redirect()->back()->with('msj', 'Retiro procesado con exito');
-	}
-	
-
-	/**
-	 * Permite guardar las orden de retiro
-	 *
-	 * @param array $data
-	 * @return void
-	 */
-	public function saveOrdenRetiro($data)
-	{
-		OrdenRetiro::create($data);
 	}
 
 }

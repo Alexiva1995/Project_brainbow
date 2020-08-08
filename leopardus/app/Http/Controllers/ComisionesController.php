@@ -274,7 +274,8 @@ class ComisionesController extends Controller
      */
     public function sabeWalletRentabilidad(array $data)
     {
-        WalletlogRentabilidad::create($data);
+        $result = WalletlogRentabilidad::create($data);
+        return $result->id;
     }
 
     /**
