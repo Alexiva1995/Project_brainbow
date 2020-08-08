@@ -17,6 +17,7 @@ use App\OrdenInversion;
 
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\RangoController;
+use App\Http\Controllers\ComisionesController;
 
 class AdminController extends Controller
 
@@ -318,11 +319,10 @@ class AdminController extends Controller
                 $ordenes = OrdenInversion::where('iduser', '=', $user->ID)->get();
                 foreach ($ordenes as $orden){
                     $orden->usuario = $user->display_name;
-                    $compras = $orden;
+                    $compras [] = $orden;
                 }
             }
         }
-        
         return view('dashboard.networkOrders')->with(compact('compras'));
     }
 
@@ -350,7 +350,7 @@ class AdminController extends Controller
                                             ->whereDate('created_at', '<=', $fecha['segundo'])->get();
                 foreach ($ordenes as $orden){
                     $orden->usuario = $user->display_name;
-                    $compras = $orden;
+                    $compras [] = $orden;
                 }
             }
         }

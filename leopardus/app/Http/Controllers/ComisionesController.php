@@ -76,7 +76,7 @@ class ComisionesController extends Controller
         $funciones = new IndexController;
         $inversiones = $this->getInversiones(false);
         foreach ($inversiones as $inversion) {
-            $paquete = $funciones->getProductDetails($inversion->paquete_invertido);
+            $paquete = $funciones->getProductDetails($inversion->paquete_inversion);
             if (!empty($paquete)) {
                 $sponsors = $funciones->getSponsor($inversion->iduser, [], 2, 'ID', 'referred_id');
                 foreach ($sponsors as $sponsor) {
@@ -93,10 +93,15 @@ class ComisionesController extends Controller
                         if (stripos($paquete->post_title, 'ORO') !== false) {
                             $porcentaje = 0.03;
                         }
-                        if ($this->checkComision($idcomision, $sponsor->ID) && $porcentaje != 0) {
+                        $check = DB::table('commissions')
+                                ->select('id')
+                                ->where('user_id', '=', $sponsor->ID)
+                                ->where('compra_id', '=', $idcomision)
+                                ->first();
+                        if ($check == null && $porcentaje != 0) {
                             $pagar = ($inversion->invertido * $porcentaje);
                             $concepto = 'Bono Directo, usuario '.$user->display_name;
-                            $this->guardarComision($sponsor->ID, $idcomision, $pagar, $user->email, 1, $concepto, 'referido');
+                            $this->guardarComision($sponsor->ID, $idcomision, $pagar, $user->user_email, 1, $concepto, 'referido');
                         }
                     }
                 }
@@ -147,10 +152,16 @@ class ComisionesController extends Controller
             if ($invertido >= 500 && $invertido < 1000) {
                 if ($usuario->nivel <= 3) {
                     if ($invertidoReferidos >= 1000) {
-                        if ($this->checkComision($idcomision, $iduser)) {
+                        
+                        $check = DB::table('commissions')
+                                ->select('id')
+                                ->where('user_id', '=', $iduser)
+                                ->where('compra_id', '=', $idcomision)
+                                ->first();
+                        if ($check == null) {
                             $pagar = $this->getMontoAPagar($usuario->nivel);
                             $concepto = 'Bono Matriz, usuario '.$usuario->display_name;
-                            $this->guardarComision($iduser, $idcomision, $pagar, $user->email, $user->nivel, $concepto, 'referido');
+                            $this->guardarComision($iduser, $idcomision, $pagar, $usuario->user_email, $usuario->nivel, $concepto, 'referido');
                         }
                     }
                 }
@@ -159,10 +170,15 @@ class ComisionesController extends Controller
             if ($invertido >= 1000 && $invertido < 2000) {
                 if ($usuario->nivel <= 6) {
                     if ($invertidoReferidos >= 1000) {
-                        if ($this->checkComision($idcomision, $iduser)) {
+                        $check = DB::table('commissions')
+                                ->select('id')
+                                ->where('user_id', '=', $iduser)
+                                ->where('compra_id', '=', $idcomision)
+                                ->first();
+                        if ($check == null) {
                             $pagar = $this->getMontoAPagar($usuario->nivel);
                             $concepto = 'Bono Matriz, usuario '.$usuario->display_name;
-                            $this->guardarComision($iduser, $idcomision, $pagar, $user->email, $user->nivel, $concepto, 'referido');
+                            $this->guardarComision($iduser, $idcomision, $pagar, $usuario->user_email, $usuario->nivel, $concepto, 'referido');
                         }
                     }
                 }
@@ -172,10 +188,15 @@ class ComisionesController extends Controller
             if ($invertido >= 2000) {
                 if ($usuario->nivel <= 10) {
                     if ($invertidoReferidos >= 1000) {
-                        if ($this->checkComision($idcomision, $iduser)) {
+                        $check = DB::table('commissions')
+                                ->select('id')
+                                ->where('user_id', '=', $iduser)
+                                ->where('compra_id', '=', $idcomision)
+                                ->first();
+                        if ($check == null) {
                             $pagar = $this->getMontoAPagar($usuario->nivel);
                             $concepto = 'Bono Matriz, usuario '.$usuario->display_name;
-                            $this->guardarComision($iduser, $idcomision, $pagar, $user->email, $user->nivel, $concepto, 'referido');
+                            $this->guardarComision($iduser, $idcomision, $pagar, $usuario->user_email, $usuario->nivel, $concepto, 'referido');
                         }
                     }
                 }
@@ -271,7 +292,7 @@ class ComisionesController extends Controller
             $fecha = Carbon::now();
             $inversiones = OrdenInversion::where([
                 ['status', '=', 1]
-            ])->whereDate('created_at', '>', $fecha->subDay(3))->get();
+            ])->whereDate('created_at', '>', $fecha->subDay(20))->get();
         }
 
         return $inversiones;

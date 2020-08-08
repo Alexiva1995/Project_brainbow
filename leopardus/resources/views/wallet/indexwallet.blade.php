@@ -145,11 +145,11 @@ if ($fecha->dayOfWeek >= 1 && $fecha->dayOfWeek <= 2) { $activo=true; }
                 </table>
             </div>
         </div>
-        @if (Auth::user()->rol_id != 0)
+        {{-- @if (Auth::user()->rol_id != 0)
         <div class="col-xs-12 col-sm-6">
             <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModalRetiro">Retiro</button>
         </div>
-        @endif
+        @endif --}}
     </div>
 </div>
 

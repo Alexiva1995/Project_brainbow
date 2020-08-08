@@ -13,28 +13,27 @@
 			<div class="table-responsive">
 				<table id="mytable" class="table zero-configuration">
 					<thead>
-						<tr>
+						<tr class="text-center">
 							<th>Numero de Orden</th>
 							<th>Usuario</th>
 							<th>Fecha</th>
 							<th>Concepto</th>
 							<th>Total</th>
-							<th>Generacion</th>
 							<th>Estado</th>
 						</tr>
 					</thead>
 					<tbody>
 						@foreach ($compras as $compra)
 						<tr class="text-center">
-							<td>{{$orden->id}}</td>
-							<td>{{$orden->usuario}}</td>
-							<td>{{date('d-m-Y', strtotime($orden->created_at))}}</td>
-							<td>{{$orden->concepto}}</td>
-							<td>$ {{$orden->invertido}}</td>
+							<td>{{$compra->id}}</td>
+							<td>{{$compra->usuario}}</td>
+							<td>{{date('d-m-Y', strtotime($compra->created_at))}}</td>
+							<td>{{$compra->concepto}}</td>
+							<td>$ {{$compra->invertido}}</td>
 							<td>
-							@if ($orden->status == 0)
+							@if ($compra->status == 0)
 								Pendiente
-							@elseif($orden->status == 1)
+							@elseif($compra->status == 1)
 								Aprobada
 							@endif
 							</td>
