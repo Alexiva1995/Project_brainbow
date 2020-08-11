@@ -56,7 +56,8 @@ class ComisionesController extends Controller
                 'credito' => 0,
                 'balance' => $user->wallet_amount,
                 'tipotransacion' => 2,
-                'status' => 0
+                'status' => 0,
+                'correo' => $referred_email
             ];
             $funciones = new WalletController;
             $funciones->saveWallet($datos);
@@ -101,7 +102,7 @@ class ComisionesController extends Controller
                         if ($check == null && $porcentaje != 0) {
                             $pagar = ($inversion->invertido * $porcentaje);
                             $concepto = 'Bono Directo, usuario '.$user->display_name;
-                            $this->guardarComision($sponsor->ID, $idcomision, $pagar, $user->user_email, 1, $concepto, 'referido');
+                            $this->guardarComision($sponsor->ID, $idcomision, $pagar, $sponsor->user_email, 1, $concepto, 'referido');
                         }
                     }
                 }

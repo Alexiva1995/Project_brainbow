@@ -259,29 +259,36 @@ class LiquidationController extends Controller
         }
         
         $wallet = DB::table('user_campo')->where('ID', '=', $iduser)->select('paypal')->first();
+        $feed = ($totalLiquidation * 0.02);
+        $totalPagar = ($totalLiquidation - $feed);
         $data = [
             'iduser' => $iduser,
-            'total' => $totalLiquidation,
+            'total' => $totalPagar,
             'wallet_used' => $wallet->paypal,
             'process_date' => Carbon::now(),
             'status' => 0,
-            'type_liquidation' => 'Comisiones'
+            'type_liquidation' => 'Comisiones',
+            'monto_bruto' => $totalLiquidation,
+            'feed' => $feed
         ];
         $idLiquidacion = $this->saveLiquidation($data);
-        $concepto = 'Liquidacion generada por un monto de '.$totalLiquidation;
 
+        $concepto = 'Liquidacion generada por un monto de '.$totalLiquidation;
+        
         $user = User::find($iduser);
         $user->wallet_amount = ($user->wallet_amount - $totalLiquidation);
+        $user->save();
         $dataWallet = [
             'iduser' => $iduser,
             'usuario' => $user->display_name,
             'descripcion' => $concepto,
-            'descuento' => 0,
+            'descuento' => $feed,
             'debito' => 0,
-            'credito' => $totalLiquidation,
+            'credito' => $totalPagar,
             'balance' => $user->wallet_amount,
             'tipotransacion' => 3,
-            'status' => 0
+            'status' => 0,
+            'correo' => $user->user_email,
         ];
         $this->saveWallet($dataWallet);
 
@@ -348,7 +355,7 @@ class LiquidationController extends Controller
     {
         // TITLE
         view()->share('title', 'Liquidaciones Realizadas');
-        $liquidaciones = Liquidacion::where('status', '=', 0)->get();
+        $liquidaciones = Liquidacion::where('status', '=', 1)->get();
 
         foreach ($liquidaciones as $liquidacion) {
             $user = User::find($liquidacion->iduser)->only('display_name', 'user_email');
@@ -468,7 +475,9 @@ class LiquidationController extends Controller
             'process_date' => Carbon::now(),
             'status' => 0,
             'type_liquidation' => 'Inversion',
-            'idinversion' => $idWalletRentabilidad
+            'idinversion' => $idWalletRentabilidad,
+            'monto_bruto' => $request->retirar,
+            'feed' => $request->mont_penalizacion
 		];
 		$this->saveLiquidation($dataLiquidation);
 
@@ -547,21 +556,22 @@ class LiquidationController extends Controller
                 $comisiones->sabeWalletRentabilidad($data);
             }elseif($liquidacion->type_liquidation == 'Comisiones'){
 
-                $concepto = 'Reverso de la liquidacion con un monto de '.$liquidacion->total;
-
-                $user->wallet_amount = ($user->wallet_amount + $liquidacion->total);
+                $concepto = 'Reverso de la liquidacion con un monto de '.$liquidacion->monto_bruto;
+                $user->wallet_amount = ($user->wallet_amount + $liquidacion->monto_bruto);
                 $dataWallet = [
                     'iduser' => $iduser,
                     'usuario' => $user->display_name,
                     'descripcion' => $concepto,
                     'descuento' => 0,
-                    'debito' => $liquidacion->total,
+                    'debito' => $liquidacion->monto_bruto,
                     'credito' => 0,
                     'balance' => $user->wallet_amount,
                     'tipotransacion' => 3,
                     'status' => 0
                 ];
+                $user->save();
                 $this->saveWallet($dataWallet);
+                Commission::where('id_liquidacion', '=', $liquidacion->id)->update(['status' => 0, 'id_liquidacion' => '']);
             }
             $liquidacion->comment_reverse = $comentario;
             $liquidacion->status = 2;

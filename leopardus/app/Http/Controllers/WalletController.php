@@ -454,12 +454,14 @@ $billetera = DB::table('walletlog')
 		$wallet = DB::table('user_campo')->where('ID', '=', Auth::user()->ID)->select('paypal')->first();
         $dataLiquidation = [
             'iduser' => Auth::user()->ID,
-            'total' => $credito,
+            'total' => $request->total,
             'wallet_used' => $wallet->paypal,
             'process_date' => Carbon::now(),
             'status' => 0,
 			'type_liquidation' => 'Inversion',
-			'idinversion' => $inversion->id
+			'idinversion' => $inversion->id,
+			'monto_bruto' => $credito,
+			'feed' => $request->mont_penalizacion
 		];
 		
         // $concepto = 'Liquidacion generada por un monto de '.$credito;
@@ -475,6 +477,7 @@ $billetera = DB::table('walletlog')
 			'year' => '',
 			'fecha_retiro' => Carbon::now(),
 			'descuento' => $request->mont_penalizacion,
+			'correo' => $user->user_email
 		];
 
 		$comisiones = new ComisionesController();

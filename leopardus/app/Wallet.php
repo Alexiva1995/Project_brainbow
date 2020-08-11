@@ -13,7 +13,7 @@ class Wallet extends Model
      */
     protected $fillable = [
          'iduser', 'usuario', 'descripcion', 'debito', 'credito',
-         'balance', 'descuento', 'tipotransacion', 'status'
+         'balance', 'descuento', 'tipotransacion', 'status', 'correo'
 
     ];
     public function user(){

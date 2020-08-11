@@ -61,7 +61,7 @@ if ($fecha->dayOfWeek >= 1 && $fecha->dayOfWeek <= 2) { $activo=true; }
                         <tr>
                             <td class="text-center">{{ $wallet->id }}</td>
                             <td class="text-center">{{date('d-m-Y', strtotime($wallet->created_at)) }}</td>
-                            <td class="text-center">{{ $correoUser->user_email }}</td>
+                            <td class="text-center">{{ $wallet->correo }}</td>
                             <td class="text-center">{{ $wallet->descripcion }}</td>
                             <td class="text-center"> 
                                 @if ($moneda->mostrar_a_d)
