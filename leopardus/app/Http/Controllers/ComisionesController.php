@@ -102,7 +102,7 @@ class ComisionesController extends Controller
                         if ($check == null && $porcentaje != 0) {
                             $pagar = ($inversion->invertido * $porcentaje);
                             $concepto = 'Bono Directo, usuario '.$user->display_name;
-                            $this->guardarComision($sponsor->ID, $idcomision, $pagar, $sponsor->user_email, 1, $concepto, 'referido');
+                            $this->guardarComision($sponsor->ID, $idcomision, $pagar, $user->user_email, 1, $concepto, 'referido');
                         }
                     }
                 }

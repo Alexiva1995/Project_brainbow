@@ -380,7 +380,7 @@ class LiquidationController extends Controller
         // TITLE
         view()->share('title', 'Liquidaciones de Inversiones');
 
-        $inversiones = $this->getInversionesUser();
+        $inversiones = $this->getInversionesUser(false);
 
 		return view('liquidation.indexInversiones', compact('inversiones')); 
     }
@@ -390,15 +390,22 @@ class LiquidationController extends Controller
      *
      * @return array
      */
-    public function getInversionesUser() : array
+    public function getInversionesUser($dashboard) : array
     {
         $funciones = new IndexController();
         $fechaActual = Carbon::now();
         $arrayInversiones = [];
-        $inversiones = OrdenInversion::where([
-            ['paquete_inversion', '!=', ''],
-            ['status', '=', 0]
-        ])->get();
+        if ($dashboard) {
+            $inversiones = OrdenInversion::where([
+                ['paquete_inversion', '!=', ''],
+                ['status', '=', 0]
+            ])->orderBy('id', 'desc')->get()->take(10);
+        } else {
+            $inversiones = OrdenInversion::where([
+                ['paquete_inversion', '!=', ''],
+                ['status', '=', 0]
+            ])->get();
+        }
         foreach ($inversiones as $inversion) {
             $paquete = $funciones->getProductDetails($inversion->paquete_inversion);
             if ($paquete != null) {

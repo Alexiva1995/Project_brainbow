@@ -17,7 +17,7 @@ use App\OrdenInversion;
 
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\RangoController;
-use App\Http\Controllers\ComisionesController;
+use App\Http\Controllers\LiquidationController;
 
 class AdminController extends Controller
 
@@ -39,10 +39,15 @@ class AdminController extends Controller
     {
 
         $funcionesIndex = new IndexController();
+        $liquidacionindex = new LiquidationController();
         $rango = new RangoController();
         $rango->ValidarRango(Auth::user()->ID);
+        $inversiones = $funcionesIndex->getInversionesUserDashboard(Auth::user()->ID);
+        if (Auth::user()->rol_id == 0) {
+            $inversiones = $liquidacionindex->getInversionesUser(true);
+        }
         $data = [
-            'inversiones' => $funcionesIndex->getInversionesUserDashboard(Auth::user()->ID)
+            'inversiones' => $inversiones
         ];
         view()->share('title', 'Balance General');
         return view('dashboard.index', compact('data'));
