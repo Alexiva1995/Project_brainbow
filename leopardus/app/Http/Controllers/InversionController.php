@@ -25,7 +25,7 @@ class InversionController extends Controller
         ]);
         if ($validate) {
             $inversion = (double) $request->inversion;
-            $total = ($inversion + $request->precio);
+            $total = ($inversion + 0);
             $transacion = [
                 'amountTotal' => $total,
                 'note' => 'Inversion de '.number_format($request->inversion, 2, ',', '.').' USD',
@@ -42,9 +42,9 @@ class InversionController extends Controller
             ];
             $transacion['items'][] = [
                 'itemDescription' => 'Paquete de Inversion '.$request->name,
-                'itemPrice' => $request->precio, // USD
+                'itemPrice' => 0, // USD
                 'itemQty' => (INT) 1,
-                'itemSubtotalAmount' => $request->precio // USD
+                'itemSubtotalAmount' => 0 // USD
             ];
 
             $ruta = CoinPayment::generatelink($transacion);

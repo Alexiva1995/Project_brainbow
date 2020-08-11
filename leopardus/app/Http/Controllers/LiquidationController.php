@@ -57,7 +57,7 @@ class LiquidationController extends Controller
     {
         $comisiones = [];
         $comisionestmp = Commission::where('status', '=', 0)->select(
-            DB::raw('sum(total) as total'), 'user_id',
+            DB::raw('sum(total) as total'), 'user_id'
         )->groupBy('user_id')->get();
 
         foreach ($comisionestmp as $comision) {
@@ -175,7 +175,7 @@ class LiquidationController extends Controller
             foreach ($request->listuser as $user) {
                 $this->generanLiquidacion($user, []);
             }
-            return redirect()->back()->with('msj', 'Liquidaciones Procesadas');
+            return redirect()->route('liquidacion')->with('msj', 'Liquidaciones Procesadas');
         }
     }
 
@@ -193,10 +193,10 @@ class LiquidationController extends Controller
         if ($validate) {
             if ($request->action == 'liquidar') {
                 $this->generanLiquidacion($request->iduser, $request->listcomisiones);
-                return redirect()->back()->with('msj', 'Liquidacion Procesadas');
+                return redirect()->route('liquidacion')->with('msj', 'Liquidacion Procesadas');
             }elseif($request->action == 'rechazar'){
                 $this->rechazarComisiones($request->listcomisiones, $request->iduser);
-                return redirect()->back()->with('msj', 'Comisiones Rechazadas');
+                return redirect()->route('liquidacion')->with('msj', 'Comisiones Rechazadas');
             }
         }
     }

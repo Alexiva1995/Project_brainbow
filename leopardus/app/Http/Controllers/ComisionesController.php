@@ -23,7 +23,7 @@ class ComisionesController extends Controller
     if (Auth::user()->rol_id == 0) {
         // $this->bonoUnilevel(Auth::user()->ID);
     } else {
-        $this->bonoDirecto();
+        // $this->bonoDirecto();
     }
   }
 
@@ -240,9 +240,20 @@ class ComisionesController extends Controller
                     $fechatmpSemana = Carbon::now();
                     $semanayear = $fechatmpSemana->weekOfYear;
                     $year = $fechatmpSemana->year;
-                    $semanas = ($paquete->duration / 4.345);
-                    $porcentaje = ($paquete->rentabilidad / 100);
-                    $rentabilidad = (($inversion->invertido * $porcentaje) / $semanas);
+                    // $semanas = ($paquete->duration / 4.345);
+                    // $porcentaje = ($paquete->rentabilidad / 100);
+                    $porcentaje = 0;
+                    if (stripos($paquete->post_title, 'BRONCE') !== false) {
+                        $porcentaje = 1.25;
+                    }
+                    if (stripos($paquete->post_title, 'PLATA') !== false) {
+                        $porcentaje = 1.04;
+                    }
+                    if (stripos($paquete->post_title, 'ORO') !== false) {
+                        $porcentaje = 0.83;
+                    }
+                    $rentabilidad = ($inversion->invertido * $porcentaje);
+                    dump('Inversion '.$inversion->invertido.' - pago rentabilidad '.$rentabilidad. ' - Idusuario '.$inversion->iduser);
                     $user->rentabilidad = ($user->rentabilidad + $rentabilidad);
                     $data = [
                         'iduser' => $inversion->iduser,

@@ -89,6 +89,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
       Route::post('/liquidarinversiones', 'LiquidationController@liquidarInversiones')->name('liquidacion.liquidacion.inversiones');
       Route::get('/liquidacionrealizadas', 'LiquidationController@liquidacionesRealizada')->name('liquidacion.realizadas');
       Route::post('/updateLiquidacion', 'LiquidationController@updateLiquidation')->name('liquidacion.update');
+
+      Route::get('rentabilidad', 'ComisionesController@getRentabilidad')->name('prueba.rentabilidad');
     });
 
     // publicidad

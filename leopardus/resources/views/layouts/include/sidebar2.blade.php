@@ -115,31 +115,8 @@
                 <span class="title">Billetera</span>
                 <span class="arrow"></span>
             </a>
-          {{--  <ul class="sub-menu" style="background-color: #000D2F;">
-                <li class="nav-item">
-                    <a href="" class="nav-link" style="color: #FFFFFF;">
-                        <i class="feather icon-circle"></i>
-                        <span class="title">Billetera Cash</span>
-                    </a>
-                </li>
-                 <li class="nav-item">
-                    <a href="{{url('mioficina/admin/wallet/puntos')}}" class="nav-link">
-                        <i class="feather icon-circle"></i>
-                        <span class="title">Historial de Puntos</span>
-                    </a>
-                </li> 
-            </ul>--}}
         </li>
         {{-- FIN BILLETERA --}}
-
-        {{--<li>
-
-            <a href="{{route('publicidad.user')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
-                <i class="feather icon-share"></i>
-                <span class="title">Publicidad</span>
-            </a>
-
-        </li>--}}
 
         {{-- INFORMES --}}
         <li>
@@ -169,31 +146,6 @@
                 </li>
             </ul>
         </li>
-
-        {{-- FIN GESTION DE PERFILES --}}
-        {{-- INICIO TICKETS --}}
-        {{-- <li class="nav-item">
-            <a href="javascript:;" class="nav-link nav-toggle">
-                <i class="feather icon-message-square"></i>
-                <span class="title">Soporte</span>
-                <span class="arrow"></span>
-            </a>
-            <ul class="sub-menu">
-                <li class="nav-item">
-                    <a href="{{url('mioficina/admin/ticket/ticket')}}" class="nav-link">
-                        <i class="feather icon-circle"></i>
-                        <span class="title">Generar Tickets</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{url('mioficina/admin/ticket/misticket')}}" class="nav-link">
-                        <i class="feather icon-circle"></i>
-                        <span class="title">Mis Tickets</span>
-                    </a>
-                </li>
-            </ul>
-        </li> --}}
-        {{-- FIN TICKETS --}}
 
         {{-- CERRAR SESIÓN --}}
         <li class="nav-item">

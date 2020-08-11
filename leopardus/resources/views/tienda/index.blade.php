@@ -84,7 +84,7 @@
         labels: {
             finish: 'Invertir',
             next: 'Siguiente',
-            previous: 'Atra'
+            previous: 'Atras'
         },
         onStepChanging: function (event, currentIndex, newIndex) {
             // Allways allow previous action even if the current form is not valid!

@@ -105,7 +105,7 @@
 <script>
     function retiro(inversion) {
         inversion = JSON.parse(inversion)
-        // if (inversion.rentabilidad != 0) {
+        if (inversion.rentabilidad != 0) {
             $('#form_retiro').fadeIn(1000)
             $('#alert_retiro').fadeOut(1000)
             let fechaActual = new Date();
@@ -119,10 +119,10 @@
             }else{
                 $('#porc_penalizacion').val(inversion.penalizacion)
             }
-        // }else{
-        //     $('#form_retiro').fadeOut(1000)
-        //     $('#alert_retiro').fadeIn(1000)
-        // }
+        }else{
+            $('#form_retiro').fadeOut(1000)
+            $('#alert_retiro').fadeIn(1000)
+        }
         $('#exampleModal').modal('show')
     }
 

@@ -34,8 +34,21 @@
                             <td>{{$inversion->correo}}</td>
                             <td>$ {{$inversion->invertido}}</td>
                             <td>{{$inversion->plan}}</td>
-                            <td>{{date('d-m-Y', strtotime($inversion->fecha_inicio))}}</td>
-                            <td>{{date('d-m-Y', strtotime($inversion->fecha_fin))}}</td>
+                            <td>
+                                @if ($inversion->fecha_inicio != null)
+                                    {{date('d-m-Y', strtotime($inversion->fecha_inicio))}}
+                                @else
+                                    Fecha No Definida
+                                @endif
+                            </td>
+                            <td>
+                                @if ($inversion->fecha_fin != null)
+                                {{date('d-m-Y', strtotime($inversion->fecha_fin))}}
+                                @else
+                                    Fecha No Definida
+                                @endif
+                                
+                            </td>
                             <td>
                                 @if ($inversion->status == 0)
                                     Esperando Pago
