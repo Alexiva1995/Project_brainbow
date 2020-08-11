@@ -15,6 +15,10 @@
                 <h5 class="billetera"></h5>
                 <h5 class="monto"></h5>
                 <div class="form-group">
+                  <label for="">Hash</label>
+                  <input name="hash" class="form-control"/>
+              </div>
+                <div class="form-group">
                     <label for="">Comentario</label>
                     <textarea name="comentario" class="form-control"></textarea>
                 </div>

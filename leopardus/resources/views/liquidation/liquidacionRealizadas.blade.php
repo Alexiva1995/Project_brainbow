@@ -20,6 +20,7 @@
                             <th>ID Usuario</th>
                             <th>Usuario</th>
                             <th>Correo</th>
+                            <th>Hash</th>
                             <th>Valor USD</th>
                             <th>Billetera</th>
                             <th>Tipo Liquidacion</th>
@@ -33,6 +34,7 @@
                             <td>{{$liquidacion->iduser}}</td>
                             <td>{{$liquidacion->usuario}}</td>
                             <td>{{$liquidacion->email}}</td>
+                            <td>{{$liquidacion->hash}}</td>
                             <td>{{$liquidacion->total}}</td>
                             <td>{{$liquidacion->wallet_used}}</td>
                             <td>{{$liquidacion->type_liquidation}}</td>

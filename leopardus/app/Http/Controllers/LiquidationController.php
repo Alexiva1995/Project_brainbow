@@ -396,7 +396,7 @@ class LiquidationController extends Controller
         $fechaActual = Carbon::now();
         $arrayInversiones = [];
         $inversiones = OrdenInversion::where([
-            // ['paquete_inversion', '!=', ''],
+            ['paquete_inversion', '!=', ''],
             ['status', '=', 0]
         ])->get();
         foreach ($inversiones as $inversion) {
@@ -507,9 +507,25 @@ class LiquidationController extends Controller
                 $this->reversarLiquidaciones($request->iduser, $request->liquidacion, $request->comentario);
             }else{
                 $accion = 'Se aprobo con exito la liquidacion '.$request->liquidacion;
+                $this->aprobarLiquidacion($request);
             }
             return redirect()->back()->with('msj', $accion);
         }
+    }
+
+    /**
+     * Permite aprobar las liquidaciones
+     *
+     * @param object $data
+     * @return void
+     */
+    public function aprobarLiquidacion(object $data)
+    {
+        $liquidacion = Liquidacion::find($data->liquidacion);
+        $liquidacion->comment = $data->comentario;
+        $liquidacion->hash = $data->hash;
+        $liquidacion->status = 1;
+        $liquidacion->save();
     }
 
     /**
