@@ -528,11 +528,15 @@ class LiquidationController extends Controller
      */
     public function aprobarLiquidacion(object $data)
     {
-        $liquidacion = Liquidacion::find($data->liquidacion);
-        $liquidacion->comment = $data->comentario;
-        $liquidacion->hash = $data->hash;
-        $liquidacion->status = 1;
-        $liquidacion->save();
+        try {
+            $liquidacion = Liquidacion::find($data->liquidacion);
+            $liquidacion->comment = $data->comentario;
+            $liquidacion->hash = $data->hash;
+            $liquidacion->status = 1;
+            $liquidacion->save();
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 
     /**
