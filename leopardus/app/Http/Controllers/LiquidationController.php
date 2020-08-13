@@ -449,10 +449,13 @@ class LiquidationController extends Controller
 		$credito = $request->retirar;
 		if ($request->porc_penalizacion != 0) {
 			$user->rentabilidad = ($user->rentabilidad - $request->retirar);
-			$admin->rentabilidad = ($user->rentabilidad + $request->mont_penalizacion);
+            $admin->rentabilidad = ($user->rentabilidad + $request->mont_penalizacion);
+            $inversion->invertido = ($inversion->invertido - $request->retirar);
+            $inversion->save();
 		}else{
             $user->rentabilidad = ($user->rentabilidad - $request->retirar);
         }
+        
 		$user->save();
 		$admin->save();
 	
@@ -555,14 +558,18 @@ class LiquidationController extends Controller
             if ($liquidacion->type_liquidation == 'Inversion') {
                 $admin = User::find(1);
                 $walletRentabilidad = WalletlogRentabilidad::find($liquidacion->idinversion);
+                $inversion = OrdenInversion::find($walletRentabilidad->idinversion);
                 $concepto = 'Reverso de la  liquidacion de '.$walletRentabilidad->credito.' de la inversion: '.$walletRentabilidad->idinversion;
                 $debito = $walletRentabilidad->credito;
                 if ($walletRentabilidad->descuento != 0) {
                     $user->rentabilidad = ($user->rentabilidad + $walletRentabilidad->credito);
                     $admin->rentabilidad = ($user->rentabilidad - $walletRentabilidad->descuento);
+                    $inversion->invertido = ($inversion->invertido + $walletRentabilidad->credito);
+                    $inversion->save();
                 }else{
                     $user->rentabilidad = ($user->rentabilidad + $walletRentabilidad->credito);
                 }
+                
                 $user->save();
                 $admin->save();
                 

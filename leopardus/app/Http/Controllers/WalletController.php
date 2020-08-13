@@ -445,9 +445,12 @@ $billetera = DB::table('walletlog')
 		if ($request->porc_penalizacion != 0) {
 			$user->rentabilidad = ($user->rentabilidad - $request->retirar);
 			$admin->rentabilidad = ($user->rentabilidad + $request->mont_penalizacion);
+			$inversion->invertido = ($inversion->invertido - $request->retirar);
+			$inversion->save();
 		}else{
 			$user->rentabilidad = ($user->rentabilidad - $request->retirar);
 		}
+		
 		$user->save();
 		$admin->save();
 
