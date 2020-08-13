@@ -245,13 +245,13 @@ class ComisionesController extends Controller
                     // $porcentaje = ($paquete->rentabilidad / 100);
                     $porcentaje = 0;
                     if (stripos($paquete->post_title, 'BRONCE') !== false) {
-                        $porcentaje = 1.25;
+                        $porcentaje = 0.0125;
                     }
                     if (stripos($paquete->post_title, 'PLATA') !== false) {
-                        $porcentaje = 1.04;
+                        $porcentaje = 0.0104;
                     }
                     if (stripos($paquete->post_title, 'ORO') !== false) {
-                        $porcentaje = 0.83;
+                        $porcentaje = 0.0083;
                     }
                     $rentabilidad = ($inversion->invertido * $porcentaje);
                     dump('Inversion '.$inversion->invertido.' - pago rentabilidad '.$rentabilidad. ' - Idusuario '.$inversion->iduser);

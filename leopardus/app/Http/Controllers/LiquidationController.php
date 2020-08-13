@@ -398,12 +398,12 @@ class LiquidationController extends Controller
         if ($dashboard) {
             $inversiones = OrdenInversion::where([
                 ['paquete_inversion', '!=', ''],
-                ['status', '=', 0]
+                ['status', '=', 1]
             ])->orderBy('id', 'desc')->get()->take(10);
         } else {
             $inversiones = OrdenInversion::where([
                 ['paquete_inversion', '!=', ''],
-                ['status', '=', 0]
+                ['status', '=', 1]
             ])->get();
         }
         foreach ($inversiones as $inversion) {
