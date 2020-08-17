@@ -43,12 +43,20 @@ class AdminController extends Controller
         $rango = new RangoController();
         $rango->ValidarRango(Auth::user()->ID);
         $inversiones = $funcionesIndex->getInversionesUserDashboard(Auth::user()->ID);
-        if (Auth::user()->rol_id == 0) {
-            $inversiones = $liquidacionindex->getInversionesUser(true);
-        }
         $data = [
             'inversiones' => $inversiones
         ];
+        if (Auth::user()->rol_id == 0) {
+            $data = [
+                'InversionesActivas' => $funcionesIndex->getInversionesActivaAdmin(),
+                'totalInvertido' => $funcionesIndex->getTotalInvertidoAdmin(),
+                'totalEntrada' => $funcionesIndex->getEntradaMesAdmin(),
+                'divisiones' => $funcionesIndex->getDivisionPaquete(),
+                'listadoOrdenes' => $funcionesIndex->getInversionesAdminDashboard(),
+                'totalusers' => $funcionesIndex->getUserRegistrado()
+            ];
+        }
+        
         view()->share('title', 'Balance General');
         return view('dashboard.index', compact('data'));
     }

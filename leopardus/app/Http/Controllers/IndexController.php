@@ -106,7 +106,7 @@ class IndexController extends Controller
             if (!empty($inversion)) {
                 $paquete = DB::table($settings->prefijo_wp.'posts as wp')->where('ID', $inversion->paquete_inversion)->first();
                 if (!empty($paquete)) {
-                    $avatarTree = asset('products/'.$paquete->post_excerpt);
+                    $avatarTree = "https://brainbow.capital/assets/membresia-".strtolower($paquete->post_title).".png";
                 }
             }
             $userTemp = DB::table('user_campo')->where('ID', '=', $user->ID)->first();
@@ -463,5 +463,160 @@ class IndexController extends Controller
         return $arrayInversiones;
     }
 
+    /**
+     * Permite Obtener las inversiones activas del año acual
+     *
+     * @return array
+     */
+    public function getInversionesActivaAdmin(): array
+    {
+        $sql = "SELECT COUNT(id) as inversiones, MONTHNAME(created_at) as meses FROM `orden_inversiones` WHERE status = 0 AND paquete_inversion != '' AND YEAR(created_at) = ? GROUP BY MONTH(created_at)";
+        $inversiones = DB::select($sql, [date('Y')]);
+        $totalInversiones = OrdenInversion::where([
+            ['status', '=', 0],
+            [DB::raw('YEAR(created_at)'), '=', date('Y')]
+        ])->get()->count('id');
+        $arrayInversiones = [];
+        foreach ($inversiones as $inversion) {
+            $arrayInversiones [] = $inversion->inversiones;
+        }
+        $data = [
+            'totalInversiones' => $totalInversiones,
+            'arregloInversiones' => $arrayInversiones
+        ];
+
+        return $data;
+    }
+
+    /**
+     * Permite Obtener el total Invertido en las Inversiones
+     *
+     * @return array
+     */
+    public function getTotalInvertidoAdmin(): array
+    {
+        $sql = "SELECT SUM(invertido) as total, MONTHNAME(created_at) as meses FROM `orden_inversiones` WHERE status = 0 AND paquete_inversion != '' AND YEAR(created_at) = ? GROUP BY MONTH(created_at)";
+        $inversiones = DB::select($sql, [date('Y')]);
+        $totalInversiones = OrdenInversion::where([
+            ['status', '=', 0],
+            [DB::raw('YEAR(created_at)'), '=', date('Y')]
+        ])->get()->sum('invertido');
+        $arrayInversiones = [];
+        foreach ($inversiones as $inversion) {
+            $arrayInversiones [] = $inversion->total;
+        }
+        $data = [
+            'totalInvertido' => $totalInversiones,
+            'arregloInvertido' => $arrayInversiones
+        ];
+        return $data;
+    }
+
+    /**
+     * Permite obtener el dinero que entra en los ultimos 2 meses
+     *
+     * @return array
+     */
+    public function getEntradaMesAdmin() : array
+    {
+        $sql = "SELECT SUM(invertido) as total, MONTH(created_at) as mes, DAY(created_at) as dia FROM `orden_inversiones` WHERE status = 0 AND paquete_inversion != '' AND MONTH(created_at) > (MONTH(now()) - 2) AND YEAR(created_at) = ? GROUP BY MONTH(created_at), DAY(created_at) ";
+        $inversiones = DB::select($sql, [date('Y')]);
+        $mesAnterior = [];
+        $mesActual = [];
+        $totalAnterior = 0;
+        $totalActual = 0;
+        for ($i=1; $i < 33; $i++) { 
+            $mesAnterior [] = 0;
+            $mesActual [] = 0;
+        }
+        foreach ($inversiones as $inversion) {
+            if ($inversion->mes == (date('m') - 1)) {
+                $mesAnterior[$inversion->dia] = $inversion->total;
+                $totalAnterior += $inversion->total;
+            }
+            if ($inversion->mes == (date('m'))) {
+                $mesActual[$inversion->dia] = $inversion->total;
+                $totalActual += $inversion->total;
+            }
+        }
+        $data = [
+            'anterior' => json_encode($mesAnterior),
+            'actual' => json_encode($mesActual),
+            'totalAnterior' => $totalAnterior,
+            'totalActual' => $totalActual
+        ];
+        return $data;
+    }
+
+    /**
+     * Permite obtener las divisiones por año
+     *
+     * @return void
+     */
+    public function getDivisionPaquete()
+    {
+        $sql = "SELECT COUNT(oi.id) as 'cant', oi.paquete_inversion, wp.post_title as 'division' FROM `orden_inversiones` as oi INNER JOIN wp_posts as wp on (wp.ID = oi.paquete_inversion) WHERE status = 0 AND paquete_inversion != '' AND YEAR(oi.created_at) = ? GROUP BY paquete_inversion order by paquete_inversion desc";
+        $divisiones = DB::select($sql, [date('Y')]);
+        $data = [];
+        $arraydivision = [];
+        foreach ($divisiones as $division ) {
+            $data[$division->division] = $division->cant;
+            $arraydivision [] = $division->cant;
+        }
+        $data['total'] = json_encode($arraydivision);
+        return $data;
+    }
+
+    /**
+     * Permite obtener las ultimas inversiones realizadas
+     *
+     * @return array
+     */
+    public function getInversionesAdminDashboard() : array
+    {
+        $fechaActual = Carbon::now();
+        $arrayInversiones = [];
+        $inversiones = OrdenInversion::where([
+            ['paquete_inversion', '!=', ''],
+        ])->orderBy('id', 'desc')->get()->take(8);
+        foreach ($inversiones as $inversion) {
+            $user = User::find($inversion->iduser);
+            $paquete = $this->getProductDetails($inversion->paquete_inversion);
+            if ($paquete != null) {
+                $arrayInversiones [] = [
+                    'id' => $inversion->id,
+                    'correo' => $user->user_email,
+                    // 'img' => asset('products/'.$paquete->post_excerpt),
+                    'inversion' => $inversion->invertido,
+                    'plan' => $paquete->post_title,
+                    'estado' => $inversion->status
+                ];
+            }
+        }
+
+        return $arrayInversiones;
+    }
+
+    /**
+     * Permite obtener la cantidad de usuario registrado por años
+     *
+     * @return void
+     */
+    public function getUserRegistrado()
+    {
+        $sql = "SELECT COUNT(ID) as users, MONTH(created_at) as mes FROM wp_users WHERE YEAR(created_at) = ? GROUP BY MONTH(created_at)";
+        $users = DB::select($sql, [date('Y')]);
+        $totalMes = [];
+        $totalRegistrado = 0;
+        foreach ($users as $mes) {
+            $totalMes [] = $mes->users;
+            $totalRegistrado = ($totalRegistrado + $mes->users);
+        }
+        $data = [
+            'totalusers' => $totalRegistrado,
+            'arrayregistro' => json_encode($totalMes)
+        ];
+        return $data;
+    }
 
 }
