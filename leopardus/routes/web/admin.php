@@ -70,6 +70,14 @@ Route::group(['prefix' => 'tienda', 'middleware' => ['auth', 'licencia', 'guest'
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']], function() {
 
+  Route::group(['prefix' => 'botbrainbow'], function (){
+    // index botbrainbow
+    Route::get('/', 'BotBrainbowController@index')->name('botbrainbow.index');
+    Route::post('/save_bot_brainbow', 'BotBrainbowController@saveBotBrainbow')->name('botbrainbow.save');
+    Route::post('/update_bot_brainbow', 'BotBrainbowController@updateBot')->name('botbrainbow.update');
+    Route::get('/get_brainbow', 'BotBrainbowController@getBotBrainbow')->name('botbrainbow.get-data');
+  });
+
   Route::post('changeside', 'HomeController@changeSide')->name('change.side');
 
     // Actualiza todos la informacion para los usuarios

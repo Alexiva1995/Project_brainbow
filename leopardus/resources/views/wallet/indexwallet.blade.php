@@ -18,131 +18,76 @@ if ($fecha->dayOfWeek >= 1 && $fecha->dayOfWeek <= 2) { $activo=true; }
 <div class="card">
     <div class="card-content">
         <div class="card-body">
-            <div class="table-responsive">
-                <table id="mytable" class="table zero-configuration">
-                    <thead>
-                        <tr>
-                            {{--<th class="text-center">
-                                #
-                            </th>
-                            <th class="text-center">
-                                Usuario
-                            </th>
-                            <th class="text-center">
-                                Fecha
-                            </th>
-                            <th class="text-center">
-                                Descripción
-                            </th>
-                            <th class="text-center">
-                                Cash
-                            </th>
-                            <th class="text-center">
-                                Credito
-                            </th>
-                            <th class="text-center">
-                                Feed
-                            </th>
-                            <th class="text-center">
-                                Balance
-                            </th>--}}
-                            <th>#</th>
-                            <th>Fecha</th>
-                            <th>Correo</th>
-                            <th>Descripción</th>
-                            <th>Comisión</th>
-                            <th>Retiro</th>
-                            <th>Fee</th>
-                            <th>Saldo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($wallets as $wallet)
-                        <tr>
-                            <td class="text-center">{{ $wallet->id }}</td>
-                            <td class="text-center">{{date('d-m-Y', strtotime($wallet->created_at)) }}</td>
-                            <td class="text-center">{{ $wallet->correo }}</td>
-                            <td class="text-center">{{ $wallet->descripcion }}</td>
-                            <td class="text-center"> 
-                                @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->debito}}
-                                @else
-                                    {{$wallet->debito}} {{$moneda->simbolo}}
-                                @endif
-                            </td>
-                            <td class="text-center"> 
-                                @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->credito}}
-                                @else
-                                    {{$wallet->credito}} {{$moneda->simbolo}}
-                                @endif
-                            </td>
-                            <td class="text-center"> 
-                                @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->descuento}}
-                                @else
-                                    {{$wallet->descuento}} {{$moneda->simbolo}}
-                                @endif
-                            </td>
-                            <td class="text-center"> 
-                                @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->balance}}
-                                @else
-                                    {{$wallet->balance}} {{$moneda->simbolo}}
-                                @endif
-                            </td>
-                            {{--<td class="text-center">
-                                {{$wallet->id}}
-                            </td>
-                            <td class="text-center">
-                                {{$wallet->usuario}}
-                            </td>
-                            <td class="text-center">
-                                {{date('d-m-Y', strtotime($wallet->created_at))}}
-                            </td>
-                            <td class="text-center">
-                                {{$wallet->descripcion}}
-                            </td>
-                            <td class="text-center">
-                                
+            <!-- Candlestick Chart -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Candlestick Chart</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div id="candlestick-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table id="mytable" class="table zero-configuration">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Fecha</th>
+                                <th>Correo</th>
+                                <th>Descripción</th>
+                                <th>Comisión</th>
+                                <th>Retiro</th>
+                                <th>Fee</th>
+                                <th>Saldo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($wallets as $wallet)
+                            <tr>
+                                <td class="text-center">{{ $wallet->id }}</td>
+                                <td class="text-center">{{date('d-m-Y', strtotime($wallet->created_at)) }}</td>
+                                <td class="text-center">{{ $wallet->correo }}</td>
+                                <td class="text-center">{{ $wallet->descripcion }}</td>
+                                <td class="text-center"> 
                                     @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->debito}}
+                                        {{$moneda->simbolo}} {{$wallet->debito}}
                                     @else
-                                    {{$wallet->debito}} {{$moneda->simbolo}}
+                                        {{$wallet->debito}} {{$moneda->simbolo}}
                                     @endif
-                                
-                            </td>
-                            <td class="text-center">
-                                
+                                </td>
+                                <td class="text-center"> 
                                     @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->credito}}
+                                        {{$moneda->simbolo}} {{$wallet->credito}}
                                     @else
-                                    {{$wallet->credito}} {{$moneda->simbolo}}
+                                        {{$wallet->credito}} {{$moneda->simbolo}}
                                     @endif
-                                
-                            </td>
-                            <td class="text-center">
-                                
+                                </td>
+                                <td class="text-center"> 
                                     @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->descuento}}
+                                        {{$moneda->simbolo}} {{$wallet->descuento}}
                                     @else
-                                    {{$wallet->descuento}} {{$moneda->simbolo}}
+                                        {{$wallet->descuento}} {{$moneda->simbolo}}
                                     @endif
-                                
-                            </td>
-                            <td class="text-center">
-                                
+                                </td>
+                                <td class="text-center"> 
                                     @if ($moneda->mostrar_a_d)
-                                    {{$moneda->simbolo}} {{$wallet->balance}}
+                                        {{$moneda->simbolo}} {{$wallet->balance}}
                                     @else
-                                    {{$wallet->balance}} {{$moneda->simbolo}}
+                                        {{$wallet->balance}} {{$moneda->simbolo}}
                                     @endif
-                                
-                            </td>--}}
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+            </div>
             </div>
         </div>
         {{-- @if (Auth::user()->rol_id != 0)
@@ -156,62 +101,64 @@ if ($fecha->dayOfWeek >= 1 && $fecha->dayOfWeek <= 2) { $activo=true; }
 @include('wallet/componentes/formRetiro', ['disponible' => Auth::user()->wallet_amount, 'tipowallet' => 1])
 @include('wallet/componentes/formTransferencia')
 
+@push('page_vendor_js')
+<script src="{{asset('app-assets/vendors/js/charts/apexcharts.min.js')}}"></script>
+@endpush
+
+@push('custom_js')
 <script>
-    $(document).ready(function () {
-        $('.retirarbtn').click(function () {
-            console.log('entre');
-            retirarpago()
-            $('.formretiro').submit();
-        })
-    })
+  function graficaBot(dataBot) {
+    dataBot = JSON.parse(dataBot)
+    let data = [];
+    dataBot.forEach(element => {
+      console.log(element.fecha);
+      data.push({
+        x: new Date(element.fecha.year, element.fecha.month, element.fecha.day, element.fecha.hour, element.fecha.minute, element.fecha.second),
+        y: element.valores
+      })
+    });
+    console.log(data);
+    var $primary = '#7367F0',
+    $success = '#28C76F',
+    $danger = '#EA5455',
+    $warning = '#FF9F43',
+    $info = '#00cfe8',
+    $label_color_light = '#dae1e7';
 
-    function metodospago() {
-        $('#correo').hide()
-        $('#wallet').hide()
-        $('#bancario').hide()
-        let url = 'wallet/obtenermetodo/' + $('#metodopago').val()
-        $.get(url, function (response) {
-            let data = JSON.parse(response)
-            $('#total').val(0)
-            if (data.tipofeed == 1) {
-                $('#comision').val(data.feed * 100)
-                $('#lblcomision').text('Comision de Retiro en Porcentaje')
-                $('#comisionH').val(data.feed)
-                $('#tipo').val(data.tipofeed)
-                $('#monto_min').val(data.monto_min)
-            } else {
-                $('#comision').val(data.feed)
-                $('#lblcomision').text('Comision de Retiro Fija')
-                $('#comisionH').val(data.feed)
-                $('#tipo').val(data.tipofeed)
-                $('#monto_min').val(data.monto_min)
-            }
-            if (data.correo == 1) {
-                $('#correo').show()
-            }
-            if (data.wallet == 1) {
-                $('#wallet').show()
-            }
-            if (data.bancario == 1) {
-                $('#bancario').show()
-            }
-            $('#retirar').show()
-        })
+  var themeColors = [$primary, $success, $danger, $warning, $info];
+    var candleStickOptions = {
+    chart: {
+      height: 350,
+      type: 'candlestick',
+    },
+    colors: themeColors,
+    series: [{
+      data: data
+    }],
+    xaxis: {
+      type: 'datetime'
+    },
+    yaxis: {
+      tickAmount: 5,
+      tooltip: {
+        enabled: true
+      }
     }
-
-    function retirarpago() {
-        $('.formretiro').submit();
-    }
-
-    function totalRetiro(valor) {
-        let resul = valor
-        // if ($('#tipo').val() == 1) {
-        //     let tmp = valor * $('#comisionH').val()
-        //     resul = valor - tmp
-        // } else {
-        //     resul = valor - $('#comisionH').val()
-        // }
-        $('#total').val(resul)
-    }
+  }
+  var candleStickChart = new ApexCharts(
+    document.querySelector("#candlestick-chart"),
+    candleStickOptions
+  );
+  candleStickChart.render();
+  }
 </script>
+@php
+@endphp
+<script>
+  $.get('../botbrainbow/get_brainbow', function (data) {
+    graficaBot(data)
+  })
+  
+</script>
+@endpush
 @endsection

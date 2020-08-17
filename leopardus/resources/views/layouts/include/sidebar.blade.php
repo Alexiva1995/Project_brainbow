@@ -36,6 +36,14 @@
                 </a>
             </li>
             {{-- FIN INVERSIONES --}}
+            {{-- INICIO INVERSIONES --}}
+            <li class="nav-item">
+                <a href="{{route('botbrainbow.index')}}" class="nav-link text-white">
+                    <i class="feather icon-activity"></i>
+                    <span class="title">Bot Brainbow</span>
+                </a>
+            </li>
+            {{-- FIN INVERSIONES --}}
             {{-- RED DE USUARIO --}}
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link text-white nav-toggle">
