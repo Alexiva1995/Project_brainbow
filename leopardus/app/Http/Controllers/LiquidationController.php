@@ -259,7 +259,7 @@ class LiquidationController extends Controller
         }
         
         $wallet = DB::table('user_campo')->where('ID', '=', $iduser)->select('paypal')->first();
-        $feed = ($totalLiquidation * 0.02);
+        $feed = ($totalLiquidation * 0.05);
         $totalPagar = ($totalLiquidation - $feed);
         $data = [
             'iduser' => $iduser,

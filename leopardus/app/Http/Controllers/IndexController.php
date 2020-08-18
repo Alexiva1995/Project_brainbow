@@ -557,7 +557,11 @@ class IndexController extends Controller
     {
         $sql = "SELECT COUNT(oi.id) as 'cant', oi.paquete_inversion, wp.post_title as 'division' FROM `orden_inversiones` as oi INNER JOIN wp_posts as wp on (wp.ID = oi.paquete_inversion) WHERE status = 0 AND paquete_inversion != '' AND YEAR(oi.created_at) = ? GROUP BY paquete_inversion order by paquete_inversion desc";
         $divisiones = DB::select($sql, [date('Y')]);
-        $data = [];
+        $data = [
+            'ORO' => 0,
+            'PLATA' => 0,
+            'BRONCE' => 0
+        ];
         $arraydivision = [];
         foreach ($divisiones as $division ) {
             $data[$division->division] = $division->cant;

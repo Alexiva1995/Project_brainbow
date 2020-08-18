@@ -141,13 +141,19 @@ class ComisionesController extends Controller
      */
     public function bonoMatrix($iduser)
     {
+        $fechaActual = Carbon::now();
         $funciones = new IndexController;
-        $user = User::find($iduser);
         $TodosUsuarios = $funciones->getChidrens2($iduser, [], 1, 'position_id', 0);
-        $invertido = OrdenInversion::where('iduser', $iduser)->get()->sum('invertido');
+        $invertido = OrdenInversion::where([
+            ['iduser', '=', $iduser],
+            ['status', '=', 1]
+        ])->whereDate('fecha_fin', '>=', $fechaActual)->get()->sum('invertido');
         
         foreach ($TodosUsuarios as $usuario) {
-            $invertidoReferidos = OrdenInversion::where('iduser', $usuario->ID)->get()->sum('invertido');
+            $invertidoReferidos = OrdenInversion::where([
+                ['iduser', '=', $usuario->ID],
+                ['status', '=', 1]
+            ])->whereDate('fecha_fin', '>=', $fechaActual)->get()->sum('invertido');
             $idcomision = $iduser.$usuario->ID.Carbon::now()->format('dmY');
             // para inversiones mayores de 500 y menores de 1000
             if ($invertido >= 500 && $invertido < 1000) {
