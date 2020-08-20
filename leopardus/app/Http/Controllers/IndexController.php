@@ -470,10 +470,11 @@ class IndexController extends Controller
      */
     public function getInversionesActivaAdmin(): array
     {
-        $sql = "SELECT COUNT(id) as inversiones, MONTHNAME(created_at) as meses FROM `orden_inversiones` WHERE status = 0 AND paquete_inversion != '' AND YEAR(created_at) = ? GROUP BY MONTH(created_at)";
+        $sql = "SELECT COUNT(id) as inversiones, MONTHNAME(created_at) as meses FROM `orden_inversiones` WHERE status = 1 AND paquete_inversion != '' AND YEAR(created_at) = ? GROUP BY MONTH(created_at)";
         $inversiones = DB::select($sql, [date('Y')]);
         $totalInversiones = OrdenInversion::where([
-            ['status', '=', 0],
+            ['status', '=', 1],
+            ['paquete_inversion', '!=', ''],
             [DB::raw('YEAR(created_at)'), '=', date('Y')]
         ])->get()->count('id');
         $arrayInversiones = [];
@@ -495,10 +496,11 @@ class IndexController extends Controller
      */
     public function getTotalInvertidoAdmin(): array
     {
-        $sql = "SELECT SUM(invertido) as total, MONTHNAME(created_at) as meses FROM `orden_inversiones` WHERE status = 0 AND paquete_inversion != '' AND YEAR(created_at) = ? GROUP BY MONTH(created_at)";
+        $sql = "SELECT SUM(invertido) as total, MONTHNAME(created_at) as meses FROM `orden_inversiones` WHERE status = 1 AND paquete_inversion != '' AND YEAR(created_at) = ? GROUP BY MONTH(created_at)";
         $inversiones = DB::select($sql, [date('Y')]);
         $totalInversiones = OrdenInversion::where([
-            ['status', '=', 0],
+            ['status', '=', 1],
+            ['paquete_inversion', '!=', ''],
             [DB::raw('YEAR(created_at)'), '=', date('Y')]
         ])->get()->sum('invertido');
         $arrayInversiones = [];
@@ -519,7 +521,7 @@ class IndexController extends Controller
      */
     public function getEntradaMesAdmin() : array
     {
-        $sql = "SELECT SUM(invertido) as total, MONTH(created_at) as mes, DAY(created_at) as dia FROM `orden_inversiones` WHERE status = 0 AND paquete_inversion != '' AND MONTH(created_at) > (MONTH(now()) - 2) AND YEAR(created_at) = ? GROUP BY MONTH(created_at), DAY(created_at) ";
+        $sql = "SELECT SUM(invertido) as total, MONTH(created_at) as mes, DAY(created_at) as dia FROM `orden_inversiones` WHERE status = 1 AND paquete_inversion != '' AND MONTH(created_at) > (MONTH(now()) - 2) AND YEAR(created_at) = ? GROUP BY MONTH(created_at), DAY(created_at) ";
         $inversiones = DB::select($sql, [date('Y')]);
         $mesAnterior = [];
         $mesActual = [];
@@ -555,7 +557,7 @@ class IndexController extends Controller
      */
     public function getDivisionPaquete()
     {
-        $sql = "SELECT COUNT(oi.id) as 'cant', oi.paquete_inversion, wp.post_title as 'division' FROM `orden_inversiones` as oi INNER JOIN wp_posts as wp on (wp.ID = oi.paquete_inversion) WHERE status = 0 AND paquete_inversion != '' AND YEAR(oi.created_at) = ? GROUP BY paquete_inversion order by paquete_inversion desc";
+        $sql = "SELECT COUNT(oi.id) as 'cant', oi.paquete_inversion, wp.post_title as 'division' FROM `orden_inversiones` as oi INNER JOIN wp_posts as wp on (wp.ID = oi.paquete_inversion) WHERE status = 1 AND paquete_inversion != '' AND YEAR(oi.created_at) = ? GROUP BY paquete_inversion order by paquete_inversion desc";
         $divisiones = DB::select($sql, [date('Y')]);
         $data = [
             'ORO' => 0,
