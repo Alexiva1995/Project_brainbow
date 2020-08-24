@@ -28,14 +28,17 @@
                 </div>
             </div>
             <div class="col-lg-3 col-sm-6 col-12">
-                <div class="card h-100 mt-1 mb-1 fondoBoxDashboard" style="background: url('{{ asset('assets/imgLanding/billetera.png') }}');">
+                <div class="card h-100 mt-1 mb-1">
                     <div class="card-header d-flex flex-column align-items-center justify-content-center pb-2" style="height:100%">
                         <div class="avatar p-50 m-0" style="background-color: #ffffff;">
                             <div class="avatar-content">
-                                <i class="fa fa-money font-medium-5" style="color:#02E9FE;"></i>
+                                {{-- <i class="fa fa-money font-medium-5" style="color:#02E9FE;"></i> --}}
+                                <img src="{{$data['rangoinfo']['imgRangoActual']}}" alt="" srcset="">
                             </div>
                         </div>
-                        <h2 class="text-bold-700 mt-1 text-white">Billetera</h2>
+                        <h2 class="text-bold-700 mt-1">Rango Actual</h2>
+                        <hr>
+                        <h5 class="text-bold-700 mt-1">Requisito Nuevo Rango: <strong>{{$data['rangoinfo']['requisitoNewRango']}}</strong></h5>
                     </div>
                 </div>
             </div>

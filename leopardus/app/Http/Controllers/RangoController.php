@@ -95,6 +95,43 @@ class RangoController extends Controller
     }
 
     /**
+     * Permite mostrar la informacion del usuario que tengo y lo que me falta para el siquiente
+     *
+     * @param integer $iduser
+     * @return array
+     */
+    public function chechPuntoDashboard($iduser) : array
+    {
+        $user = User::find($iduser);
+        $rol_actual = $user->rol_id;
+        $rolActual = Rol::find($user->rol_id);
+        $data = [
+            'imgRangoActual' => asset('assets/roles/pngwave.png'),
+            'requisitoNewRango' => '0/0'
+        ];
+        if ($rol_actual > 0) {
+            $rol_new = $user->rol_id + 1;
+            $rol = Rol::find($rol_new);
+            $miInversion = $this->getTotalInvertion($iduser);
+            $redInversion = $this->getTotalInvertionRed($iduser);
+            $sumInversion = ($miInversion + $redInversion);
+            $puntos = ($sumInversion / 500);
+            $data = [
+                'imgRangoActual' => asset('assets/'.$rolActual->imagen),
+                'requisitoNewRango' => $puntos.'/'.$rol->grupal.' Puntos'
+            ];
+        }elseif($rol_actual == 7){
+            $rol = Rol::find($rol_actual);
+            $data = [
+                'imgRangoActual' => asset('assets/'.$rolActual->imagen),
+                'requisitoNewRango' => $rol->grupal.'/'.$rol->grupal.' Puntos'
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
      * Permite obtener el total que he invetido
      *
      * @param integer $iduser

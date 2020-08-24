@@ -44,7 +44,8 @@ class AdminController extends Controller
         $rango->ValidarRango(Auth::user()->ID);
         $inversiones = $funcionesIndex->getInversionesUserDashboard(Auth::user()->ID);
         $data = [
-            'inversiones' => $inversiones
+            'inversiones' => $inversiones,
+            'rangoinfo' => $rango->chechPuntoDashboard(Auth::user()->ID)
         ];
         if (Auth::user()->rol_id == 0) {
             $data = [
@@ -53,7 +54,7 @@ class AdminController extends Controller
                 'totalEntrada' => $funcionesIndex->getEntradaMesAdmin(),
                 'divisiones' => $funcionesIndex->getDivisionPaquete(),
                 'listadoOrdenes' => $funcionesIndex->getInversionesAdminDashboard(),
-                'totalusers' => $funcionesIndex->getUserRegistrado()
+                'totalusers' => $funcionesIndex->getUserRegistrado(),
             ];
         }
         
