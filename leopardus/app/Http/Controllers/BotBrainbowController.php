@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Botbrainbow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Imports\BotImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BotBrainbowController extends Controller
 {
@@ -142,5 +144,27 @@ class BotBrainbowController extends Controller
 			];
         }
         return json_encode($dataGrafica);
+    }
+
+    /**
+     * Permite guardar la informacion por lotes de botbrainbow
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function saveBotExcel(Request $request)
+    {
+        $validate = $request->validate([
+            'lote' => ['required', 'file', 'mimes:xls,xlsx,csv']
+            ]);
+        try {
+            if ($validate) {
+                Excel::import(new BotImport, $request->file('lote'));
+    
+                return redirect()->back()->with('msj', 'Informacion Agregada con exito');
+            }
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 }

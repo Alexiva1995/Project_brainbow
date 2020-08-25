@@ -76,6 +76,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
     Route::post('/save_bot_brainbow', 'BotBrainbowController@saveBotBrainbow')->name('botbrainbow.save');
     Route::post('/update_bot_brainbow', 'BotBrainbowController@updateBot')->name('botbrainbow.update');
     Route::get('/get_brainbow', 'BotBrainbowController@getBotBrainbow')->name('botbrainbow.get-data');
+    Route::post('/up_bot', 'BotBrainbowController@saveBotExcel')->name('botbrainbow.upbot');
   });
 
   Route::post('changeside', 'HomeController@changeSide')->name('change.side');

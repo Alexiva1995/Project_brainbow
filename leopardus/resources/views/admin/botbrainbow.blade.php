@@ -18,6 +18,29 @@
 @include('dashboard.componentView.alert')
 <section>
     <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Subir BotBrainbow</h5>
+        </div>
+        <div class="card-content">
+            <div class="card-body">
+                <form action="{{route('botbrainbow.upbot')}}" method="post" enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label for="">Formato de Subida Bot</label><br>
+                        <a href="{{asset('assets/formatoBotBrainbow.xlsx')}}" download>Descargar Formato</a>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Subir Excel</label>
+                        <input type="file" name="lote" id="" class="form-control">
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary">Subir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card">
         <div class="card-content">
             <div class="card-body">
                 <div class="col-12">
