@@ -108,12 +108,21 @@
             </li>
             {{-- FIN GENEALOGIA --}}
 
+            {{-- BOT BRAINBOW --}}
+            <li class="nav-item">
+                <a href="{{route('botbrainbow.show')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
+                    <i class="feather icon-activity"></i>
+                    <span class="title">Bot Brainbow</span>
+                    {{-- <span class="arrow"></span> --}}
+                </a>
+            </li>
+            {{-- FIN BOT BRAINBOW --}}
         {{--INICIO BILLETERA --}}
         <li class="nav-item">
             <a href="{{url('mioficina/admin/wallet/')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
                 <i class="feather icon-trending-up"></i>
                 <span class="title">Billetera</span>
-                <span class="arrow"></span>
+                {{-- <span class="arrow"></span> --}}
             </a>
         </li>
         {{-- FIN BILLETERA --}}

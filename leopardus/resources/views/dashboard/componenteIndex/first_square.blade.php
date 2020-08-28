@@ -33,12 +33,16 @@
                         <div class="avatar p-50 m-0" style="background-color: #ffffff;">
                             <div class="avatar-content">
                                 {{-- <i class="fa fa-money font-medium-5" style="color:#02E9FE;"></i> --}}
-                                <img src="{{$data['rangoinfo']['imgRangoActual']}}" alt="" srcset="">
+                                <img src="{{$data['rangoinfo']['imgRangoActual']}}" alt="" srcset="" height="60">
                             </div>
                         </div>
-                        <h2 class="text-bold-700 mt-1">Rango Actual</h2>
+                        {{-- <h3 class="text-bold-700 mt-1">Rango Actual</h3> --}}
                         <hr>
-                        <h5 class="text-bold-700 mt-1">Requisito Nuevo Rango: <strong>{{$data['rangoinfo']['requisitoNewRango']}}</strong></h5>
+                        <h5 class="text-bold-700 mt-1 text-center">
+                            <small>
+                                Proximo Rango: <br> <strong>{{$data['rangoinfo']['requisitoNewRango']}}</strong>
+                            </small>
+                        </h5>
                     </div>
                 </div>
             </div>

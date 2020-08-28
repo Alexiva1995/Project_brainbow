@@ -167,4 +167,10 @@ class BotBrainbowController extends Controller
             dd($th);
         }
     }
+
+    public function show_bot()
+    {
+        view()->share('title', 'Bot Brainbow');
+        return view('wallet.botbrainbow');
+    }
 }

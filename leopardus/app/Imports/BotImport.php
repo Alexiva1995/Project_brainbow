@@ -71,7 +71,9 @@ class BotImport implements ToModel, WithHeadingRow
     public function saveBotBrainbow($data)
     {
         $botBrainbow = new BotBrainbowController();
+        // dump($data['fecha'], $data['hora']);
         $data['fecha'] = $data['fecha'].' '.$data['hora'];
+        // dd($data['fecha']);
         $fechaNumerica = new Carbon($data['fecha']);
         $data['fecha_numerica'] = $fechaNumerica->timestamp;
         $data['post_nega'] = $botBrainbow->getSubioBajo($data['fecha_numerica'], $data['cerrado']);
