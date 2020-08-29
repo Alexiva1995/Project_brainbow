@@ -63,11 +63,12 @@ class WalletController extends Controller
 			}
 			$wallets = Wallet::where([
 				['iduser', '=', Auth::user()->ID], 
-				['debito', '!=', 0],
+				['debito', '>', 0],
 			])->orWhere([
 				['iduser', '=', Auth::user()->ID], 
-				['credito', '!=', 0]
+				['credito', '>', 0]
 				])->get();
+			// dd($wallets);
 			$cuentawallet = DB::table('user_campo')->where('ID', Auth::user()->ID)->select('paypal')->get()[0];
 			$cuentawallet = $cuentawallet->paypal;
 			$correoUser = DB::table('wp_users')->where('ID', Auth::user()->ID)->select('user_email')->first();

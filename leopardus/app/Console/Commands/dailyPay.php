@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\ComisionesController;
+use App\Http\Controllers\InversionController;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -43,5 +44,9 @@ class dailyPay extends Command
 
         $comision->bonoDirecto();
         $this->info('Bono directo pagado '. Carbon::now());
+
+        $inversion = new InversionController();
+        $inversion->verificarCompras();
+        $this->info('Compras Verificadas '. Carbon::now()); 
     }
 }

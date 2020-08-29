@@ -147,12 +147,12 @@
                         <span class="title">Comisiones</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="{{url('mioficina/admin/info/liquidacion')}}" class="nav-link" style="color: #FFFFFF;">
                         <i class="feather icon-circle"></i>
                         <span class="title">Liquidaciones</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 

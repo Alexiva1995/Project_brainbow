@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\IndexController;
 use App\User;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use CoinPayment;
 
 class InversionController extends Controller
@@ -105,5 +107,34 @@ class InversionController extends Controller
         }
 
         return view('admin.indexAdminInversiones', compact('inversiones'));
+    }
+
+    /**
+     * Permite Verificar las compras procesadas
+     *
+     * @return void
+     */
+    public function verificarCompras()
+    {
+        try {
+            $ordenes = OrdenInversion::where([
+                ['status', '=', '1'],
+                ['idtrasancion', '!=', ''],
+                ['fecha_inicio', '=', null]
+            ])->get();
+            foreach ($ordenes as $orden) {
+                $transacion = DB::table('coinpayment_transactions')->where('txn_id', '=', $orden->idtrasancion)->first();
+                $funcione = new IndexController();
+                $paquete = $funcione->getProductDetails($orden->paquete_inversion);
+                $fecha_inicio = new Carbon($transacion->created_at);
+                $fecha_fin = new Carbon($transacion->created_at);
+                DB::table('orden_inversiones')->where('idtrasancion', '=', $orden->idtrasancion)->update([
+                    'fecha_inicio' => $fecha_inicio,
+                    'fecha_fin' => $fecha_fin->addMonth($paquete->duration)
+                ]);
+            }
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 }

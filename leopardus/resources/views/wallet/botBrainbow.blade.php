@@ -42,11 +42,11 @@
     dataBot.forEach(element => {
       console.log(element.fecha);
       data.push({
-        x: new Date(element.fecha.year, element.fecha.month, element.fecha.day, element.fecha.hour, element.fecha.minute, element.fecha.second),
+        x: new Date(element.fecha.year, (element.fecha.month - 1), element.fecha.day, element.fecha.hour, element.fecha.minute, element.fecha.second),
         y: element.valores
       })
     });
-    console.log(data);
+    // console.log(data);
     var $primary = '#7367F0',
     $success = '#28C76F',
     $danger = '#EA5455',
