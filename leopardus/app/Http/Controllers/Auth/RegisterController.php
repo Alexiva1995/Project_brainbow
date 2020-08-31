@@ -217,11 +217,11 @@ class RegisterController extends Controller
         // Obtenemos el referido.
 
 
-        $referido = $user_id_default;
+        $referido = 236;
         if(isset($data['referred_id'])){
 
             if (empty($data['referred_id'])) {
-                $data['referred_id'] = 1;
+                $data['referred_id'] = 236;
             }
             
             if ($this->VerificarUser($data['referred_id'])) {
