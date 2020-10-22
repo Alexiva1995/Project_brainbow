@@ -45,6 +45,9 @@ class dailyPay extends Command
         $comision->bonoDirecto();
         $this->info('Bono directo pagado '. Carbon::now());
 
+        $comision->bonoBlackBox();
+        $this->info('Bono BlackBox pagado '. Carbon::now());
+
         $inversion = new InversionController();
         $inversion->verificarCompras();
         $this->info('Compras Verificadas '. Carbon::now()); 

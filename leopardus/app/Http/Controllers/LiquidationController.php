@@ -61,7 +61,7 @@ class LiquidationController extends Controller
         )->groupBy('user_id')->get();
 
         foreach ($comisionestmp as $comision) {
-            $user = User::find($comision->user_id)->only('display_name', 'status', 'user_email');
+            $user = User::find($comision->user_id);
             $comision->usuario = 'Usuario No Disponible';
             $comision->status = 0;
             $comision->email = 'Correo no disponible';

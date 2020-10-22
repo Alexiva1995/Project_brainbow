@@ -41,6 +41,14 @@
                 </ul>
             </li>
             {{--FIN RANKING --}}
+            {{-- INICIO BLACKBOX --}}
+            <li class="nav-item">
+                <a  href="javascript:;"  class="nav-link text-white" onclick="$('#modalBlackBox').modal('show')">
+                    <i class="feather icon-package"></i>
+                    <span class="title">Blackbow</span>
+                </a>
+            </li>
+            {{-- FIN BLACKBOW --}}
             {{-- TRANSACCIONES --}}
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link nav-toggle" style="color: #FFFFFF;">
@@ -126,6 +134,30 @@
             </a>
         </li>
         {{-- FIN BILLETERA --}}
+
+        {{-- TICKET --}}
+        <li>
+            <a href="javascript:;" class="nav-link nav-toggle" style="color: #FFFFFF;">
+                <i class="feather icon-mail"></i>
+                <span class="title">Tickets</span>
+                <span class="arrow"></span>
+            </a>
+            <ul class="sub-menu" style="background-color: #000D2F;">
+                <li class="nav-item">
+                    <a href="{{route('ticket')}}" class="nav-link" style="color: #FFFFFF;">
+                        <i class="feather icon-circle"></i>
+                        <span class="title">Generar Ticket</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('misticket')}}" class="nav-link" style="color: #FFFFFF;">
+                        <i class="feather icon-circle"></i>
+                        <span class="title">Mis Tickets</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        {{-- FIN TICKET --}}
 
         {{-- INFORMES --}}
         <li>

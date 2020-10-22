@@ -64,6 +64,8 @@ Route::group(['prefix' => 'tienda', 'middleware' => ['auth', 'licencia', 'guest'
 
     // inversiones 
     Route::post('/inversion', 'InversionController@pago')->name('tienda.inversion');
+    // Blackbox
+    Route::post('/blackbox', 'InversionController@pagoBlackBox')->name('tienda.blackbox');
 });
 
 

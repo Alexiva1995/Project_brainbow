@@ -112,6 +112,41 @@ class ComisionesController extends Controller
 
 
     /**
+     * Permite pagar el pono unilevel
+     *
+     * @return void
+     */
+    public function bonoBlackBox()
+    {
+        $funciones = new IndexController;
+        $fecha = Carbon::now();
+        $inversiones = OrdenInversion::where([
+            ['status', '=', 1],
+            ['paquete_inversion', '=', 0]
+        ])->whereDate('created_at', '>', $fecha->subDay(20))->get();
+        foreach ($inversiones as $inversion) {
+            $sponsors = $funciones->getSponsor($inversion->iduser, [], 2, 'ID', 'referred_id');
+            foreach ($sponsors as $sponsor) {
+                $user = User::find($inversion->iduser);
+                if ($sponsor->ID != $inversion->iduser) {
+                    $idcomision = $inversion->iduser.$sponsor->ID.$inversion->id.'20';
+                    $check = DB::table('commissions')
+                            ->select('id')
+                            ->where('user_id', '=', $sponsor->ID)
+                            ->where('compra_id', '=', $idcomision)
+                            ->first();
+                    if ($check == null) {
+                        $pagar = 20;
+                        $concepto = 'Bono BlackBox, usuario '.$user->display_name;
+                        $this->guardarComision($sponsor->ID, $idcomision, $pagar, $user->user_email, 1, $concepto, 'referido');
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
      * Permite verificar si una comision ya fue cobrada
      *
      * @param integer $idcompra
@@ -146,13 +181,15 @@ class ComisionesController extends Controller
         $TodosUsuarios = $funciones->getChidrens2($iduser, [], 1, 'position_id', 0);
         $invertido = OrdenInversion::where([
             ['iduser', '=', $iduser],
-            ['status', '=', 1]
+            ['status', '=', 1],
+            ['paquete_inversion', '!=', 0]
         ])->whereDate('fecha_fin', '>=', $fechaActual)->get()->sum('invertido');
         
         foreach ($TodosUsuarios as $usuario) {
             $invertidoReferidos = OrdenInversion::where([
                 ['iduser', '=', $usuario->ID],
-                ['status', '=', 1]
+                ['status', '=', 1],
+                ['paquete_inversion', '!=', 0]
             ])->whereDate('fecha_fin', '>=', $fechaActual)->get()->sum('invertido');
             $idcomision = $iduser.$usuario->ID.Carbon::now()->format('dmY');
             // para inversiones mayores de 500 y menores de 1000
@@ -305,12 +342,14 @@ class ComisionesController extends Controller
     {
         if ($rentabilidad) {
             $inversiones = OrdenInversion::where([
-                ['status', '=', 1]
+                ['status', '=', 1],
+                ['paquete_inversion', '!=', 0]
             ])->get();
         }else{
             $fecha = Carbon::now();
             $inversiones = OrdenInversion::where([
-                ['status', '=', 1]
+                ['status', '=', 1],
+                ['paquete_inversion', '!=', 0]
             ])->whereDate('created_at', '>', $fecha->subDay(20))->get();
         }
 

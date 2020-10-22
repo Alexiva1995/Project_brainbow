@@ -5,13 +5,13 @@
 @include('dashboard.componentView.optionDatatable')
 @push('custom_js')
 <script>
-	$(document).ready(function () {
-		$('#mytable2').DataTable({
-			dom: 'flBrtip',
+    $(document).ready(function () {
+        $('#mytable2').DataTable({
+            dom: 'flBrtip',
             responsive: true,
             order: [5, ['desc']]
-		});
-	});
+        });
+    });
 </script>
 @endpush
 {{-- alertas --}}
@@ -199,7 +199,7 @@
                         </div>
                     </form>
                 </div>
-                
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </div>

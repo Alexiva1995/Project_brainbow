@@ -65,7 +65,7 @@ class InversionController extends Controller
     {
         $data = [
             'invertido' => (DOUBLE) $inversion,
-            'concepto' => 'Inversion de '.number_format($inversion, 2, ',', '.'). ' USD',
+            'concepto' => ($idpaquete != 0) ? 'Inversion de '.number_format($inversion, 2, ',', '.'). ' USD' : 'Paquete BlackBox',
             'iduser' => Auth::user()->ID,
             'idtrasancion' => '',
             'status' => 0,
@@ -90,20 +90,21 @@ class InversionController extends Controller
         $funciones = new IndexController();
         
         foreach ($inversiones as $inversion) {
-            $plan = $funciones->getProductDetails($inversion->paquete_inversion);
-            $user = User::find($inversion->iduser);
-            if (!empty($user)) {
-                $inversion->correo = $user->user_email;
-                $inversion->usuario = $user->display_name;
-            }else{
-                $inversion->correo = 'Usuario Eliminado o no disponible';
-                $inversion->usuario = 'Usuario Eliminado o no disponible';
+            if ($inversion->paquete_inversion != 0) {
+                $plan = $funciones->getProductDetails($inversion->paquete_inversion);
+                $user = User::find($inversion->iduser);
+                if (!empty($user)) {
+                    $inversion->correo = $user->user_email;
+                    $inversion->usuario = $user->display_name;
+                }else{
+                    $inversion->correo = 'Usuario Eliminado o no disponible';
+                    $inversion->usuario = 'Usuario Eliminado o no disponible';
+                }
+                $inversion->plan = 'Plan no definido';
+                if (!empty($plan)) {
+                    $inversion->plan = $plan->post_title;
+                }
             }
-            $inversion->plan = 'Plan no definido';
-            if (!empty($plan)) {
-                $inversion->plan = $plan->post_title;
-            }
-            
         }
 
         return view('admin.indexAdminInversiones', compact('inversiones'));
@@ -125,16 +126,56 @@ class InversionController extends Controller
             foreach ($ordenes as $orden) {
                 $transacion = DB::table('coinpayment_transactions')->where('txn_id', '=', $orden->idtrasancion)->first();
                 $funcione = new IndexController();
-                $paquete = $funcione->getProductDetails($orden->paquete_inversion);
-                $fecha_inicio = new Carbon($transacion->created_at);
-                $fecha_fin = new Carbon($transacion->created_at);
-                DB::table('orden_inversiones')->where('idtrasancion', '=', $orden->idtrasancion)->update([
-                    'fecha_inicio' => $fecha_inicio,
-                    'fecha_fin' => $fecha_fin->addMonth($paquete->duration)
-                ]);
+                if ($orden->paquete_inversion != 0) {
+                    $paquete = $funcione->getProductDetails($orden->paquete_inversion);
+                    $fecha_inicio = new Carbon($transacion->created_at);
+                    $fecha_fin = new Carbon($transacion->created_at);
+                    DB::table('orden_inversiones')->where('idtrasancion', '=', $orden->idtrasancion)->update([
+                        'fecha_inicio' => $fecha_inicio,
+                        'fecha_fin' => $fecha_fin->addMonth($paquete->duration)
+                    ]);
+                }else{
+                    DB::table('orden_inversiones')->where('idtrasancion', '=', $orden->idtrasancion)->update([
+                        'status' => 1
+                    ]);
+                }
             }
         } catch (\Throwable $th) {
             dd($th);
+        }
+    }
+
+    /**
+     * Permite procesar el pago del BlackBox
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function pagoBlackBox(Request $request)
+    {
+        $validate = $request->validate([
+            'price' => ['required'],
+        ]);
+        if ($validate) {
+            $price = (double) $request->price;
+            $total = ($price + 0);
+            $transacion = [
+                'amountTotal' => $total,
+                'note' => 'Paquete BlackBox',
+                'idorden' => $this->saveOrden($price, 0),
+                'tipo' => 'blackbox',
+                'buyer_email' => Auth::user()->user_email,
+                'redirect_url' => route('tienda-index')
+            ];
+            $transacion['items'][] = [
+                'itemDescription' => 'Paquete BlackBox',
+                'itemPrice' => $price, // USD
+                'itemQty' => (INT) 1,
+                'itemSubtotalAmount' => $price // USD
+            ];
+
+            $ruta = CoinPayment::generatelink($transacion);
+            return redirect($ruta);
         }
     }
 }

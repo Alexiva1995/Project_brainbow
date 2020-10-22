@@ -30,9 +30,9 @@
 
     {{-- menu --}}
     @if (Auth::user()->rol_id == 0)
-        @include('layouts.include.sidebar')
+    @include('layouts.include.sidebar')
     @else
-        @include('layouts.include.sidebar2')
+    @include('layouts.include.sidebar2')
     @endauth
 
     {{-- contenido --}}
@@ -52,6 +52,39 @@
             </div>
             <div class="content-body">
                 @yield('content')
+
+                {{-- Modal BlackBox --}}
+                <div class="modal fade" id="modalBlackBox" tabindex="-1" role="dialog"
+                    aria-labelledby="modalBlackBoxTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-centered modal-dialog-scrollable"
+                        role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalBlackBoxTitle">BlackBox</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 class="text-justify">
+                                    Blackbox: Opere directamente en el bróker en donde nuestras redes neuronales pueden
+                                    efectuar operaciones, su dinero estará directamente regulado y usted tiene el acceso
+                                    de retirar ganancias o capital en cualquier momento, a su vez puede seguir
+                                    diariamente sus ganancias sin entregar el capital a la plataforma.
+                                </h5>
+                                <h5 class="mt-2">FEE MENSUAL:  40% sobre ganancias</h5>
+                                <form action="{{route('tienda.blackbox')}}" method="post" class="text-center mt-2">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="price" value="100">
+                                    <button type="submit" class="btn btn-success">Comprar</button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
