@@ -50,7 +50,7 @@
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link text-white" onclick="$('#modalBlackBox').modal('show')">
                     <i class="feather icon-package"></i>
-                    <span class="title">Blackbow</span>
+                    <span class="title">Blackbox</span>
                 </a>
             </li>
             {{-- FIN BLACKBOW --}}
