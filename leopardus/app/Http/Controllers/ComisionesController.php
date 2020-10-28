@@ -11,6 +11,7 @@ use App\OrdenInversion;
 use App\SettingsComision;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\WalletController;
+use App\SettingsBono;
 use App\WalletlogRentabilidad;
 
 class ComisionesController extends Controller
@@ -85,14 +86,16 @@ class ComisionesController extends Controller
                     if ($sponsor->ID != $inversion->iduser) {
                         $idcomision = $inversion->iduser.$sponsor->ID.$inversion->id.'40';
                         $porcentaje = 0;
+                        $bonodirecto = SettingsBono::where('type_bono', 'directo')->first();
+                        $bonodirecto->settings_bono = json_decode($bonodirecto->settings_bono);
                         if (stripos($paquete->post_title, 'BRONCE') !== false) {
-                            $porcentaje = 0.01;
+                            $porcentaje = $bonodirecto->settings_bono->bronce;
                         }
                         if (stripos($paquete->post_title, 'PLATA') !== false) {
-                            $porcentaje = 0.02;
+                            $porcentaje = $bonodirecto->settings_bono->plata;
                         }
                         if (stripos($paquete->post_title, 'ORO') !== false) {
-                            $porcentaje = 0.03;
+                            $porcentaje = $bonodirecto->settings_bono->oro;
                         }
                         $check = DB::table('commissions')
                                 ->select('id')
@@ -136,7 +139,9 @@ class ComisionesController extends Controller
                             ->where('compra_id', '=', $idcomision)
                             ->first();
                     if ($check == null) {
-                        $pagar = 20;
+                        $bonoblackbox = SettingsBono::where('type_bono', 'blackbox')->first();
+                        $bonoblackbox->settings_bono = json_decode($bonoblackbox->settings_bono);
+                        $pagar = $bonoblackbox->settings_bono->blackbox;
                         $concepto = 'Bono BlackBox, usuario '.$user->display_name;
                         $this->guardarComision($sponsor->ID, $idcomision, $pagar, $user->user_email, 1, $concepto, 'referido');
                     }
@@ -257,12 +262,16 @@ class ComisionesController extends Controller
      */
     public function getMontoAPagar(int $nivel): int
     {
-        $arreMonto = [
-            1 => 8, 2 => 6, 3 => 5, 4 => 4, 5 => 3,
-            6 => 3, 7 => 2, 8 => 2, 9 => 1, 10 => 1
-        ];
+        // $arreMonto = [
+        //     1 => 8, 2 => 6, 3 => 5, 4 => 4, 5 => 3,
+        //     6 => 3, 7 => 2, 8 => 2, 9 => 1, 10 => 1
+        // ];
 
-        return $arreMonto[$nivel];
+        $bonomatrix = SettingsBono::where('type_bono', 'matrix')->first();
+        $bonomatrix->settings_bono = json_decode($bonomatrix->settings_bono);
+
+        
+        return $bonomatrix->settings_bono->$nivel;
     }
 
     /**

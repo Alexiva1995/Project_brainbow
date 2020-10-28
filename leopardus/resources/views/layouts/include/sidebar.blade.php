@@ -135,7 +135,7 @@
         </ul>
         </li>
         {{-- FIN BILLETERA --}}
-        {{--INICIO BILLETERA --}}
+        {{--INICIO TICKET --}}
         <li class="nav-item">
             <a href="{{route('todosticket')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
                 <i class="feather icon-mail"></i>
@@ -143,7 +143,7 @@
                 {{-- <span class="arrow"></span> --}}
             </a>
         </li>
-        {{-- FIN BILLETERA --}}
+        {{-- FIN TICKET --}}
         {{-- LISTA DE USUARIOS--}}
         <li class="nav-item">
             <a href="{{url('mioficina/admin/userrecords')}}" class="nav-link text-white">
@@ -152,6 +152,15 @@
             </a>
         </li>
         {{-- FIN LISTA DE USUARIOS --}}
+        {{--INICIO CONFIGURARION BONOS--}}
+        <li class="nav-item">
+            <a href="{{route('bonosetting.index')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
+                <i class="feather icon-settings"></i>
+                <span class="title">Configurar Bonos</span>
+                {{-- <span class="arrow"></span> --}}
+            </a>
+        </li>
+        {{-- FIN CONFIGURARION BONOS--}}
         {{-- CERRAR SESIÓN --}}
         <li class="nav-item">
             <a href="{{ route('logout') }}"
