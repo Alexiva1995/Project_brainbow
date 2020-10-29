@@ -82,17 +82,31 @@ class TicketController extends Controller
 	}
 	
     public function comentar($id)
-      {
-          
-    $ticket = Ticket::find($id);
-    $comentario = DB::table('comentarios')
-    ->orderBy('id', 'ASC')
-    ->get();
-
-    $notification = new NotificationController;
-    $notification->viewTicket($ticket->id, Auth::user()->ID);
-    return view('ticket.comentar', compact('ticket','comentario'));
+    {
+      $ticket = Ticket::find($id);
+        
+      $comentarios = DB::table('comentarios')->where('tickets_id', $id)->get();
+      foreach ($comentarios as $comentario) {
+        $tmp = User::find($comentario->user_id);
+        $comentario->user = 'Usuario No Disponible';
+        if (!empty($tmp)) {
+          $comentario->user = $tmp->display_name;
+        }
       }
+
+      $tmp = User::find($ticket->user_id);
+      $ticket->user = 'Usuario No Disponible';
+      if (!empty($tmp)) {
+        $ticket->user = $tmp->display_name;  
+      }
+      
+
+      $ticket->comentarios = $comentarios;
+
+      $notification = new NotificationController;
+      $notification->viewTicket($ticket->id, Auth::user()->ID);
+      return view('ticket.comentar', compact('ticket'));
+    }
     
     	public function subir(Request $request)
     {
@@ -139,12 +153,28 @@ class TicketController extends Controller
     
     public function ver($id)
     {
-  $ticket = Ticket::find($id);
+      $ticket = Ticket::find($id);
+        
+      $comentarios = DB::table('comentarios')->where('tickets_id', $id)->get();
+      foreach ($comentarios as $comentario) {
+        $tmp = User::find($comentario->user_id);
+        $comentario->user = 'Usuario No Disponible';
+        if (!empty($tmp)) {
+          $comentario->user = $tmp->display_name;
+        }
+      }
 
- 	$comentario = DB::table('comentarios')
- 	->orderBy('id', 'ASC')
- 	->get();
-   return view('ticket.ver', compact('ticket','comentario'));
+      $tmp = User::find($ticket->user_id);
+      $ticket->user = 'Usuario No Disponible';
+      if (!empty($tmp)) {
+        $ticket->user = $tmp->display_name;  
+      }
+      $ticket->comentarios = $comentarios;
+
+      $notification = new NotificationController;
+      $notification->viewTicket($ticket->id, Auth::user()->ID);
+
+      return view('ticket.ver', compact('ticket'));
     }
     
      public function cerrar($id)

@@ -32,7 +32,7 @@
               <a href="{{ route('misticket') }}" class="btn btn-danger btn-block" id="btn">Cancelar</a>
             </div>
             <div class="col-sm-6" style="padding-left: 10px;">
-              <button class="btn btn-success btn-block" type="submit" id="btn">Aceptar</button>
+              <button class="btn btn-info btn-block" type="submit" id="btn">Aceptar</button>
             </div>
           </div>
         </div>
