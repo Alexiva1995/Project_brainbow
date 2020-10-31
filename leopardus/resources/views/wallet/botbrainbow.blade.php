@@ -36,16 +36,18 @@
 
 @push('custom_js')
 <script>
-  function graficaBot(dataBot) {
-    dataBot = JSON.parse(dataBot)
-    let data = [];
-    dataBot.forEach(element => {
-      console.log(element.fecha);
-      data.push({
-        x: new Date(element.fecha.year, (element.fecha.month - 1), element.fecha.day, element.fecha.hour, element.fecha.minute, element.fecha.second),
-        y: element.valores
-      })
-    });
+
+
+  function graficaBot(data) {
+    // dataBot = JSON.parse(dataBot)
+    
+    // dataBot.forEach(element => {
+    //   console.log(element);
+    //   data.push({
+    //     x: new Date(element.fecha.year, (element.fecha.month - 1), element.fecha.day, element.fecha.hour, element.fecha.minute, element.fecha.second),
+    //     y: element.valores
+    //   })
+    // });
     // console.log(data);
     var $primary = '#7367F0',
     $success = '#28C76F',
@@ -84,9 +86,36 @@
 @php
 @endphp
 <script>
-  $.get('../botbrainbow/get_brainbow', function (data) {
-    graficaBot(data)
+  $(document).ready(function (){
+    let data3 = [];
+    $.ajax({
+        url: 'http://api.marketstack.com/v1/intraday',
+        data: {
+          access_key: '98c27ef11dc0a1c0b8e50c5dcdeeb3ba',
+          symbols: 'AAPL',
+          interval: '15min',
+          limit: '20',
+          sort: 'DESC'
+        },
+        dataType: 'json',
+        success: function(apiResponse) {
+          if (Array.isArray(apiResponse['data'])) {
+            apiResponse['data'].forEach(stockData => {
+                  // console.log(Ticker ${stockData['symbol']}, has a day high of ${stockData['high']}, on ${stockData['date']});
+                  // console.log(stockData);
+                    data3.push({
+                        x: stockData.date,
+                        y: [stockData.open, stockData.high, stockData.low, stockData.close]
+                  });
+            });
+            graficaBot(data3)
+          }
+        }
+    });
   })
+  // $.get('../botbrainbow/get_brainbow', function (data) {
+  //   graficaBot(data)
+  // })
 </script>
 @endpush
 @endsection
