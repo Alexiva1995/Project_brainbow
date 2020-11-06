@@ -43,10 +43,17 @@
             {{--FIN RANKING --}}
             {{-- INICIO BLACKBOX --}}
             <li class="nav-item">
-                <a  href="javascript:;"  class="nav-link text-white" onclick="$('#modalBlackBox').modal('show')">
+                @if ($blackboxcheck == 0)
+                <a href="javascript:;" class="nav-link text-white" onclick="$('#modalBlackBox').modal('show')">
                     <i class="feather icon-package"></i>
                     <span class="title">Blackbox</span>
                 </a>
+                @else
+                <a href="{{route('blackbox')}}" class="nav-link text-white">
+                    <i class="feather icon-package"></i>
+                    <span class="title">Blackbox</span>
+                </a>    
+                @endif 
             </li>
             {{-- FIN BLACKBOW --}}
             {{-- TRANSACCIONES --}}

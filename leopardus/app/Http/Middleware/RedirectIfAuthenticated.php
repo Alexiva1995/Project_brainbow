@@ -2,9 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\OrdenInversion;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
+
 
 class RedirectIfAuthenticated
 {
@@ -18,7 +21,20 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        // if (Auth::guard($guard)->check()) {
+        if (Auth::guard($guard)->check()) {
+
+            $inversion = OrdenInversion::where([
+                ['status', '=', 1],
+                ['paquete_inversion', '=', 0],
+                ['iduser', '=', Auth::user()->ID]
+            ])->first();
+
+            $blackboxcheck = 0;
+            if (!empty($inversion)) {
+                $blackboxcheck = 1;   
+            }
+            
+            View::share('blackboxcheck', $blackboxcheck);
         //     if ($request->getPathInfo() != '/mioficina/admin/user/update') {
         //         if ($request->getPathInfo() != '/mioficina/admin/user/edit') {
         //             $check = DB::table('user_campo')->where([
@@ -33,7 +49,7 @@ class RedirectIfAuthenticated
         //             }
         //         }
         //     }
-        // }
+        }
 
         return $next($request);
     }

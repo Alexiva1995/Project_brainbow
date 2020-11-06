@@ -30,6 +30,17 @@ class HomeController extends Controller
         return view('index');
     }
 
+    /**
+     * Lleva a la vista de blackbox
+     *
+     * @return void
+     */
+    public function blackbox()
+    {
+        view()->share('title', 'BlackBox');
+        return view('dashboard.blackbox');
+    }
+
     public function index()
     {
         if (Auth::guest()){

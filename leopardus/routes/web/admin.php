@@ -74,6 +74,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
 
   Route::resource('bonosetting', 'BonoSettingAdminController');
 
+  Route::get('blackbox', 'HomeController@blackbox')->name('blackbox');
+
   Route::group(['prefix' => 'botbrainbow'], function (){
     // index botbrainbow
     Route::get('/', 'BotBrainbowController@index')->name('botbrainbow.index');
