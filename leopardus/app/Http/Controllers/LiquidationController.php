@@ -334,7 +334,7 @@ class LiquidationController extends Controller
         $liquidaciones = Liquidacion::where('status', '=', 0)->get();
 
         foreach ($liquidaciones as $liquidacion) {
-            $user = User::find($liquidacion->iduser)->only('display_name', 'user_email');
+            $user = User::find($liquidacion->iduser);
             $liquidacion->usuario = 'Usuario No Disponible';
             $liquidacion->email = 'Correo no disponible';
             if (!empty($user)) {
@@ -516,8 +516,7 @@ class LiquidationController extends Controller
                 $accion = 'Se reverso con exito la liquidacion '.$request->liquidacion;
                 $this->reversarLiquidaciones($request->iduser, $request->liquidacion, $request->comentario);
             }else{
-                $accion = 'Se aprobo con exito la liquidacion '.$request->liquidacion;
-                $this->aprobarLiquidacion($request);
+                $accion = $this->aprobarLiquidacion($request);
             }
             return redirect()->back()->with('msj', $accion);
         }
@@ -527,16 +526,36 @@ class LiquidationController extends Controller
      * Permite aprobar las liquidaciones
      *
      * @param object $data
-     * @return void
+     * @return string
      */
-    public function aprobarLiquidacion(object $data)
+    public function aprobarLiquidacion(object $data): string
     {
         try {
+            $estado = '';
             $liquidacion = Liquidacion::find($data->liquidacion);
             $liquidacion->comment = $data->comentario;
-            $liquidacion->hash = $data->hash;
             $liquidacion->status = 1;
-            $liquidacion->save();
+            $valor = $this->getRateBtc();
+            if ($valor != 0) {
+                $cmd = 'create_withdrawal';
+                $dataPago = [
+                    'amount' => ($liquidacion->total * $valor),
+                    'currency' => 'BTC',
+                    'address' => $liquidacion->wallet_used,
+                ];
+                // llamo la a la funcion que va a ser la transacion
+                $result = $this->coinpayments_api_call($cmd, $dataPago);
+                if (!empty($result['result'])) {
+                    $estado = 'Se aprobo con exito la liquidacion '.$liquidacion->id;
+                    $liquidacion->hash = $result['result']['id'];
+                    $liquidacion->save();
+                }else{
+                    $estado = "Hubo un error al momento de procesar el retiro";
+                }
+            }else{
+                $estado = "Hubo un error al momento de obtener el valor del btc";
+            }
+            return $estado;
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -612,6 +631,93 @@ class LiquidationController extends Controller
             $liquidacion->save();
         } catch (\Throwable $th) {
             dd($th);
+        }
+    }
+
+    /**
+     * Permite obtener la informacion del valor de la moneda
+     *
+     * @return float
+     */
+    public function getRateBtc(): float
+    {
+        $valor = 0;
+        // inicia el curl para conectarse a coinbase
+		$cURL = curl_init();
+		// toda la informacion del arreglo de coinbase
+		curl_setopt_array($cURL, array(
+            CURLOPT_URL => "https://api.coinbase.com/v2/exchange-rates",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json']
+			));
+		// se ejecuta el curl
+        $tmpResult = curl_exec($cURL);
+        // verifica si trae la informacion
+		if ($tmpResult !== false) {
+            $currency = json_decode($tmpResult);
+            $valor = $currency->data->rates->BTC;
+        }
+        return $valor;
+    }
+
+    /**
+     * Permite ejecutar los comando de coinpayment
+     *
+     * @param string $cmd
+     * @param array $req
+     * @return void
+     */
+    public function coinpayments_api_call($cmd, $req = array()) {
+        // Fill these in from your API Keys page
+        $public_key = env('COIN_PAYMENT_PUBLIC_KEY');
+        $private_key = env('COIN_PAYMENT_PRIVATE_KEY');
+        
+        // Set the API command and required fields
+        $req['version'] = 1;
+        $req['cmd'] = $cmd;
+        $req['key'] = $public_key;
+        $req['format'] = 'json'; //supported values are json and xml
+        
+        // Generate the query string
+        $post_data = http_build_query($req, '', '&');
+        
+        // Calculate the HMAC signature on the POST data
+        $hmac = hash_hmac('sha512', $post_data, $private_key);
+        
+        // Create cURL handle and initialize (if needed)
+        static $ch = NULL;
+        if ($ch === NULL) {
+            $ch = curl_init('https://www.coinpayments.net/api.php');
+            curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('HMAC: '.$hmac));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        
+        // Execute the call and close cURL handle     
+        $data = curl_exec($ch);                
+        // Parse and return data if successful.
+        if ($data !== FALSE) {
+            if (PHP_INT_SIZE < 8 && version_compare(PHP_VERSION, '5.4.0') >= 0) {
+                // We are on 32-bit PHP, so use the bigint as string option. If you are using any API calls with Satoshis it is highly NOT recommended to use 32-bit PHP
+                $dec = json_decode($data, TRUE, 512, JSON_BIGINT_AS_STRING);
+            } else {
+                $dec = json_decode($data, TRUE);
+            }
+            if ($dec !== NULL && count($dec)) {
+                return $dec;
+            } else {
+                // If you are using PHP 5.5.0 or higher you can use json_last_error_msg() for a better error message
+                return array('error' => 'Unable to parse JSON result ('.json_last_error().')');
+            }
+        } else {
+            return array('error' => 'cURL error: '.curl_error($ch));
         }
     }
 
