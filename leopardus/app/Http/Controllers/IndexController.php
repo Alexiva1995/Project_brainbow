@@ -591,7 +591,7 @@ class IndexController extends Controller
             if ($paquete != null) {
                 $arrayInversiones [] = [
                     'id' => $inversion->id,
-                    'correo' => $user->user_email,
+                    'correo' => (!empty($user)) ? $user->user_email : 'Usuario No Disponible',
                     // 'img' => asset('products/'.$paquete->post_excerpt),
                     'inversion' => $inversion->invertido,
                     'plan' => $paquete->post_title,
