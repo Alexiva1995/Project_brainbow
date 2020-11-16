@@ -18,6 +18,7 @@ use App\OrdenInversion;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\RangoController;
 use App\Http\Controllers\LiquidationController;
+use App\Http\Controllers\ComisionesController;
 
 class AdminController extends Controller
 
@@ -40,13 +41,16 @@ class AdminController extends Controller
 
         $funcionesIndex = new IndexController();
         $liquidacionindex = new LiquidationController();
+        $comisionController = new ComisionesController();
         $rango = new RangoController();
         $rango->ValidarRango(Auth::user()->ID);
         $inversiones = $funcionesIndex->getInversionesUserDashboard(Auth::user()->ID);
         $data = [
             'inversiones' => $inversiones,
-            'rangoinfo' => $rango->chechPuntoDashboard(Auth::user()->ID)
+            'rangoinfo' => $rango->chechPuntoDashboard(Auth::user()->ID),
+            'rentabilidad' => $comisionController->getBarraRentabilidad(236)
         ];
+
         if (Auth::user()->rol_id == 0) {
             $data = [
                 'InversionesActivas' => $funcionesIndex->getInversionesActivaAdmin(),

@@ -8,6 +8,7 @@
 			@include('dashboard.componenteIndex.admin_square')
 			@else
 			@include('dashboard.componenteIndex.first_square')
+			
 			@endif
 			{{-- secundo cuadro --}}
 			{{-- @include('dashboard.componenteIndex.second_square') --}}

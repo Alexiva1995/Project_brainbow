@@ -326,7 +326,38 @@ class ComisionesController extends Controller
                 }
             }
         }
+    }
 
+    /**
+     * Permite obtener la informacion para la barra de progreso
+     *
+     * @param integer $iduser
+     * @return array
+     */
+    public function getBarraRentabilidad(int $iduser): array
+    {
+        $data = [];
+        $fecha = Carbon::now();
+        $funciones = new IndexController;
+        $inversion = OrdenInversion::where([
+            ['status', '=', 1],
+            ['paquete_inversion', '!=', 0],
+            ['iduser', '=', $iduser]
+        ])->whereDate('fecha_fin', '>=', $fecha)->first();
+
+        if ($inversion != null) {
+            $paquete = $funciones->getProductDetails($inversion->paquete_inversion);
+            $maximoRentabilidad = ($inversion->invertido * '1'.$paquete->rentabilidad);
+            $ganancia = WalletlogRentabilidad::where('idinversion', '=', $inversion->id)->get()->sum('debito');
+            $porcentage = (($ganancia * 100) / $maximoRentabilidad);
+            $data = [
+                'maximo' => $maximoRentabilidad,
+                'progreso' => $ganancia,
+                'progre_porc' => $porcentage
+            ];
+        }
+
+        return $data;
     }
 
 
