@@ -221,7 +221,7 @@ class RegisterController extends Controller
         if(isset($data['referred_id'])){
 
             if (empty($data['referred_id'])) {
-                $data['referred_id'] = 236;
+                $data['referred_id'] = 1;
             }
             
             if ($this->VerificarUser($data['referred_id'])) {
