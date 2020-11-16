@@ -355,6 +355,12 @@ class ComisionesController extends Controller
                 'progreso' => $ganancia,
                 'progre_porc' => $porcentage
             ];
+        }else{
+            $data = [
+                'maximo' => 0,
+                'progreso' => 0,
+                'progre_porc' => 0
+            ];
         }
 
         return $data;

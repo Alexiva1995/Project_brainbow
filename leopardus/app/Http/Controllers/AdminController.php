@@ -48,7 +48,7 @@ class AdminController extends Controller
         $data = [
             'inversiones' => $inversiones,
             'rangoinfo' => $rango->chechPuntoDashboard(Auth::user()->ID),
-            'rentabilidad' => $comisionController->getBarraRentabilidad(236)
+            'rentabilidad' => $comisionController->getBarraRentabilidad(Auth::user()->ID)
         ];
 
         if (Auth::user()->rol_id == 0) {
