@@ -10,9 +10,26 @@ $(document).ready(function () {
     //     donutsChart(data)
     // })
 
-    url = 'admin/publicidad/ciclografiph'
+    url = 'getcurrency'
     $.get(url, function (data) {
-        barChart(data)
+        data = JSON.parse(data)
+        data.forEach(element => {
+          $('#currencys').append(
+            '<div class="col-4">'+
+            '<div class="card mb-0">'+
+                '<div class="card-body">'+
+                    '<h5>'+ element.s+'<span class="float-right">'+element.cp+'</span>'+
+                    '</h5>'+
+                    '<h5 class="text-center">'+
+                        '<span class="float-left">Open<br>'+element.o+'%</span>'+
+                        '<span class="float-right">Close<br>'+element.c+'%</span>'+
+                    '</h5>'+
+                '</div>'+
+            '</div>'+
+        '</div>'
+          )
+        });
+        carruselCurrency()
     })
 })
 
@@ -184,4 +201,41 @@ function charLine(data) {
         lineChartOptions
       );
       lineChart.render();
+}
+
+function carruselCurrency() {
+  $('#currencys').slick({
+    infinite: true,
+    speed: 300,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+      // You can unslick at a given breakpoint now by adding:
+      // settings: "unslick"
+      // instead of a settings object
+    ]
+  });
 }

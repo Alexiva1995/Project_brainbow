@@ -404,7 +404,34 @@ class AdminController extends Controller
 
        $user=User::search($request->get('user_email'))->orderBy('id','ASC')->paginate(1);
         return view('admin.vista')->with('user',$user);
+    }
 
+    /**
+     * Permite obtener las monedas
+     *
+     * @return void
+     */
+    public function getCurrency()
+    {
+        $access_key = "vfBg9wlm2uoOVXnBrLMHKukYs"; // Your API access key, Signup to get API KEY 
+        $symbol = "all_forex"; // FX Pairs 
+        $period = "5m";
+
+        // Enter your API URL below 
+        $api_url = "https://fcsapi.com/api-v3/forex/latest"; 
+        $post = "symbol=".$symbol."&period=".$period."&access_key=".$access_key; 
+
+        // Initialize CURL: 
+        $ch = curl_init($api_url); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+        curl_setopt($ch, CURLOPT_POST, true); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post); 
+        $json = curl_exec($ch); // Store the data 
+        curl_close($ch); 
+
+        $response = json_decode($json, true); // convert JSON into Array 
+        
+        return json_encode($response['response']);
     }
 
 

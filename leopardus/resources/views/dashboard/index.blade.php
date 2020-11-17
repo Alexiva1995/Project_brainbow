@@ -3,12 +3,12 @@
 @section('content')
 	<div class="contai2">
 		<div class="row">
+			@include('dashboard.componenteIndex.carruselcurrency')
 			{{-- primeros cuadro --}}
 			@if (Auth::user()->rol_id == 0)
 			@include('dashboard.componenteIndex.admin_square')
 			@else
 			@include('dashboard.componenteIndex.first_square')
-			
 			@endif
 			{{-- secundo cuadro --}}
 			{{-- @include('dashboard.componenteIndex.second_square') --}}
@@ -19,6 +19,7 @@
 @endsection
 
 @push('custom_js')
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script src="{{asset('assets/scripts/graficas.js')}}"></script>
 
 <script type="text/javascript">
@@ -102,6 +103,8 @@
 @push('vendor_css')
 <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/charts/apexcharts.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('app-assets/vendors/css/extensions/sweetalert2.min.css')}}">
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 @endpush
 
 @push('page_vendor_js')

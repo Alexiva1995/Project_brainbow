@@ -25,7 +25,7 @@ Route::get('/', 'HomeController@home');
 Route::prefix('mioficina')->group(function ()
 {
 
- 
+ Route::get('getcurrency', 'AdminController@getCurrency')->name('get.currency');
   
 Route::group(['prefix' => 'autentication'], function (){
   Route::get('/register', 'Auth\RegisterController@newRegister')->name('autenticacion.new-register');
