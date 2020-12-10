@@ -18,7 +18,7 @@
                         </div>
                         <div class="card-content">
                             <div class="card-body">
-                                <div id="candlestick-chart"></div>
+                                <div id="column-chart"></div>
                             </div>
                         </div>
                     </div>
@@ -39,16 +39,6 @@
 
 
   function graficaBot(data) {
-    // dataBot = JSON.parse(dataBot)
-    
-    // dataBot.forEach(element => {
-    //   console.log(element);
-    //   data.push({
-    //     x: new Date(element.fecha.year, (element.fecha.month - 1), element.fecha.day, element.fecha.hour, element.fecha.minute, element.fecha.second),
-    //     y: element.valores
-    //   })
-    // });
-    // console.log(data);
     var $primary = '#7367F0',
     $success = '#28C76F',
     $danger = '#EA5455',
@@ -57,61 +47,82 @@
     $label_color_light = '#dae1e7';
 
   var themeColors = [$primary, $success, $danger, $warning, $info];
-    var candleStickOptions = {
+  var columnChartOptions = {
     chart: {
       height: 350,
-      type: 'candlestick',
+      type: 'bar',
     },
     colors: themeColors,
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        endingShape: 'rounded',
+        columnWidth: '55%',
+      },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    },
     series: [{
-      data: data
+      name: 'Fondos Inversiones',
+      data: data.fondos
+    }, {
+      name: 'Redes Neuronales',
+      data: data.redes
+    }, {
+      name: 'Acciones',
+      data: data.acciones
     }],
+    legend: {
+      offsetY: -10
+    },
     xaxis: {
-      type: 'datetime'
+      categories: data.meses,
     },
     yaxis: {
-      tickAmount: 5,
-      tooltip: {
-        enabled: true
+      title: {
+        text: 'Año '+data.year,
+      }
+    },
+    fill: {
+      opacity: 1
+
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return  val + "%"
+        }
       }
     }
   }
-  var candleStickChart = new ApexCharts(
-    document.querySelector("#candlestick-chart"),
-    candleStickOptions
+
+  var columnChart = new ApexCharts(
+    document.querySelector("#column-chart"),
+    columnChartOptions
   );
-  candleStickChart.render();
+
+  columnChart.render();
+
   }
 </script>
 @php
 @endphp
 <script>
   $(document).ready(function (){
-    let data3 = [];
     $.ajax({
-        url: 'http://api.marketstack.com/v1/intraday',
-        data: {
-          access_key: '98c27ef11dc0a1c0b8e50c5dcdeeb3ba',
-          symbols: 'AAPL',
-          interval: '15min',
-          limit: '20',
-          sort: 'DESC'
-        },
+        url: "{{route('botbrainbow.get-data')}}",
+        method: 'get',
         dataType: 'json',
-        success: function(apiResponse) {
-          if (Array.isArray(apiResponse['data'])) {
-            apiResponse['data'].forEach(stockData => {
-                  // console.log(Ticker ${stockData['symbol']}, has a day high of ${stockData['high']}, on ${stockData['date']});
-                  // console.log(stockData);
-                    data3.push({
-                        x: stockData.date,
-                        y: [stockData.open, stockData.high, stockData.low, stockData.close]
-                  });
-            });
-            graficaBot(data3)
-          }
+        success: function(response) {
+          graficaBot(response)
         }
-    });
+    })
   })
   // $.get('../botbrainbow/get_brainbow', function (data) {
   //   graficaBot(data)

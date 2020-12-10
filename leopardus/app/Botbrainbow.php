@@ -9,7 +9,7 @@ class Botbrainbow extends Model
     protected $table = 'botbrainbow';
 
     protected $fillable = [
-        'abierto', 'alto', 'bajo', 'cerrado',
-        'fecha_numerica', 'post_nega'
+        'fondo_inversion', 'redes_neuronales', 
+        'acciones', 'mes', 'year'
     ];
 }

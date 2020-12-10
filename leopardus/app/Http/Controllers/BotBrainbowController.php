@@ -6,6 +6,7 @@ use App\Botbrainbow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Imports\BotImport;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BotBrainbowController extends Controller
@@ -18,12 +19,8 @@ class BotBrainbowController extends Controller
     public function index()
     {
         view()->share('title', 'Bot Brainbow');
-        $botbrainbow = Botbrainbow::orderBy('fecha_numerica', 'desc')->get();
-        foreach ($botbrainbow as $bot) {
-            $dt = Carbon::now();
-            $dt->timestamp = $bot->fecha_numerica;
-            $bot->fecha_bot = $dt;
-        }
+        $botbrainbow = Botbrainbow::orderBy('id', 'desc')->get();
+        
         return view('admin.botbrainbow', compact('botbrainbow'));
     }
 
@@ -36,21 +33,15 @@ class BotBrainbowController extends Controller
     public function saveBotBrainbow(Request $request)
     {
         $validate = $request->validate([
-            'fecha' => ['required'],
-            'hora' => ['required'],
-            'abierto' => ['required', 'numeric'],
-            'alto' => ['required', 'numeric'],
-            'bajo' => ['required', 'numeric'],
-            'cerrado' => ['required', 'numeric'],
+            'fondo_inversion' => ['required', 'numeric'],
+            'redes_neuronales' => ['required', 'numeric'],
+            'acciones' => ['required', 'numeric'],
+            'mes' => ['required', 'numeric'],
+            'year' => ['required', 'numeric'],
         ]);
         if ($validate) {
             $data = $request->all();
-            $data['fecha'] = $data['fecha'].' '.$data['hora'];
-            $fechaNumerica = new Carbon($data['fecha']);
-            $data['fecha_numerica'] = $fechaNumerica->timestamp;
-            $data['post_nega'] = $this->getSubioBajo($data['fecha_numerica'], $data['cerrado']);
             $this->updateBotBrainbow($data, true, 0);
-
             return redirect()->back()->with('msj', 'Registro Exitoso');
         }
     }
@@ -92,20 +83,20 @@ class BotBrainbowController extends Controller
     public function updateBot(Request $request)
     {
         $validate = $request->validate([
-            'abierto' => ['required', 'numeric'],
-            'alto' => ['required', 'numeric'],
-            'bajo' => ['required', 'numeric'],
-            'cerrado' => ['required', 'numeric'],
+            'fondo_inversion' => ['required', 'numeric'],
+            'redes_neuronales' => ['required', 'numeric'],
+            'acciones' => ['required', 'numeric'],
+            'mes' => ['required', 'numeric'],
+            'year' => ['required', 'numeric'],
         ]);
         if ($validate) {
-            $botbrainbow = Botbrainbow::find($request->idbot);
             $data = [
-                'abierto' => $request->abierto,
-                'alto' => $request->alto,
-                'bajo' => $request->bajo,
-                'cerrado' => $request->cerrado,
+                'fondo_inversion' => $request->fondo_inversion,
+                'redes_neuronales' => $request->redes_neuronales,
+                'acciones' => $request->acciones,
+                'mes' => $request->mes,
+                'year' => $request->year,
             ];
-            $data['post_nega'] = $this->getSubioBajo($botbrainbow->fecha_numerica, $data['cerrado']);
             $this->updateBotBrainbow($data, false, $request->idbot);
 
             return redirect()->back()->with('msj', 'Actualizar Registro Bot');
@@ -119,30 +110,35 @@ class BotBrainbowController extends Controller
      */
     public function getBotBrainbow()
     {
-        $botBrainbow = Botbrainbow::orderBy('fecha_numerica', 'desc')->get();
-		$dataGrafica = [];
-		foreach ($botBrainbow as $bot) {
-			$valores = [
-				$bot->abierto,
-				$bot->alto,
-				$bot->bajo,
-				$bot->cerrado
-            ];
-            $dt = Carbon::now();
-            $dt->timestamp = $bot->fecha_numerica;
-            $fecha = [
-                "year" => $dt->year,
-                "month" => $dt->month,
-                "day" => $dt->day,
-                "hour" => $dt->hour,
-                "minute" => $dt->minute,
-                "second" => $dt->second,
-            ];
-			$dataGrafica [] = [
-				"fecha" => $fecha,
-				"valores" => $valores
-			];
+        $botBrainbow = Botbrainbow::select(
+            DB::raw('SUM(fondo_inversion) as fondos'), 
+            DB::raw('SUM(redes_neuronales) as redes'),
+            DB::raw('SUM(acciones) as acciones'),
+            'mes', 'year'
+        )->where('year', Carbon::now()->format('Y'))->groupBy('mes', 'year')->orderBy('mes')->get();
+        $arrayMes = [
+            1 => 'Ene', 2 => 'Feb', 3 => 'Mar', 4 => 'Abr', 5 => 'May', 6 => 'Jun',
+            7 => 'Jul', 8 => 'Ago', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dic'
+        ];
+        $arrayFondo = [];
+        $arrayRedes = [];
+        $arrayAcciones = [];
+        $arrayMeses = [];
+        foreach ($botBrainbow as $bot) {
+            $arrayFondo [] = $bot->fondos;
+            $arrayRedes [] = $bot->redes;
+            $arrayAcciones [] = $bot->acciones;
+            $arrayMeses [] = $arrayMes[$bot->mes];
         }
+
+		$dataGrafica = [
+            'fondos' => $arrayFondo,
+            'redes' => $arrayRedes,
+            'acciones' => $arrayAcciones,
+            'meses' => $arrayMeses,
+            'year' => Carbon::now()->format('Y')
+        ];
+		
         return json_encode($dataGrafica);
     }
 

@@ -17,7 +17,7 @@
 {{-- alertas --}}
 @include('dashboard.componentView.alert')
 <section>
-    <div class="card">
+    {{-- <div class="card">
         <div class="card-header">
             <h5 class="card-title">Subir BotBrainbow</h5>
         </div>
@@ -39,7 +39,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="card">
         <div class="card-content">
             <div class="card-body">
@@ -52,25 +52,19 @@
                         <thead>
                             <tr class="text-center">
                                 <th class="text-center">
-                                    Abierto
+                                    Fondo de inversión
                                 </th>
                                 <th class="text-center">
-                                    Alto
+                                    Redes Neuronales
                                 </th>
                                 <th class="text-center">
-                                    Bajo
+                                    Acciones
                                 </th>
                                 <th class="text-center">
-                                    Cerrado
+                                    Mes
                                 </th>
                                 <th class="text-center">
-                                    Bajo - Subio
-                                </th>
-                                <th class="text-center">
-                                    Fecha Bot
-                                </th>
-                                <th class="text-center">
-                                    Fecha Creacion
+                                    Año
                                 </th>
                                 <th>
                                     Accion
@@ -80,19 +74,11 @@
                         <tbody>
                             @foreach($botbrainbow as $bot)
                             <tr class="text-center">
-                                <td>{{$bot->abierto}}</td>
-                                <td>{{$bot->alto}}</td>
-                                <td>{{$bot->bajo}}</td>
-                                <td>{{$bot->cerrado}}</td>
-                                <td>
-                                    @if ($bot->post_nega == 0)
-                                    <i class="fa fa-chevron-down font-small-3 text-danger mr-50"></i>
-                                    @else
-                                    <i class="fa fa-chevron-up font-small-3 text-success mr-50"></i>
-                                    @endif
-                                </td>
-                                <td>{{date('Y-m-d H:i:s', strtotime($bot->fecha_bot))}}</td>
-                                <td>{{date('Y-m-d H:i:s', strtotime($bot->created_at))}}</td>
+                                <td>{{$bot->fondo_inversion}}%</td>
+                                <td>{{$bot->redes_neuronales}}%</td>
+                                <td>{{$bot->acciones}}%</td>
+                                <td>{{$bot->mes}}</td>
+                                <td>{{$bot->year}}</td>
                                 <td>
                                     <button class="btn btn-primary" onclick="update('{{json_encode($bot)}}')">
                                         <i class="fa fa-edit"></i>
@@ -120,33 +106,41 @@
                     <form action="{{route('botbrainbow.save')}}" method="post">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label for="">Fecha Bot</label>
-                            <input type="date" class="form-control" name="fecha">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Hora Bot</label>
-                            <input type="time" class="form-control" name="hora">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Abierto</label>
-                            <input type="number" step="any" class="form-control" name="abierto">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Alto</label>
-                            <input type="number" step="any" class="form-control" name="alto">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Bajo</label>
-                            <input type="number" step="any" class="form-control" name="bajo">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Cerrado</label>
-                            <input type="number" step="any" class="form-control" name="cerrado">
+                            <label for="">Fondo Inversion</label>
+                            <input type="number" class="form-control" name="fondo_inversion" step="any">
                             <p class="text-black text-help">
-                                Con este valor es que se va a saber si bajo o subio,
-                                comparandolo con el valor anterior registrado de la fecha mas cercana a la que se va a
-                                registrar.
+                                El valor aqui puesto sera tomado directamente como un valor en porcentaje
+                                Ej: si colocas 5, este sera tomado como si fuera 5%
                             </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Redes Neuronales</label>
+                            <input type="number" class="form-control" name="redes_neuronales" step="any">
+                            <p class="text-black text-help">
+                                El valor aqui puesto sera tomado directamente como un valor en porcentaje
+                                Ej: si colocas 5, este sera tomado como si fuera 5%
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Acciones</label>
+                            <input type="number" class="form-control" name="acciones" step="any">
+                            <p class="text-black text-help">
+                                El valor aqui puesto sera tomado directamente como un valor en porcentaje
+                                Ej: si colocas 5, este sera tomado como si fuera 5%
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Mes</label>
+                            <select name="mes" class="form-control">
+                                <option value="" disabled selected>Seleccione un Mes</option>
+                                @for ($i = 1; $i < 13; $i++)
+                                    <option value="{{$i}}">Mes {{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Año</label>
+                            <input type="number" class="form-control" name="year" max="9999">
                         </div>
                         <div class="form-group text-center">
                             <button class="btn btn-primary">Agregar</button>
@@ -174,25 +168,41 @@
                         <input type="hidden" name="_token" id="token">
                         <input type="hidden" name="idbot" id="idbot">
                         <div class="form-group">
-                            <label for="">Abierto</label>
-                            <input type="number" step="any" class="form-control" name="abierto" id="abierto">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Alto</label>
-                            <input type="number" step="any" class="form-control" name="alto" id="alto">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Bajo</label>
-                            <input type="number" step="any" class="form-control" name="bajo" id="bajo">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Cerrado</label>
-                            <input type="number" step="any" class="form-control" name="cerrado" id="cerrado">
+                            <label for="">Fondo Inversion</label>
+                            <input type="number" class="form-control" name="fondo_inversion" step="any" id="fondo_inversion">
                             <p class="text-black text-help">
-                                Con este valor es que se va a saber si bajo o subio,
-                                comparandolo con el valor anterior registrado de la fecha mas cercana a la que se va a
-                                registrar.
+                                El valor aqui puesto sera tomado directamente como un valor en porcentaje
+                                Ej: si colocas 5, este sera tomado como si fuera 5%
                             </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Redes Neuronales</label>
+                            <input type="number" class="form-control" name="redes_neuronales" step="any" id="redes_neuronales">
+                            <p class="text-black text-help">
+                                El valor aqui puesto sera tomado directamente como un valor en porcentaje
+                                Ej: si colocas 5, este sera tomado como si fuera 5%
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Acciones</label>
+                            <input type="number" class="form-control" name="acciones" step="any" id="acciones">
+                            <p class="text-black text-help">
+                                El valor aqui puesto sera tomado directamente como un valor en porcentaje
+                                Ej: si colocas 5, este sera tomado como si fuera 5%
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Mes</label>
+                            <select name="mes" class="form-control" id="mes">
+                                <option value="" disabled selected>Seleccione un Mes</option>
+                                @for ($i = 1; $i < 13; $i++)
+                                    <option value="{{$i}}">Mes {{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Año</label>
+                            <input type="number" class="form-control" name="year" max="9999" id="year">
                         </div>
                         <div class="form-group text-center">
                             <button class="btn btn-primary">Agregar</button>
@@ -212,10 +222,11 @@
     function update(bot) {
         bot = JSON.parse(bot)
         $('#idbot').val(bot.id)
-        $('#abierto').val(bot.abierto)
-        $('#alto').val(bot.alto)
-        $('#bajo').val(bot.bajo)
-        $('#cerrado').val(bot.cerrado)
+        $('#fondo_inversion').val(bot.fondo_inversion)
+        $('#redes_neuronales').val(bot.redes_neuronales)
+        $('#acciones').val(bot.acciones)
+        $('#mes').val(bot.mes)
+        $('#year').val(bot.year)
         $('#token').val('{{ csrf_token() }}')
         $('#editBot').modal('show')
     }
