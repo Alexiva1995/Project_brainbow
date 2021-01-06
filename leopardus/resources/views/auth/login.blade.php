@@ -11,12 +11,11 @@
         }
     @endphp
 
-
     <section class="row flexbox-container">
         <div class="col-xl-8 col-11 d-flex justify-content-center">
             <div class="card bg-authentication rounded-0 mb-0">
                 <div class="row m-0" style="background-color: white;">
-                    <div class="col-lg-6 d-lg-block d-none" style="padding: 0 0; background-color: black;">
+                    <div class="col-lg-6 d-flex d-none" style="padding: 0 0; background-color: black; justify-content: center; align-content: center;">
                         <img style="max-width: 400px;"src="{{asset('assets/imgLanding/foto-logo.png')}}" alt="branding logo">
                     </div>
                     <div class="col-lg-6 col-12 p-0">

@@ -48,17 +48,17 @@
             {{-- FIN BOT BRAINBOW--}}
             {{-- INICIO BLACKBOX --}}
             <li class="nav-item">
-                @if ($blackboxcheck == 0)
+                {{-- @if ($blackboxcheck == 0)
                 <a href="javascript:;" class="nav-link text-white" onclick="$('#modalBlackBox').modal('show')">
                     <i class="feather icon-package"></i>
                     <span class="title">Blackbox</span>
                 </a>
-                @else
-                <a href="{{route('blackbox')}}" class="nav-link text-white">
+                @else --}}
+                <a href="{{route('blackbox.log')}}" class="nav-link text-white">
                     <i class="feather icon-package"></i>
                     <span class="title">Blackbox</span>
                 </a>    
-                @endif 
+                {{-- @endif  --}}
             </li>
             {{-- FIN BLACKBOW --}}
             {{-- RED DE USUARIO --}}

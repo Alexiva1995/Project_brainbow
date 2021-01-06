@@ -178,4 +178,26 @@ class InversionController extends Controller
             return redirect($ruta);
         }
     }
+
+    public function indexBlackbox()
+    {
+        view()->share('title', 'Compras Blackbox');
+        
+        $inversiones = OrdenInversion::where('paquete_inversion', 0)->get();
+        $funciones = new IndexController();
+        
+        foreach ($inversiones as $inversion) {
+            $user = User::find($inversion->iduser);
+            if (!empty($user)) {
+                $inversion->correo = $user->user_email;
+                $inversion->usuario = $user->display_name;
+            }else{
+                $inversion->correo = 'Usuario Eliminado o no disponible';
+                $inversion->usuario = 'Usuario Eliminado o no disponible';
+            }
+            $inversion->plan = 'Paquetes Blackbox';
+        }
+
+        return view('admin.indexAdminInversiones', compact('inversiones'));
+    }
 }

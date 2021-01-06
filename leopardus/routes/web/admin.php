@@ -66,6 +66,7 @@ Route::group(['prefix' => 'tienda', 'middleware' => ['auth', 'licencia', 'guest'
     Route::post('/inversion', 'InversionController@pago')->name('tienda.inversion');
     // Blackbox
     Route::post('/blackbox', 'InversionController@pagoBlackBox')->name('tienda.blackbox');
+    
 });
 
 
@@ -140,6 +141,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
         Route::post('retirarInversiobes', 'WalletController@retirarInversiones')->name('wallet-inversiones-retirar');
         // admin
         Route::get('inversionesAdmin', 'InversionController@indexAdminInversion')->name('inversiones.admin');
+        Route::get('blackboxlog', 'InversionController@indexBlackbox')->name('blackbox.log');
     });
 
     
