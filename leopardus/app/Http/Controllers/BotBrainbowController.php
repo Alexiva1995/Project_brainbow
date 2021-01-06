@@ -115,7 +115,7 @@ class BotBrainbowController extends Controller
             DB::raw('SUM(redes_neuronales) as redes'),
             DB::raw('SUM(acciones) as acciones'),
             'mes', 'year'
-        )->where('year', '>=', '2018')->groupBy('mes', 'year')->orderBy('mes')->get();
+        )->where('year', '>=', '2018')->groupBy('mes', 'year')->orderBy('year', 'asc')->orderBy('mes')->get();
         $arrayMes = [
             1 => 'Ene', 2 => 'Feb', 3 => 'Mar', 4 => 'Abr', 5 => 'May', 6 => 'Jun',
             7 => 'Jul', 8 => 'Ago', 9 => 'Sep', 10 => 'Oct', 11 => 'Nov', 12 => 'Dic'
