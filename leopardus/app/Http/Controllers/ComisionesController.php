@@ -348,7 +348,10 @@ class ComisionesController extends Controller
         if ($inversion != null) {
             $paquete = $funciones->getProductDetails($inversion->paquete_inversion);
             $maximoRentabilidad = ($inversion->invertido * '1'.$paquete->rentabilidad);
-            $ganancia = WalletlogRentabilidad::where('idinversion', '=', $inversion->id)->get()->sum('debito');
+            $ganancia = WalletlogRentabilidad::where([
+                ['idinversion', '=', $inversion->id],
+                ['semana', '!=', '']
+            ])->get()->sum('debito');
             $porcentage = (($ganancia * 100) / $maximoRentabilidad);
             $data = [
                 'maximo' => $maximoRentabilidad,

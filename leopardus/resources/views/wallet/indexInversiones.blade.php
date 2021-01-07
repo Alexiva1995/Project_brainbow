@@ -20,7 +20,9 @@
                             <th>Plan</th>
                             <th>Inversion</th>
                             <th>Ganacia</th>
+                            <th>Disponible</th>
                             <th>Fecha Finalizacion</th>
+                            <th>Estado</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -31,11 +33,20 @@
                             <td>{{$inversion['plan']}}</td>
                             <td>$ {{$inversion['inversion']}}</td>
                             <td>$ {{$inversion['rentabilidad']}}</td>
+                            <td>$ {{$inversion['disponible']}}</td>
                             <td>{{date('d-m-Y', strtotime($inversion['fecha_venci']))}}</td>
+                            <td>{{$inversion['estado']}}</td>
                             <td>
+                                @if ($inversion['estado'] == 'Activa')
                                 <button class="btn btn-info" onclick="retiro('{{json_encode($inversion)}}')">
-                                    retirar
+                                    Retirar
                                 </button>
+                                @endif
+                                @if ($inversion['estado'] != 'Retirado')
+                                <button class="btn btn-info" onclick="retiro2('{{json_encode($inversion)}}')">
+                                    Retirar Inversion
+                                </button>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -99,6 +110,44 @@
     </div>
   </div>
 
+  <!-- Modal Retiro Invertido -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Retiro Invertido</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{{route('wallet-inversiones-retirar-invertido')}}" method="post" id="form_retiro2">
+            {{ csrf_field() }}
+            <input type="hidden" name="idinversion" id="idinversion2">
+            <div class="form-group">
+                <label for="">Plan</label>
+                <input type="text" class="form-control" readonly name="plan" id="plan2">
+            </div>
+            <div class="form-group">
+                <label for="">Estas Ganancias se perderan</label>
+                <input type="text" class="form-control" readonly name="ganacia" id="ganacia2">
+            </div>
+            <div class="form-group">
+                <label for="">Monto a Retirar (Lo Invertido)</label>
+                <input type="text" class="form-control" name="retirar" id="retirar2">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-info">Retirar Invertido</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
     function retiro(inversion) {
         inversion = JSON.parse(inversion)
@@ -109,7 +158,7 @@
             let fechaInversion = new Date(inversion.fecha_venci.date)
             $('#plan').val(inversion.plan)
             $('#idinversion').val(inversion.id)
-            $('#ganacia').val(inversion.rentabilidad)
+            $('#ganacia').val(inversion.disponible)
             if (fechaActual.getTime() >= fechaInversion.getTime()) {
                 $('#porc_penalizacion').val(0)
             }else{
@@ -120,6 +169,15 @@
             $('#alert_retiro').fadeIn(1000)
         }
         $('#exampleModal').modal('show')
+    }
+
+    function retiro2(inversion) {
+        inversion = JSON.parse(inversion)
+        $('#plan2').val(inversion.plan)
+        $('#idinversion2').val(inversion.id)
+        $('#ganacia2').val(inversion.rentabilidad)
+        $('#retirar2').val(inversion.inversion)
+        $('#exampleModal2').modal('show')
     }
 
     function calcularMonto(monto) {

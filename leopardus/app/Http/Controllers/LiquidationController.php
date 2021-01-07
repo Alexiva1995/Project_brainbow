@@ -574,11 +574,16 @@ class LiquidationController extends Controller
         try {
             $liquidacion = Liquidacion::find($idliquidacion);
             $user = User::find($iduser);
-            if ($liquidacion->type_liquidation == 'Inversion') {
+            if ($liquidacion->type_liquidation != 'Comisiones') {
                 $admin = User::find(1);
                 $walletRentabilidad = WalletlogRentabilidad::find($liquidacion->idinversion);
                 $inversion = OrdenInversion::find($walletRentabilidad->idinversion);
                 $concepto = 'Reverso de la  liquidacion de '.$walletRentabilidad->credito.' de la inversion: '.$walletRentabilidad->idinversion;
+                if ($liquidacion->type_liquidation == 'Retiro Invertido') {
+                    $concepto = 'Reverso del retiro de lo invertido: '.$liquidacion->total.' de la inversion: '.$walletRentabilidad->idinversion.' - Ganancia Recuperada: '.$walletRentabilidad->credito;
+                    $inversion->status = 1;
+                    $inversion->save();                    
+                }
                 $debito = $walletRentabilidad->credito;
                 if ($walletRentabilidad->descuento != 0) {
                     $user->rentabilidad = ($user->rentabilidad + $walletRentabilidad->credito);
@@ -586,6 +591,7 @@ class LiquidationController extends Controller
                     $inversion->invertido = ($inversion->invertido + $walletRentabilidad->credito);
                     $inversion->save();
                 }else{
+                    
                     $user->rentabilidad = ($user->rentabilidad + $walletRentabilidad->credito);
                 }
                 

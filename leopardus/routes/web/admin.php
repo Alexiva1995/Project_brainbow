@@ -139,6 +139,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'licencia', 'guest']
         // inversiones
         Route::get('/walletInversiones', 'WalletController@indexInversiones')->name('wallet-invesiones');
         Route::post('retirarInversiobes', 'WalletController@retirarInversiones')->name('wallet-inversiones-retirar');
+        Route::post('retirar_invertido', 'WalletController@retirarInvertido')->name('wallet-inversiones-retirar-invertido');
         // admin
         Route::get('inversionesAdmin', 'InversionController@indexAdminInversion')->name('inversiones.admin');
         Route::get('blackboxlog', 'InversionController@indexBlackbox')->name('blackbox.log');

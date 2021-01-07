@@ -424,7 +424,7 @@ $billetera = DB::table('walletlog')
 	{
 		$funciones = new IndexController();
 
-		$inversiones = $funciones->getInversionesUserDashboard(Auth::user()->ID);
+		$inversiones = $funciones->getInversionesUserDashboard(Auth::user()->ID, true);
 
 		return view('wallet.indexInversiones', compact('inversiones')); 
 	}
@@ -456,20 +456,6 @@ $billetera = DB::table('walletlog')
 		$admin->save();
 
 		$wallet = DB::table('user_campo')->where('ID', '=', Auth::user()->ID)->select('paypal')->first();
-        $dataLiquidation = [
-            'iduser' => Auth::user()->ID,
-            'total' => $request->total,
-            'wallet_used' => $wallet->paypal,
-            'process_date' => Carbon::now(),
-            'status' => 0,
-			'type_liquidation' => 'Inversion',
-			'idinversion' => $inversion->id,
-			'monto_bruto' => $credito,
-			'feed' => $request->mont_penalizacion
-		];
-		
-        // $concepto = 'Liquidacion generada por un monto de '.$credito;
-
 		$data = [
 			'iduser' => $inversion->iduser,
 			'idinversion' => $inversion->id,
@@ -485,11 +471,83 @@ $billetera = DB::table('walletlog')
 		];
 
 		$comisiones = new ComisionesController();
-		$comisiones->sabeWalletRentabilidad($data);
+		$dataLiquidation = [
+            'iduser' => Auth::user()->ID,
+            'total' => $request->total,
+            'wallet_used' => $wallet->paypal,
+            'process_date' => Carbon::now(),
+            'status' => 0,
+			'type_liquidation' => 'Inversion',
+			'idinversion' => $comisiones->sabeWalletRentabilidad($data),
+			'monto_bruto' => $credito,
+			'feed' => $request->mont_penalizacion
+		];
+		
+		// $concepto = 'Liquidacion generada por un monto de '.$credito;
 		$liquidacion = new LiquidationController();
 		$liquidacion->saveLiquidation($dataLiquidation);
 
+
 		return redirect()->back()->with('msj', 'Retiro procesado con exito');
+	}
+
+	/**
+	 * Permite procesar el proceso de la liquidacion de la inversiones
+	 *
+	 * @param Request $request
+	 * @return void
+	 */
+	public function retirarInvertido(Request $request)
+	{
+
+		$user = User::find(Auth::user()->ID);
+		$admin = User::find(1);
+		$inversion = OrdenInversion::find($request->idinversion);
+		$inversion->status = 2;
+		$inversion->save();
+		$concepto = 'Retiro de la inversion realizada '.$request->retirar.' - Ganancia perdida '.$request->ganacia;
+		$credito = $request->retirar;
+		$user->rentabilidad = ($user->rentabilidad - $request->ganacia);
+		
+		$user->save();
+		$admin->save();
+
+		$wallet = DB::table('user_campo')->where('ID', '=', Auth::user()->ID)->select('paypal')->first();
+		
+		$data = [
+			'iduser' => $inversion->iduser,
+			'idinversion' => $inversion->id,
+			'concepto' => $concepto,
+			'debito' => 0,
+			'credito' => $request->ganacia,
+			'balance' => $user->rentabilidad,
+			'semana' => '',
+			'year' => '',
+			'fecha_retiro' => Carbon::now(),
+			'descuento' => 0,
+			'correo' => $user->user_email
+		];
+
+		$comisiones = new ComisionesController();
+
+        $dataLiquidation = [
+            'iduser' => Auth::user()->ID,
+            'total' => $credito,
+            'wallet_used' => $wallet->paypal,
+            'process_date' => Carbon::now(),
+            'status' => 0,
+			'type_liquidation' => 'Retiro Invertido',
+			'idinversion' => $comisiones->sabeWalletRentabilidad($data),
+			'monto_bruto' => $credito,
+			'feed' => 0
+		];
+		
+		// $concepto = 'Liquidacion generada por un monto de '.$credito;
+
+		$liquidacion = new LiquidationController();
+		$liquidacion->saveLiquidation($dataLiquidation);
+		
+		return redirect()->back()->with('msj', 'Retiro de lo Invertido procesado con exito');
 	}
 
 }

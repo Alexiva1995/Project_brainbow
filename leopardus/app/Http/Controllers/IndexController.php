@@ -429,30 +429,52 @@ class IndexController extends Controller
      * @param integer $iduser
      * @return array
      */
-    public function getInversionesUserDashboard($iduser) : array
+    public function getInversionesUserDashboard($iduser, $user = false) : array
     {
         $fechaActual = Carbon::now();
         $arrayInversiones = [];
-        $inversiones = OrdenInversion::where([
-            ['iduser', '=', $iduser],
-            ['paquete_inversion', '!=', ''],
-            ['status', '=', 1]
-        ])->get();
+        if ($user == false) {
+            $inversiones = OrdenInversion::where([
+                ['iduser', '=', $iduser],
+                ['paquete_inversion', '!=', ''],
+                ['status', '=', 1]
+            ])->get();
+        }else{
+            $inversiones = OrdenInversion::where([
+                ['iduser', '=', $iduser],
+                ['paquete_inversion', '!=', ''],
+            ])->get();
+        }
         foreach ($inversiones as $inversion) {
             $paquete = $this->getProductDetails($inversion->paquete_inversion);
             if ($paquete != null) {
                 $rentabilidad = WalletlogRentabilidad::where([
                     ['iduser', '=', $iduser],
                     ['idinversion', '=', $inversion->id],
+                    ['semana', '!=', '']
                 ])->get()->sum('debito');
+                $debito = WalletlogRentabilidad::where([
+                    ['iduser', '=', $iduser],
+                    ['idinversion', '=', $inversion->id],
+                ])->get()->sum('debito');
+                $credito = WalletlogRentabilidad::where([
+                    ['iduser', '=', $iduser],
+                    ['idinversion', '=', $inversion->id],
+                ])->get()->sum('credito');
+                
                 $fecha_vencimiento = new Carbon($inversion->fecha_fin);
-                $estado = ($fecha_vencimiento > $fechaActual) ? 'Activa' : 'Vencidad';
+                if ($inversion->status == 1) {
+                    $estado = ($fecha_vencimiento > $fechaActual) ? 'Activa' : 'Vencidad';
+                }else{
+                    $estado = ($inversion->status == 0) ? 'En Proceso' : 'Retirado';
+                }
                 $arrayInversiones [] = [
                     'id' => $inversion->id,
                     'img' => asset('products/'.$paquete->post_excerpt),
                     'inversion' => $inversion->invertido,
                     'plan' => $paquete->post_title,
                     'rentabilidad' => $rentabilidad,
+                    'disponible' => ($debito - $credito),
                     'fecha_venci' => $fecha_vencimiento,
                     'penalizacion' => $paquete->penalizacion,
                     'estado' => $estado
