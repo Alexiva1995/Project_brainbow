@@ -217,11 +217,11 @@ class RegisterController extends Controller
         // Obtenemos el referido.
 
 
-        $referido = 236;
+        $referido = $user_id_default;;
         if(isset($data['referred_id'])){
 
             if (empty($data['referred_id'])) {
-                $data['referred_id'] = 236;
+                $data['referred_id'] = 1;
             }
             
             if ($this->VerificarUser($data['referred_id'])) {
@@ -261,19 +261,17 @@ class RegisterController extends Controller
         //     }
         //     $posicion = $data['position_id'];
         // }
-
-        // if ($data['ladomatrix'] == 'I') {
-        //     $consulta=new ReferralTreeController;
-        //     $resultado = $consulta->getPosition($referido, $data['ladomatrix']);
-        //     $posicion = $resultado;
-        //     // $data['ladomatrix'] = $resultado['lado'];
-        // }else{
+        if ($data['ladomatrix'] == 'I') {
             $consulta=new ReferralTreeController;
-            $resultado = $consulta->getPosition2($referido);
+            $resultado = $consulta->getPosition($referido, $data['ladomatrix']);
             $posicion = $resultado;
             // $data['ladomatrix'] = $resultado['lado'];
-        // }
-
+        }else{
+            $consulta=new ReferralTreeController;
+            $resultado = $consulta->getPosition($referido, $data['ladomatrix']);
+            $posicion = $resultado;
+            // $data['ladomatrix'] = $resultado['lado'];
+        }
         
 
 

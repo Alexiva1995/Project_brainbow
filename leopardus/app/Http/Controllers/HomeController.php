@@ -191,20 +191,28 @@ class HomeController extends Controller
 
     public function changeSide(Request $request)
     {
+        // $validate = $request->validate([
+        //     'ladoregistrar' => ['required']
+        // ]);
+        // if ($validate) {
+        //     if (Auth::user()->update(['ladoregistrar' => $request->ladoregistrar])) {
+        //         return 1;
+        //     } else {
+        //         return 0;
+        //     }
+            
+        //     // return redirect()->back()->with('msj', 'Lado actualizado con exito');
+        //     return 1;
+        // }else{
+        //     return 0;
+        // }
+
         $validate = $request->validate([
             'ladoregistrar' => ['required']
         ]);
         if ($validate) {
-            if (Auth::user()->update(['ladoregistrar' => $request->ladoregistrar])) {
-                return 1;
-            } else {
-                return 0;
-            }
-            
-            // return redirect()->back()->with('msj', 'Lado actualizado con exito');
-            return 1;
-        }else{
-            return 0;
+            Auth::user()->update(['ladoregistrar' => $request->ladoregistrar]);
+            return redirect()->back()->with('msj', 'Lado actualizado con exito');
         }
 
     }
@@ -243,5 +251,7 @@ class HomeController extends Controller
             
         }
     }
+
+    
 
 }
