@@ -3,7 +3,7 @@
     <section class="mt-2 mb-2">
         <div class="row">
             <div class="col-lg-3 col-sm-6 col-12">
-                <div class="card h-100 mt-1 mb-1" onclick="copyToClipboard('copy')">
+                <div class="card h-100 mt-1 mb-1">
                     <div style="border-bottom: solid #E4E4E4 1px; padding: 5px 10px;">
                         <h5 class="text-bold-700 mt-1" style="color: #000D2F;">
                             @if (Auth::user()->status == 1)
@@ -13,7 +13,7 @@
                             @endif
                         </h5>
                     </div>
-                    <div class="card-header d-flex flex-column align-items-center justify-content-center pb-2">
+                    <div class="card-header d-flex flex-column align-items-center justify-content-center pb-2" onclick="copyToClipboard('copy')">
                         <div class="avatar p-50 m-0" style="background-color: #02E9FE;">
                             <div class="avatar-content">
                                 <i class="feather icon-link font-medium-5" style="color: white;"></i>
@@ -24,6 +24,19 @@
                         <p style="display:none;" id="copy">
                             {{route('autenticacion.new-register').'?referred_id='.Auth::user()->ID}}
                         </p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <label class="text-center">Selecione un lado de Registro para su arbol</label>
+                            <div class="custom-control custom-radio p-2">
+                                <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" onclick="updateSideBinary('D')" @if (Auth::user()->ladoregistrar == 'D') 'checked' @endif>
+                                <label class="custom-control-label" for="customRadio1">Derecha</label>
+                              </div>
+                              <div class="custom-control custom-radio p-2">
+                                <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input" onclick="updateSideBinary('I')" @if (Auth::user()->ladoregistrar == 'I') 'checked' @endif>
+                                <label class="custom-control-label" for="customRadio2">Izquierda</label>
+                              </div>
+                        </div>
                     </div>
                 </div>
             </div>

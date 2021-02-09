@@ -22,15 +22,15 @@
     <h6 class="text-center text-white">{{Auth::user()->user_email}}</h6>
 </div>
 </li> --}}
-            {{-- INICIO --}}
-            <li class="nav-item">
+
+            @if (Auth::user()->ID == 1)
+            {{-- INICIO INVERSIONES --}}
+                        <li class="nav-item">
                 <a href="{{url('mioficina/admin')}}" class="nav-link text-white nav-toggle">
                     <i class="fa fa-home"></i>
                     <span class="title">Dashboard</span>
                 </a>
             </li>
-            @if (Auth::user()->ID == 1)
-            {{-- INICIO INVERSIONES --}}
             <li class="nav-item">
                 <a href="{{route('inversiones.admin')}}" class="nav-link text-white">
                     <i class="feather icon-bar-chart-2"></i>
@@ -39,27 +39,10 @@
             </li>
             {{-- FIN INVERSIONES --}}
             {{-- INICIO BOT BRAINBOW --}}
-            <li class="nav-item">
-                <a href="{{route('botbrainbow.index')}}" class="nav-link text-white">
-                    <i class="feather icon-activity"></i>
-                    <span class="title">Bot Brainbow</span>
-                </a>
-            </li>
+
             {{-- FIN BOT BRAINBOW--}}
             {{-- INICIO BLACKBOX --}}
-            <li class="nav-item">
-                {{-- @if ($blackboxcheck == 0)
-                <a href="javascript:;" class="nav-link text-white" onclick="$('#modalBlackBox').modal('show')">
-                    <i class="feather icon-package"></i>
-                    <span class="title">Blackbox</span>
-                </a>
-                @else --}}
-                <a href="{{route('blackbox.log')}}" class="nav-link text-white">
-                    <i class="feather icon-package"></i>
-                    <span class="title">Blackbox</span>
-                </a>    
-                {{-- @endif  --}}
-            </li>
+
             {{-- FIN BLACKBOW --}}
             {{-- RED DE USUARIO --}}
             <li class="nav-item">
@@ -72,101 +55,39 @@
                     <li class="nav-item">
                         <a href="{{route('referraltree', ['matriz'])}}" class="nav-link text-white">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Matriz</span>
+                            <span class="title">Binario</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url('mioficina/admin/network/directrecords')}}" class="nav-link text-white">
+                        <a href="{{route('referraltree', ['tree'])}}" class="nav-link text-white">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Directos</span>
+                            <span class="title">Unilevel</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{url('mioficina/admin/network/networkrecords')}}" class="nav-link text-white">
+                        <a href="{{route('autenticacion.new-register').'?referred_id='.Auth::user()->ID}}"
+                            class="nav-link" style="color: #FFFFFF;">
                             <i class="feather icon-circle"></i>
-                            <span class="title">Red</span>
+                            <span class="title">Nuevo Usuario</span>
                         </a>
                     </li>
+                   
                 </ul>
             </li>
             {{-- FIN RED DE USUARIO --}}
             @endif
             {{--INICIO BILLETERA --}}
-            <li class="nav-item">
-                <a href="javascript:;" class="nav-link text-white nav-toggle">
-                    <i class="feather icon-trending-up"></i>
-                    <span class="title">Financiero</span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu" style="background-color: #000D2F;">
-                    {{-- <li class="nav-item">
-                        <a href="{{url('mioficina/admin/wallet/')}}" class="nav-link text-white">
-                    <i class="feather icon-circle"></i>
-                    <span class="title">
-                        <small>Billetera</small>
-                    </span>
-                    </a>
-            </li> --}}
-            <li class="nav-item">
-                <a href="{{route('liquidacion')}}" class="nav-link text-white">
-                    <i class="feather icon-circle"></i>
-                    <span class="title">
-                        <small>Liquidación Comisiones</small>
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{route('liquidacion.inversion')}}" class="nav-link text-white">
-                    <i class="feather icon-circle"></i>
-                    <span class="title">
-                        <small>Liquidación Inversiones</small>
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{route('liquidacion.pendientes')}}" class="nav-link text-white">
-                    <i class="feather icon-circle"></i>
-                    <span class="title">
-                        <small>Liquidaciones Pendientes</small>
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{route('liquidacion.realizadas')}}" class="nav-link text-white">
-                    <i class="feather icon-circle"></i>
-                    <span class="title">
-                        <small>Liquidaciones Realizadas</small>
-                    </span>
-                </a>
-            </li>
-        </ul>
-        </li>
+            
+           
         {{-- FIN BILLETERA --}}
         {{--INICIO TICKET --}}
-        <li class="nav-item">
-            <a href="{{route('todosticket')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
-                <i class="feather icon-mail"></i>
-                <span class="title">Tickets</span>
-                {{-- <span class="arrow"></span> --}}
-            </a>
-        </li>
+       
         {{-- FIN TICKET --}}
         {{-- LISTA DE USUARIOS--}}
-        <li class="nav-item">
-            <a href="{{url('mioficina/admin/userrecords')}}" class="nav-link text-white">
-                <i class="fa fa-list-alt"></i>
-                <span class="title">Lista de Usuarios</span>
-            </a>
-        </li>
+       
         {{-- FIN LISTA DE USUARIOS --}}
         {{--INICIO CONFIGURARION BONOS--}}
-        <li class="nav-item">
-            <a href="{{route('bonosetting.index')}}" class="nav-link nav-toggle" style="color: #FFFFFF;">
-                <i class="feather icon-settings"></i>
-                <span class="title">Configurar Bonos</span>
-                {{-- <span class="arrow"></span> --}}
-            </a>
-        </li>
+
         {{-- FIN CONFIGURARION BONOS--}}
         {{-- CERRAR SESIÓN --}}
         <li class="nav-item">

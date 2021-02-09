@@ -48,7 +48,7 @@
 
 <style>
     .dropdown-item:hover{
-        background: #02E9FE !important;
+        background: #C8AD77 !important;
         color: #ffffff !important;
     }
 </style>
@@ -138,12 +138,12 @@
     }
 
     .app-content .wizard > .steps > ul > li.current .step, .app-content .wizard.wizard-circle > .steps > ul > li::before, .app-content .wizard.wizard-circle > .steps > ul > li::after{
-        background: #02E9FE ;
-        border-color:  #02E9FE ;
+        background: #C8AD77 ;
+        border-color:  #C8AD77 ;
     }
     
     .app-content .wizard > .steps > ul > li.done .step{
-        border-color:  #02E9FE ;
+        border-color:  #C8AD77 ;
     }
 
     .app-content .wizard > .steps > ul > li.current > a{
@@ -151,12 +151,12 @@
     }
 
     .app-content .wizard > .actions > ul > li > a[href="#previous"]{
-        background: #02E9FE;
+        background: #C8AD77;
         /* color: white; */
     }
 
     .app-content .wizard > .actions > ul > li > a{
-        background: #02E9FE;
+        background: #C8AD77;
     }
 
     .bg-blue-dark{
@@ -164,12 +164,12 @@
     }
 
     .input-group-text{
-        background: #02E9FE;
+        background: #C8AD77;
         color: #1f2b48;
-        border-color: #02E9FE;
+        border-color: #C8AD77;
     }
     .b-blue{
-        border-color: #02E9FE;
+        border-color: #C8AD77;
     }
 
     .fondoBoxDashboard{

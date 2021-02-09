@@ -235,19 +235,19 @@ right connector from last child*/
 								@include('referraltree::infouser', ['data' => $child2])
 							</li>
 							@endforeach
-							@if (count($child->children) < 3) @if (count($child->children) == 2)
+							@if (count($child->children) < 2) @if (count($child->children) == 2)
 								<li>
 									<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 								</li>
 								@endif
 								@if (count($child->children) == 1)
-								@for ($i = 1; $i < 3; $i++) <li>
+								@for ($i = 1; $i < 2; $i++) <li>
 									<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 					</li>
 					@endfor
 					@endif
 					@if (count($child->children) == 0)
-					@for ($i = 1; $i < 4; $i++) <li>
+					@for ($i = 1; $i < 3; $i++) <li>
 						<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 			</li>
 			@endfor
@@ -258,10 +258,10 @@ right connector from last child*/
 		{{-- Fin nivel 2 --}}
 		</li>
 		@endforeach
-		@if (count($trees) < 3) @if (count($trees)==2) <li>
+		@if (count($trees) < 2) @if (count($trees)==2) <li>
 			<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 			<ul>
-				@for ($o = 1; $o < 4; $o++) <li>
+				@for ($o = 1; $o < 3; $o++) <li>
 					<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 					</li>
 					@endfor
@@ -269,10 +269,10 @@ right connector from last child*/
 			</li>
 			@endif
 			@if (count($trees) == 1)
-			@for ($i = 1; $i < 3; $i++) <li>
+			@for ($i = 1; $i < 2; $i++) <li>
 				<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 				<ul>
-					@for ($o = 1; $o < 4; $o++) <li>
+					@for ($o = 1; $o < 3; $o++) <li>
 						<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 						</li>
 						@endfor
@@ -280,7 +280,7 @@ right connector from last child*/
 				</li>
 				@endfor
 				@endif
-				@if (count($trees) == 0)
+				{{-- @if (count($trees) == 0)
 				@for ($i = 1; $i < 4; $i++) <li>
 					<img src="https://brainbow.capital/assets/newuser.png" style="width:64px">
 					<ul>
@@ -291,7 +291,7 @@ right connector from last child*/
 					</ul>
 					</li>
 					@endfor
-					@endif
+					@endif --}}
 					@endif
 					</ul>
 					{{-- fin nivel 1 --}}

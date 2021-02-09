@@ -211,7 +211,7 @@ $referred = DB::table($settings->prefijo_wp.'users')
                                 </div>
                             </div>
                             <br>
-                            <button type="submit" class="btn" style="display: block; background-color: #02E9FE; color: white; font-weight: bold; width: 100%;">REGISTRAME</button>
+                            <button type="submit" class="btn" style="display: block; background-color: #C8AD77; color: white; font-weight: bold; width: 100%;">REGISTRAME</button>
 
                             <div style="padding: 30px 0 0 0;" class="text-center">¿Ya tienes una cuenta? <a href="{{route('login')}}" style="font-size: 12px; color: #00184E; font-weight: bold;">Inicia Sesión</a></div>
 

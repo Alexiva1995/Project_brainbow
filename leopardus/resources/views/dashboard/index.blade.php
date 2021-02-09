@@ -3,7 +3,6 @@
 @section('content')
 	<div class="contai2">
 		<div class="row">
-			@include('dashboard.componenteIndex.carruselcurrency')
 			{{-- primeros cuadro --}}
 			@if (Auth::user()->rol_id == 0)
 			@include('dashboard.componenteIndex.admin_square')

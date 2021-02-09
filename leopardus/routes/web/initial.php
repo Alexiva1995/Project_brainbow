@@ -22,7 +22,9 @@ Route::prefix('mioficina')->group(function(){
     // return view('landing.index', compact('landing'));
 })->name('landing');*/
 
-Route::get('/', 'HomeController@home');
+Route::get('/', function(){
+    return redirect()->route('login');
+});
 
 Route::get('/producto/legal', function(){
     $landing = 3;

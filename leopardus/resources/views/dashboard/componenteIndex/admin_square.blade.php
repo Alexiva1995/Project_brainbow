@@ -56,8 +56,8 @@
             </div>
             {{-- Cuadro de Link de referido --}}
             <div class="col-lg-3 col-sm-6 col-12 mt-2">
-                <div class="card h-100 d-flex flex-column align-items-center justify-content-center" onclick="copyToClipboard('copy')">
-                    <div class="card-header d-flex flex-column align-items-center justify-content-center pb-2">
+                <div class="card h-100 d-flex flex-column align-items-center justify-content-center">
+                    <div class="card-header d-flex flex-column align-items-center justify-content-center pb-2" onclick="copyToClipboard('copy')">
                         <div class="avatar p-50 m-0" style="background-color: #02E9FE;">
                             <div class="avatar-content">
                                 <i class="feather icon-link font-medium-5" style="color: white;"></i>
@@ -68,6 +68,19 @@
                         <p style="display:none;" id="copy">
                             {{route('autenticacion.new-register').'?referred_id='.Auth::user()->ID}}
                         </p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <label class="text-center">Selecione un lado de Registro para su arbol</label>
+                            <div class="custom-control custom-radio p-2">
+                                <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" onclick="updateSideBinary('D')" @if (Auth::user()->ladoregistrar == 'D') 'checked' @endif>
+                                <label class="custom-control-label" for="customRadio1">Derecha</label>
+                              </div>
+                              <div class="custom-control custom-radio p-2">
+                                <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input" onclick="updateSideBinary('I')" @if (Auth::user()->ladoregistrar == 'I') 'checked' @endif>
+                                <label class="custom-control-label" for="customRadio2">Izquierda</label>
+                              </div>
+                        </div>
                     </div>
                 </div>
             </div>

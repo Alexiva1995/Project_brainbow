@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Level Up</title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('flaticon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('flaticn.png') }}">
     {{-- font Google --}}
     <link href="https://fonts.googleapis.com/css?family=Baloo+Thambi+2:400,500,600,700,800&display=swap"
         rel="stylesheet">
@@ -29,7 +29,7 @@
         }
 
         .bg-alt-orange {
-            background: #00646d;
+            background: #000000;
         }
 
         .text-alt-orange {
@@ -104,10 +104,7 @@
             <div class="card-body">
                 <small>
                     <p class="">
-                        Adquiere uno de nuestros planes <br>
-                        y desarrolla habilidades que te <br>
-                        permitan llevar a otras personas <br>
-                        a un siguiente nivel
+                  
                     </p>
                 </small>
                 <div class="col-12 text-white">

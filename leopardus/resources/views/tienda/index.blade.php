@@ -49,15 +49,15 @@
                                     {{-- paso 1 fin --}}
 
                                     {{-- paso 2 --}}
-                                    @include('tienda.componentes.planes')
+                                    {{-- @include('tienda.componentes.planes') --}}
                                     {{-- paso 2 fin --}}
 
                                     {{-- paso 3 --}}
                                     {{-- @include('install.component.step3') --}}
                                     {{-- paso 3 fin --}}
-                                    <input type="hidden" name="idproducto" id="idproducto">
-                                    <input type="hidden" id="title2" name="name">
-                                    <input type="hidden" id="price2" name="precio">
+                                    <input type="hidden" name="idproducto" id="idproducto" value="0000">
+                                    <input type="hidden" id="title2" name="name" value="inversion">
+                                    <input type="hidden" id="price2" name="precio" value="0">
                                 </form>
                             </div>
                         </div>

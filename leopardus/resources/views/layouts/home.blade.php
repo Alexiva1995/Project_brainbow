@@ -3,7 +3,7 @@
     <!-- Mirrored from www.pchain.org/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 07 May 2020 21:33:00 GMT -->
     <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
     <head>
-        <title>BRAINBOW</title>
+        <title>GoldenBit</title>
         <meta charset="utf-8">
         <meta name="viewport"
               content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
@@ -13,7 +13,7 @@
         <script type="text/javascript" src="js/html5shiv.js"></script>
         <script type="text/javascript" src="js/respond.js"></script>
         <![endif]-->
-    	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('flaticon.png') }}">
+    	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('flatic.png') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('templateHome/css/slick.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('templateHome/css/swiper3.min.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset('templateHome/css/animate.min.css') }}"/>
@@ -25,7 +25,7 @@
 
             <div class="mologo">
                 <a href="index.html">
-                    <img class="l1" src="{{ asset('assets/imgLanding/brainbow_png.png') }}">
+                    <img class="l1" src="{{ asset('assets/imgLanding/logo-dashboard.png') }}">
 
                 </a>
             </div>

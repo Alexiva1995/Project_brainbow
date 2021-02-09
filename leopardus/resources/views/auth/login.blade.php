@@ -76,7 +76,7 @@
                                             </div>
                                         </div><br>
 
-                                        <button type="submit" class="btn" style="display: block; background-color: #02E9FE; color: white; font-weight: bold; width: 100%;">INGRESAR</button>
+                                        <button type="submit" class="btn" style="display: block; background-color: #C8AD77; color: white; font-weight: bold; width: 100%;">INGRESAR</button>
 
                                         <div style="padding: 30px 0 0 0;" class="text-center">¿No tienes una cuenta? <a href="{{route('autenticacion.new-register')}}" style="font-size: 12px; color: #00184E; font-weight: bold;">Regístrate</a></div>
                                     </form>
@@ -90,7 +90,7 @@
                                         </div>
 
                                         <div style="padding: 30px 0 0 0;">
-                                            <button type="submit" class="btn" style="display: block; background-color: #02E9FE; color: white; width: 100%;">Recuperar Clave</button>
+                                            <button type="submit" class="btn" style="display: block; background-color: #C8AD77; color: white; width: 100%;">Recuperar Clave</button>
                                         </div>
 
                                         <div style="padding: 30px 0 0 0;" class="text-center"><a href="javascript:;" onclick="toggle()" style="font-size: 12px; color: #00184E; font-weight: bold;">Regresar al Login</a></div>

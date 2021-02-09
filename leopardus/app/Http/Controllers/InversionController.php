@@ -27,7 +27,8 @@ class InversionController extends Controller
         ]);
         if ($validate) {
             $inversion = (double) $request->inversion;
-            $total = ($inversion + 0);
+            $porcentage = ($inversion * 0.06);
+            $total = ($inversion + $porcentage);
             $transacion = [
                 'amountTotal' => $total,
                 'note' => 'Inversion de '.number_format($request->inversion, 2, ',', '.').' USD',
@@ -41,12 +42,6 @@ class InversionController extends Controller
                 'itemPrice' => $inversion, // USD
                 'itemQty' => (INT) 1,
                 'itemSubtotalAmount' => $inversion // USD
-            ];
-            $transacion['items'][] = [
-                'itemDescription' => 'Paquete de Inversion '.$request->name,
-                'itemPrice' => 0, // USD
-                'itemQty' => (INT) 1,
-                'itemSubtotalAmount' => 0 // USD
             ];
 
             $ruta = CoinPayment::generatelink($transacion);
@@ -69,7 +64,7 @@ class InversionController extends Controller
             'iduser' => Auth::user()->ID,
             'idtrasancion' => '',
             'status' => 0,
-            'paquete_inversion' => (int)$idpaquete
+            'paquete_inversion' => 0
         ];
 
         $orden = OrdenInversion::create($data);
